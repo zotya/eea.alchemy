@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<action-icons>
+  <action-icon
+    category="controlpanel"
+    action_id="eea.alchemy"
+    title="Alchemy tags" priority="0"
+    icon_expr="++resource++eea.alchemy.png"
+  />
+</action-icons>

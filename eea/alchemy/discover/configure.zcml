@@ -1,0 +1,19 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="eea.alchemy">
+
+  <class class=".AlchemyAPI.AlchemyAPI">
+    <implements interface=".interfaces.IAlchemyAPI" />
+  </class>
+
+  <utility
+    provides=".interfaces.IAlchemyAPI"
+    factory=".AlchemyAPI.AlchemyAPI" />
+
+  <adapter
+    for="Products.Archetypes.interfaces.IBaseObject"
+    provides=".interfaces.IDiscoverGeoTags"
+    factory="..discover.DiscoverGeoTags"
+    />
+
+</configure>

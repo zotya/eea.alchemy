@@ -1,0 +1,47 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:browser="http://namespaces.zope.org/browser"
+  i18n_domain="eea.alchemy">
+
+  <include package="eea.faceted.vocabularies" />
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    name="alchemy-tags.html"
+    template="browser.pt"
+    class=".browser.Alchemy"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    name="alchemy.search"
+    template="search.pt"
+    class=".browser.Search"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:page
+    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    name="alchemy.results"
+    template="results.pt"
+    class=".browser.Results"
+    permission="cmf.ManagePortal"
+    />
+
+  <browser:resource
+    name="eea.alchemy.css"
+    file="browser.css"
+    />
+
+  <browser:resource
+    name="eea.alchemy.js"
+    file="browser.js"
+    />
+
+  <browser:resource
+    name="eea.alchemy.png"
+    file="browser.png"
+    />
+
+</configure>

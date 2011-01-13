@@ -1,0 +1,10 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  i18n_domain="eea.alchemy">
+
+  <include package="eea.jquery" />
+  <include file="profiles.zcml" />
+  <include package=".browser" />
+  <include package=".discover" />
+
+</configure>

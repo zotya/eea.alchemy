@@ -1,0 +1,44 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+  metal:use-macro="here/prefs_main_template/macros/master"
+  i18n:domain="eea.alchemy">
+<head>
+
+<metal:css fill-slot="css_slot">
+  <style type="text/css" media="all">
+    <!-- @import url(++resource++eea.alchemy.css); -->
+  </style>
+</metal:css>
+
+<metal:js fill-slot="javascript_head_slot">
+  <script type="text/javascript"
+    src="++resource++eea.alchemy.js"></script>
+</metal:js>
+
+</head>
+
+<body>
+<div metal:fill-slot="prefs_configlet_main" id="eea-alchemy">
+
+  <h1 class="documentFirstHeading" i18n:translate="">
+    Auto-discover geographical coverage, temporal coverage and keywords
+  </h1>
+
+  <a href=""
+    class="link-parent"
+    tal:attributes="href string:$portal_url/plone_control_panel"
+    i18n:translate="label_up_to_plone_setup">Up to Site Setup</a>
+
+  <p class="documentDescription" i18n:translate="">
+    Use the form bellow to auto-discover and update documents geotags,
+    temportal coverage and keywords
+  </p>
+
+  <div tal:replace="structure here/@@alchemy.search" />
+  <div class="alchemy-results">
+    <!-- Results here -->
+  </div>
+
+</div>
+</body>
+</html>
