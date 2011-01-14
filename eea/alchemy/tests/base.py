@@ -52,3 +52,20 @@ class EEAAlchemyTestCase(ptc.PloneTestCase):
 class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
     """Base class for functional integration tests for the 'EEA Alchemy' product.
     """
+    def afterSetUp(self):
+        """ Setup
+        """
+        sid = self.folder.invokeFactory('Folder', id='sandbox')
+        sandbox = self.folder._getOb(sid)
+        sandbox.processForm(data=1, metadata=1, values={
+            'title': (
+                "Formation of new land cover in the region of Valencia, Spain"
+            ),
+            'description': (
+                "Urban sprawl 1990-2000 in the province of Venice "
+                "using a 1 km x 1 km grid"
+            ),
+        })
+
+        atool = self.portal.portal_properties.alchemyapi
+        atool.key = '12345665766867'

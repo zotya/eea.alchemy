@@ -2,18 +2,30 @@
   xmlns="http://namespaces.zope.org/zope"
   i18n_domain="eea.alchemy">
 
-  <class class=".AlchemyAPI.AlchemyAPI">
-    <implements interface=".interfaces.IAlchemyAPI" />
+  <class class=".api.AlchemyAPI">
+    <implements interface="eea.alchemy.interfaces.IAlchemyAPI" />
   </class>
 
   <utility
-    provides=".interfaces.IAlchemyAPI"
-    factory=".AlchemyAPI.AlchemyAPI" />
+    provides="eea.alchemy.interfaces.IAlchemyAPI"
+    factory=".api.AlchemyAPI" />
+
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverTemporalCoverage"
+    factory=".utilities.time.DiscoverTemporalCoverage" />
+
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverGeographicalCoverage"
+    factory=".utilities.geotags.DiscoverGeographicalCoverage" />
+
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverKeywords"
+    factory=".utilities.keywords.DiscoverKeywords" />
 
   <adapter
     for="Products.Archetypes.interfaces.IBaseObject"
-    provides=".interfaces.IDiscoverGeoTags"
-    factory="..discover.DiscoverGeoTags"
+    provides="eea.alchemy.interfaces.IDiscoverGeoTags"
+    factory=".adapters.geotags.DiscoverGeoTags"
     />
 
 </configure>

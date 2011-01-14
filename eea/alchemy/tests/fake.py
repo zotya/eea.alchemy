@@ -1,5 +1,5 @@
 from zope.interface import implements
-from eea.alchemy.discover.AlchemyAPI import AlchemyAPI
+from eea.alchemy.discover.api import AlchemyAPI
 from eea.alchemy.interfaces import IAlchemyAPI
 
 class FakeAlchemyAPI(AlchemyAPI):
@@ -19,6 +19,29 @@ class FakeAlchemyAPI(AlchemyAPI):
                       'http://www.alchemyapi.com/company/terms.html')
         }
         text = paramObject.getText()
+
+        # Keywords
+        if apiCall == "TextGetRankedKeywords":
+            template = {
+                'status': 'FAKE',
+                'usage': (
+                    'By accessing AlchemyAPI or using information generated '
+                    'by AlchemyAPI, you are agreeing to be bound by the '
+                    'AlchemyAPI Terms of Use: '
+                    'http://www.alchemyapi.com/company/terms.html'),
+                'keywords': [],
+                'url': '',
+                'language': 'english'
+            }
+
+            if 'new land cover' in text:
+                template['keywords'] = [{
+                    'relevance': '0.992296', 'text': 'new land cover'
+                }]
+                return template
+            return template
+
+        # Geotags
         if 'Spain' in text:
             template['entities'].append({
                 'count': '1',

@@ -2,7 +2,7 @@ EEA Alchemy
 
 Documentation
 
-  See the **docs** directory in this package.
+  See the **interfaces.py**
 
 Authors and contributors
 

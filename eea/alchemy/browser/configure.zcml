@@ -8,40 +8,40 @@
   <browser:page
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     name="alchemy-tags.html"
-    template="browser.pt"
-    class=".browser.Alchemy"
+    template="zpt/tool.pt"
+    class=".app.tool.Alchemy"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     name="alchemy.search"
-    template="search.pt"
-    class=".browser.Search"
+    template="zpt/search.pt"
+    class=".app.tool.Search"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
     name="alchemy.results"
-    template="results.pt"
-    class=".browser.Results"
+    template="zpt/results.pt"
+    class=".app.tool.Results"
     permission="cmf.ManagePortal"
     />
 
   <browser:resource
     name="eea.alchemy.css"
-    file="browser.css"
+    file="css/tool.css"
     />
 
   <browser:resource
     name="eea.alchemy.js"
-    file="browser.js"
+    file="js/tool.js"
     />
 
   <browser:resource
     name="eea.alchemy.png"
-    file="browser.png"
+    file="png/tool.png"
     />
 
 </configure>

@@ -13,7 +13,7 @@ def test_suite():
     """ Suite
     """
     return unittest.TestSuite((
-            Suite('docs/discover.txt',
+            Suite('interfaces.py',
                   optionflags=OPTIONFLAGS,
                   package='eea.alchemy',
                   test_class=EEAAlchemyFunctionalTestCase) ,
