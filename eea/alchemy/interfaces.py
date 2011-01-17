@@ -127,8 +127,7 @@ class IDiscoverGeoTags(Interface):
 
         >>> from zope.component import getAdapter
         >>> from eea.alchemy.interfaces import IDiscoverGeoTags
-        >>> sandbox = folder._getOb('sandbox')
-        >>> discover = getAdapter(sandbox, IDiscoverGeoTags)
+        >>> discover = getAdapter(self.sandbox, IDiscoverGeoTags)
         >>> tags = discover('title')
         >>> [tag.get('text', '') for tag in tags]
         ['Spain', 'Valencia']

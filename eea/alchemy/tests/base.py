@@ -52,6 +52,12 @@ class EEAAlchemyTestCase(ptc.PloneTestCase):
 class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
     """Base class for functional integration tests for the 'EEA Alchemy' product.
     """
+    _sandbox = None
+
+    @property
+    def sandbox(self):
+        return self._sandbox
+
     def afterSetUp(self):
         """ Setup
         """
@@ -67,5 +73,6 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
             ),
         })
 
+        self._sandbox = sandbox
         atool = self.portal.portal_properties.alchemyapi
         atool.key = '12345665766867'
