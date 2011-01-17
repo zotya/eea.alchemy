@@ -13,16 +13,55 @@ Search form
 **/
 jQuery.fn.EEAlchemySearch = function(settings){
   var self = this;
+  self.valid = false;
 
   self.options = {
     initialize: function(){
       var context = jQuery(self);
       var form = jQuery('form', context);
+
+      jQuery('input[type=submit]', form).hide();
+      jQuery('input[type=checkbox]', form).click(function(){
+        self.options.validate(form);
+      });
+
       form.submit(function(){
         jQuery('.submitting', context).removeClass('submitting');
+        if(!self.valid){
+          return false;
+        }
         jQuery(document).trigger(jQuery.EEAlchemyEvents.Search, {form: form});
         return false;
       });
+    },
+
+    // Validate search form
+    validate: function(form){
+      self.valid = false;
+      // Portal type required
+      var portal_type = jQuery('input[name=portal_type]:checked', form).length;
+      if(!portal_type){
+        jQuery('input[type=submit]', form).hide();
+        return false;
+      }
+
+      // Lookin required
+      var lookin = jQuery('input[name=lookin]:checked', form).length;
+      if(!lookin){
+        jQuery('input[type=submit]', form).hide();
+        return false;
+      }
+
+      // Discover required
+      var discover = jQuery('input[name=discover]:checked', form).length;
+      if(!discover){
+        jQuery('input[type=submit]', form).hide();
+        return false;
+      }
+
+      // Valid
+      self.valid = true;
+      jQuery('input[type=submit]', form).show();
     }
   };
 

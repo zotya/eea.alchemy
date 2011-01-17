@@ -1,7 +1,10 @@
 <div class="alchemy-search">
   <form action="@@alchemy.results" method="post">
     <fieldset class="alchemy-box">
-      <legend i18n:translate="">Portal types</legend>
+      <legend>
+        <span i18n:translate="">Portal types</span>
+        <span title="Required" class="fieldRequired">(Required)</span>
+      </legend>
       <div class="alchemy-box-content">
       <ul>
         <tal:types repeat="term python:view.portal_types">
@@ -22,7 +25,10 @@
     </fieldset>
 
     <fieldset class="alchemy-box">
-      <legend i18n:translate="">Look in</legend>
+      <legend>
+        <span i18n:translate="">Look in</span>
+        <span title="Required" class="fieldRequired">(Required)</span>
+      </legend>
       <div class="alchemy-box-content">
         <ul>
           <tal:schema repeat="term python:view.atschema">
@@ -43,7 +49,10 @@
     </fieldset>
 
     <fieldset class="alchemy-box">
-      <legend i18n:translate="">Discover</legend>
+      <legend>
+       <span i18n:translate="">Discover</span>
+       <span title="Required" class="fieldRequired">(Required)</span>
+      </legend>
       <div class="alchemy-box-content">
         <ul>
           <tal:schema repeat="term python:view.discover">

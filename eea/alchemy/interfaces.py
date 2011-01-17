@@ -22,6 +22,9 @@ class IAlchemyAPI(Interface):
 
     """
 
+class IAlchemyDiscoverable(Interface):
+    """ Marker interface for discoverable items
+    """
 #
 # Utilities
 #
@@ -144,7 +147,61 @@ class IDiscoverGeoTags(Interface):
         >>> [tag.get('type', '') for tag in tags]
         ['StateOrCounty']
 
+        This adapter can also be applied on ZCatalog brains
+
+        >>> discover = getAdapter(self.brain, IDiscoverGeoTags)
+        >>> tags = discover('Title')
+        >>> [tag.get('text', '') for tag in tags]
+        ['Spain', 'Valencia']
 
         Keyword arguments:
         metadata -- object metadata to look in for geotags
+        """
+
+class IDiscoverTags(Interface):
+    """ Auto discover keywords from object metadata (title, description)
+    """
+    def __call__(metadata=['title', 'description']):
+        """ Return an iterable with discovered keywords:
+
+        >>> from zope.component import getAdapter
+        >>> from eea.alchemy.interfaces import IDiscoverTags
+        >>> discover = getAdapter(self.sandbox, IDiscoverTags)
+        >>> tags = discover('title')
+        >>> [tag.get('text', '') for tag in tags]
+        ['new land cover']
+
+        This adapter can also be applied on ZCatalog brains
+
+        >>> discover = getAdapter(self.brain, IDiscoverTags)
+        >>> tags = discover('Title')
+        >>> [tag.get('text', '') for tag in tags]
+        ['new land cover']
+
+        Keyword arguments:
+        metadata -- object metadata to look in for keywords
+        """
+
+class IDiscoverTime(Interface):
+    """ Auto discover time coverage from object metadata (title, description)
+    """
+    def __call__(metadata=['title', 'description']):
+        """ Return an iterable with discovered time coverage:
+
+        >>> from zope.component import getAdapter
+        >>> from eea.alchemy.interfaces import IDiscoverTime
+        >>> discover = getAdapter(self.sandbox, IDiscoverTime)
+        >>> tags = discover('description')
+        >>> [tag.get('text', '') for tag in tags]
+        ['1990-2000']
+
+        This adapter can also be applied on ZCatalog brains
+
+        >>> discover = getAdapter(self.brain, IDiscoverTime)
+        >>> tags = discover('Description')
+        >>> [tag.get('text', '') for tag in tags]
+        ['1990-2000']
+
+        Keyword arguments:
+        metadata -- object metadata to look in for time periods
         """

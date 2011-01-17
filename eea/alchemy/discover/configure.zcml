@@ -6,6 +6,14 @@
     <implements interface="eea.alchemy.interfaces.IAlchemyAPI" />
   </class>
 
+  <class class="Products.ZCatalog.CatalogBrains.AbstractCatalogBrain">
+    <implements interface="eea.alchemy.interfaces.IAlchemyDiscoverable" />
+  </class>
+
+  <class class="Products.Archetypes.BaseObject.BaseObject">
+    <implements interface="eea.alchemy.interfaces.IAlchemyDiscoverable" />
+  </class>
+
   <utility
     provides="eea.alchemy.interfaces.IAlchemyAPI"
     factory=".api.AlchemyAPI" />
@@ -23,9 +31,21 @@
     factory=".utilities.keywords.DiscoverKeywords" />
 
   <adapter
-    for="Products.Archetypes.interfaces.IBaseObject"
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
     provides="eea.alchemy.interfaces.IDiscoverGeoTags"
     factory=".adapters.geotags.DiscoverGeoTags"
+    />
+
+  <adapter
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverTags"
+    factory=".adapters.keywords.DiscoverTags"
+    />
+
+  <adapter
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverTime"
+    factory=".adapters.time.DiscoverTime"
     />
 
 </configure>

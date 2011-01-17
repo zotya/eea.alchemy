@@ -1,9 +1,15 @@
 """ Alchemy controllers
 """
-from zope.component import queryUtility
+import simplejson as json
+from zope.component import queryUtility, queryAdapter
 from zope.app.schema.vocabulary import IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from Products.Five.browser import BrowserView
+from Products.CMFCore.utils import getToolByName
+
+from eea.alchemy.interfaces import IDiscoverGeoTags
+from eea.alchemy.interfaces import IDiscoverTags
+from eea.alchemy.interfaces import IDiscoverTime
 
 SCHEMA = (
     ('title', 'Title'),
@@ -53,12 +59,31 @@ class Results(BrowserView):
     """ Results View
     """
 
+    _form = {}
+    _results = {}
+
+    @property
+    def form(self):
+        if not self._form:
+            self._form = self.request.form
+        return self._form
+
     @property
     def portal_types(self):
         """ Found Content types
         """
+        # Box header
         yield SimpleTerm('portal_types', 0, 'Portal types')
-        raise StopIteration
+
+        voc = queryUtility(IVocabularyFactory,
+                           name=u"eea.faceted.vocabularies.FacetedPortalTypes")
+        if not voc:
+            raise StopIteration
+
+        portal_types = self.form.get('portal_type', [])
+        for term in voc(self.context):
+            if term.value in portal_types:
+                yield term
 
     @property
     def geotags(self):
@@ -84,7 +109,43 @@ class Results(BrowserView):
         yield SimpleTerm('subject', 0, 'Keywords')
         raise StopIteration
 
+    def results(self, format='dict'):
+        if format == 'json':
+            return json.dumps(self._results)
+        return self._results
+
+    def discover(self, brain, interface=None):
+        """ Discover tags in brain
+        """
+        discover = self.form.get('discover', [])
+        if 'geotags' not in discover:
+            return []
+
+        lookin = self.form.get('lookin', [])
+        discover = queryAdapter(brain, interface)
+        if not discover:
+            return []
+        return [tag.get('text', '') for tag in discover(lookin)]
+
+    def query(self):
+        """ Query catalog
+        """
+        ctool = getToolByName(self.context, 'portal_catalog')
+        ptype = self.form.get('portal_type', None)
+        brains = ctool(Language='all', portal_type=ptype)
+
+        for brain in brains:
+            self._results[brain.getRID()] = {
+                'url': brain.getURL(),
+                'portal_type': brain.portal_type,
+                'geotags': self.discover(brain, IDiscoverGeoTags),
+                'keywords': self.discover(brain, IDiscoverTags),
+                'timeline': self.discover(brain, IDiscoverTime)
+            }
+
     def __call__(self, **kwargs):
         if self.request:
             kwargs.update(self.request.form)
+        self._form = kwargs
+        self.query()
         return self.index()

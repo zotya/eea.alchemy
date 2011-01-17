@@ -1,15 +1,15 @@
-""" Auto-discover geotags API
+""" Auto-discover keywords
 """
 import logging
 from zope.interface import implements
 from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
-from eea.alchemy.interfaces import IDiscoverGeoTags
-from eea.alchemy.interfaces import IDiscoverGeographicalCoverage
+from eea.alchemy.interfaces import IDiscoverTags
+from eea.alchemy.interfaces import IDiscoverKeywords
 logger = logging.getLogger('eea.alchemy.discover')
 
-class DiscoverGeoTags(object):
-    """ Common adapter to auto-discover geotags in context metadata
+class DiscoverTags(object):
+    """ Common adapter to auto-discover keywords in context metadata
     """
     _key = None
 
@@ -32,12 +32,12 @@ class DiscoverGeoTags(object):
         self._key = key
         return key
 
-    def __call__(self, metadata=('title', 'description')):
+    def __call__(self, metadata=('Title', 'Description')):
         if not self.key:
             raise StopIteration
 
         if isinstance(metadata, (unicode, str)):
-            metadata = (metadata,)
+            metadata = [metadata, ]
 
         string = ""
         for prop in metadata:
@@ -59,7 +59,7 @@ class DiscoverGeoTags(object):
 
             string += '\n' + text
 
-        discover = getUtility(IDiscoverGeographicalCoverage)
+        discover = getUtility(IDiscoverKeywords)
         if not discover:
             raise StopIteration
 

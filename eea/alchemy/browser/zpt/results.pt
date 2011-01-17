@@ -97,6 +97,9 @@
     </fieldset>
 
     <div style="clear: both"> </div>
+
+    <textarea name="results" id="results"
+      tal:content="python:view.results('json')"></textarea>
     <div class="alchemy-button">
       <input type="submit" value="Apply" i18n:attributes="value" />
     </div>
