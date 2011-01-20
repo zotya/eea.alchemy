@@ -1,7 +1,7 @@
 <div>
   <form action="@@alchemy.results" method="post">
     <fieldset class="alchemy-box-results" tal:define="
-      ctypes python:view.portal_types;
+      ctypes python:template.portal_types;
       total python:ctypes.next();">
       <legend i18n:translate=""
         tal:content="string:${total/title} (${total/token})" />
@@ -25,7 +25,7 @@
     </fieldset>
 
     <fieldset class="alchemy-box-results" tal:define="
-        geotags python:view.geotags;
+        geotags python:template.geotags;
         total python:geotags.next()">
       <legend i18n:translate=""
         tal:content="string:${total/title} (${total/token})" />
@@ -49,7 +49,7 @@
     </fieldset>
 
     <fieldset class="alchemy-box-results" tal:define="
-      timeline python:view.timeline;
+      timeline python:template.timeline;
       total python:timeline.next();">
       <legend i18n:translate=""
         tal:content="string:${total/title} (${total/token})" />
@@ -73,7 +73,7 @@
     </fieldset>
 
     <fieldset class="alchemy-box-results" tal:define="
-      keywords python:view.keywords;
+      keywords python:template.keywords;
       total python:keywords.next()">
       <legend i18n:translate=""
         tal:content="string:${total/title} (${total/token})" />
@@ -99,7 +99,7 @@
     <div style="clear: both"> </div>
 
     <textarea name="results" id="results"
-      tal:content="python:view.results('json')"></textarea>
+      tal:content="python:template.results('json')"></textarea>
     <div class="alchemy-button">
       <input type="submit" value="Apply" i18n:attributes="value" />
     </div>

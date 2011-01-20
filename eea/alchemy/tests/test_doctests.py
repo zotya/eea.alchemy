@@ -17,4 +17,8 @@ def test_suite():
                   optionflags=OPTIONFLAGS,
                   package='eea.alchemy',
                   test_class=EEAAlchemyFunctionalTestCase) ,
+            Suite('browser/app/tool.py',
+                  optionflags=OPTIONFLAGS,
+                  package='eea.alchemy',
+                  test_class=EEAAlchemyFunctionalTestCase) ,
     ))

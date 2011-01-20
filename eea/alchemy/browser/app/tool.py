@@ -12,8 +12,8 @@ from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverTime
 
 SCHEMA = (
-    ('title', 'Title'),
-    ('description', 'Description')
+    ('Title', 'Title'),
+    ('Description', 'Description')
 )
 
 DISCOVER = (
@@ -24,10 +24,28 @@ DISCOVER = (
 
 class Alchemy(BrowserView):
     """ Main Controller
+
+        >>> self.loginAsPortalOwner()
+        >>> from zope.component import getMultiAdapter
+        >>> view = getMultiAdapter((portal, portal.REQUEST),
+        ...                         name=u'alchemy-tags.html')
+
+        >>> print view()
+        <...Auto-discover geographical coverage, temporal coverage and...
+
     """
 
 class Search(BrowserView):
     """ Search View
+
+        >>> self.loginAsPortalOwner()
+        >>> from zope.component import getMultiAdapter
+        >>> view = getMultiAdapter((portal, portal.REQUEST),
+        ...                         name=u'alchemy.search')
+
+        >>> print view()
+        <...Portal types... ...Look in... ...Discover...
+
     """
     @property
     def portal_types(self):
@@ -57,6 +75,16 @@ class Search(BrowserView):
 
 class Results(BrowserView):
     """ Results View
+
+        >>> self.loginAsPortalOwner()
+        >>> from zope.component import getMultiAdapter
+        >>> view = getMultiAdapter((portal, portal.REQUEST),
+        ...                         name=u'alchemy.results')
+
+        >>> print view()
+        <...Portal types... ...Geographical coverage...
+        ...Temporal Coverage... ...Keywords...
+
     """
 
     _form = {}
@@ -117,14 +145,14 @@ class Results(BrowserView):
     def discover(self, brain, interface=None):
         """ Discover tags in brain
         """
-        discover = self.form.get('discover', [])
-        if 'geotags' not in discover:
-            return []
-
-        lookin = self.form.get('lookin', [])
         discover = queryAdapter(brain, interface)
         if not discover:
             return []
+
+        lookin = self.form.get('lookin', [])
+        if not lookin:
+            return []
+
         return [tag.get('text', '') for tag in discover(lookin)]
 
     def query(self):
