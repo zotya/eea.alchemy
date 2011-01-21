@@ -21,8 +21,9 @@ class DiscoverGeographicalCoverage(object):
     """
     implements(IDiscoverGeographicalCoverage)
 
-    _key = ''
-    _alchemy = None
+    def __init__(self):
+        self._key = ''
+        self._alchemy = None
 
     @property
     def key(self):

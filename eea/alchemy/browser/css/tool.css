@@ -50,3 +50,15 @@
   border-width: 1px;
   border-style: dotted;
 }
+
+#eea-alchemy .alchemy-loader {
+  width: 100%;
+  height: 1em;
+  border: 1px dotted #95b229;
+}
+
+#eea-alchemy .alchemy-loader-bar {
+  width: 1em;
+  height: 100%;
+  background-color: #95b229;
+}

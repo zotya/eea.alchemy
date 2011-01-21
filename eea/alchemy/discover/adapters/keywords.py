@@ -11,10 +11,9 @@ logger = logging.getLogger('eea.alchemy.discover')
 class DiscoverTags(object):
     """ Common adapter to auto-discover keywords in context metadata
     """
-    _key = None
-
     def __init__(self, context):
         self.context = context
+        self._key = None
 
     @property
     def key(self):
@@ -31,6 +30,17 @@ class DiscoverTags(object):
 
         self._key = key
         return key
+
+    @property
+    def existing(self):
+        """ Get existing keywords from ZCatalog
+        """
+        ctool = getToolByName(self.context, 'portal_catalog')
+        index = ctool.Indexes.get('Subject', None)
+        if not index:
+            raise StopIteration
+        for value in index.uniqueValues():
+            yield value
 
     def __call__(self, metadata=('Title', 'Description')):
         if not self.key:
@@ -63,5 +73,19 @@ class DiscoverTags(object):
         if not discover:
             raise StopIteration
 
+        duplicates = []
         for item in discover(self.key, string):
+            duplicates.append(item['text'])
             yield item
+
+        # Search in portal_catalog existing keywords
+        for keyword in self.existing:
+            if keyword in duplicates:
+                continue
+            if keyword.lower() not in string.lower():
+                continue
+
+            yield {
+                'relevance': '100.0',
+                'text': keyword
+            }

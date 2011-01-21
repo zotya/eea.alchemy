@@ -17,7 +17,7 @@
           <label tal:attributes="
             for python:term.value;
             title python:term.title"
-            tal:content="python:term.title" />
+            tal:content="python:term.title + ' (%s)' % term.token" />
         </li>
         </tal:types>
       </ul>
@@ -98,7 +98,7 @@
 
     <div style="clear: both"> </div>
 
-    <textarea name="results" id="results"
+    <textarea name="results" id="results" style="display: none"
       tal:content="python:template.results('json')"></textarea>
     <div class="alchemy-button">
       <input type="submit" value="Apply" i18n:attributes="value" />

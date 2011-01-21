@@ -44,4 +44,9 @@
     file="png/tool.png"
     />
 
+  <browser:resource
+    name="eea.alchemy.loader.gif"
+    file="png/loader.gif"
+    />
+
 </configure>

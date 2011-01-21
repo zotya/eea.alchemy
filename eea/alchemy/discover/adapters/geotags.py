@@ -11,10 +11,9 @@ logger = logging.getLogger('eea.alchemy.discover')
 class DiscoverGeoTags(object):
     """ Common adapter to auto-discover geotags in context metadata
     """
-    _key = None
-
     def __init__(self, context):
         self.context = context
+        self._key = None
 
     @property
     def key(self):
