@@ -14,6 +14,7 @@ class DiscoverTime(object):
 
     def __init__(self, context):
         self.context = context
+        self.field = 'temporalCoverage'
         self._metadata = ('Title', 'Description')
 
     def metadata():
@@ -74,7 +75,50 @@ class DiscoverTime(object):
         def setTags(self, value):
             """ Setter
             """
-            logger.exception('DiscoverTime.setTags not implemented')
+            doc = self.context
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+
+            field = doc.getField(self.field)
+            if not field:
+                logger.warn('%s has no %s schema field. Time coverage not set',
+                            doc.absolute_url(1), self.field)
+                return
+
+            mutator = field.getMutator(doc)
+            if not mutator:
+                logger.warn("Can't edit field %s for doc %s",
+                            self.field, doc.absolute_url(1))
+                return
+
+            tags = set()
+            for tag in self.tags:
+                text = tag.get('text')
+                if not text:
+                    continue
+                try:
+                    start, end = text.split('-')
+                    start, end = int(start), int(end)
+                    tag = range(start, end+1)
+                except Exception, err:
+                    logger.exception(err)
+                    continue
+                else:
+                    tags = tags.union(tag)
+
+            current = [int(year) for year in field.getAccessor(doc)()]
+            tags = tags.union(current)
+            tags = list(tags)
+            tags.sort(reverse=True)
+            if not set(tags).difference(current):
+                return
+
+            tags = [str(year) for year in tags]
+            logger.info('Update %s for %s. Before: %s, After: %s',
+                        self.field, doc.absolute_url(1), current, tags)
+            mutator(tags)
+            doc.reindexObject(idxs=['getTemporalCoverage'])
 
         return property(getTags, setTags)
     tags = tags()

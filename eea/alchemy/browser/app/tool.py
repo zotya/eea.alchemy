@@ -134,8 +134,8 @@ class Update(BrowserView):
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
-        logger.info('Applying alchemy %s auto-discover on %s objects. '
-                    'Looking in %s', lookfor, len(brains), lookin)
+        logger.info('Applying alchemy %s auto-discover on %s %s objects. '
+                    'Looking in %s', lookfor, len(brains), ptype, lookin)
 
         for brain in brains:
             if "location" in lookfor:
