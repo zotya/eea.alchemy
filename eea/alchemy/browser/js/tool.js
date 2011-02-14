@@ -1,18 +1,10 @@
 (function(){
 
-jQuery.EEAlchemyEvents = {
-  SearchStart: 'EEAlchemy-Search-Start',
-  SearchStop: 'EEAlchemy-Search-Stop',
-  AjaxStart: 'EEAlchemy-AJAX-Start',
-  AjaxStop: 'EEAlchemy-AJAX-Stop',
-  AjaxError: 'EEAlchemy-AJAX-Error'
-};
-
 /**
 
 Search form
 **/
-jQuery.fn.EEAlchemySearch = function(settings){
+jQuery.fn.EEAlchemy = function(settings){
   var self = this;
   self.valid = false;
 
@@ -27,25 +19,15 @@ jQuery.fn.EEAlchemySearch = function(settings){
         .css('display', 'inline')
         .hide();
       jQuery('input[type=submit]', form).after(img);
-
       jQuery('input[type=checkbox]', form).click(function(){
         self.options.validate(form);
       });
 
-      // Events
-      jQuery(document).bind(jQuery.EEAlchemyEvents.SearchStart, function(evt, data){
-        self.options.search_start(form);
-      });
-      jQuery(document).bind(jQuery.EEAlchemyEvents.SearchStop, function(evt, data){
-        self.options.search_end(form);
-      });
-
       form.submit(function(){
-        jQuery('.submitting', self).removeClass('submitting');
         if(!self.valid){
           return false;
         }
-        jQuery(document).trigger(jQuery.EEAlchemyEvents.SearchStart, {form: form});
+        self.options.search(form);
         return false;
       });
     },
@@ -81,57 +63,26 @@ jQuery.fn.EEAlchemySearch = function(settings){
 
     search_start: function(form){
       jQuery('input[type=submit]', form).hide();
+      jQuery('input[type=checkbox]', form).attr('disabled', true);
       jQuery('#eea-alchemy-loader').show();
     },
 
-    search_end: function(form){
+    search_end: function(form, message){
       jQuery('#eea-alchemy-loader').hide();
-      jQuery('input[type=submit]', form).show();
-    }
-  };
-
-  // Update settings
-  if(settings){
-    jQuery.extend(self.options, settings);
-  }
-
-  self.options.initialize();
-  return this;
-};
-
-/**
-
-Results
-**/
-jQuery.fn.EEAlchemyResults = function(settings){
-  var self = this;
-
-  self.options = {
-    initialize: function(){
-      // Bind events
-      jQuery(document).bind(jQuery.EEAlchemyEvents.SearchStart, function(evt, data){
-        self.options.search(data);
-      });
+      var msg = jQuery('<div>')
+        .addClass('alchemy-msg')
+        .text(message);
+      jQuery('input[type=submit]', form).after(msg);
     },
 
-    search: function(data){
-      var form = data.form;
+    search: function(form){
       var query = form.serialize();
+      query += '&redirect=';
       var action = form.attr('action');
-      jQuery(document).trigger(jQuery.EEAlchemyEvents.AjaxStart);
+      self.options.search_start(form);
       jQuery.get(action, query, function(data){
-        self.options.showResults(data);
-        jQuery(document).trigger(jQuery.EEAlchemyEvents.AjaxStop);
-        jQuery(document).trigger(jQuery.EEAlchemyEvents.SearchStop);
+        self.options.search_end(form, data);
       });
-    },
-
-    showResults: function(data){
-      self.html(data);
-      var div = jQuery('<div>');
-      var form = jQuery('form', self);
-      form.after(div);
-      div.EEAlchemyLoader();
     }
   };
 
@@ -144,39 +95,6 @@ jQuery.fn.EEAlchemyResults = function(settings){
   return this;
 };
 
-jQuery.fn.EEAlchemyLoader = function(settings){
-  var self = this;
-  self.addClass('alchemy-loader');
-
-  self.options = {
-    total: 100,
-    current: 1,
-    initialize: function(){
-      self.bar = jQuery('<div>').addClass('alchemy-loader-bar');
-      self.append(self.bar);
-      self.options.update();
-    },
-
-    update: function(value){
-      var total = self.options.total;
-      if(value >= total){
-        value = total;
-      }
-
-      self.options.current = value;
-      var percent = value / total;
-      self.bar.width(self.width() * percent);
-    }
-  };
-
-  // Update settings
-  if(settings){
-    jQuery.extend(self.options, settings);
-  }
-
-  self.options.initialize();
-  return this;
-};
 /**
 
 Load
@@ -188,8 +106,7 @@ jQuery(document).ready(function(){
   jQuery(".discussion").remove();
 
   // Initialize
-  jQuery('#eea-alchemy .alchemy-search').EEAlchemySearch();
-  jQuery('#eea-alchemy .alchemy-results').EEAlchemyResults();
+  jQuery('#eea-alchemy .alchemy-search').EEAlchemy();
 });
 
-})();
+}());

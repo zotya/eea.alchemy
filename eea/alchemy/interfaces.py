@@ -1,6 +1,7 @@
 """ EEA Alchemy public interfaces
 """
 from zope.interface import Interface
+from zope import schema
 
 class IAlchemyAPI(Interface):
     """ Utility to use AlchemyAPI (http://alchemyapi.com) using zope.components
@@ -124,84 +125,82 @@ class IDiscoverKeywords(Interface):
 #
 class IDiscoverGeoTags(Interface):
     """ Auto discover location from object metadata (title, description)
-    """
-    def __call__(metadata=['title', 'description']):
-        """ Return an iterable with discovered geotags:
+
+        metadata -- object metadata to look in for geotags
+        tags -- get/set(persist to ZODB) discovered geotags
 
         >>> from zope.component import getAdapter
         >>> from eea.alchemy.interfaces import IDiscoverGeoTags
         >>> discover = getAdapter(self.sandbox, IDiscoverGeoTags)
-        >>> tags = discover('title')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'title'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['Spain', 'Valencia']
 
-        >>> tags = discover('title')
-        >>> [tag.get('type', '') for tag in tags]
+        >>> [tag.get('type', '') for tag in discover.tags]
         ['Country', 'City']
 
-        >>> tags = discover('description')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'description'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['Venice']
 
-        >>> tags = discover('description')
-        >>> [tag.get('type', '') for tag in tags]
+        >>> [tag.get('type', '') for tag in discover.tags]
         ['StateOrCounty']
 
         This adapter can also be applied on ZCatalog brains
 
         >>> discover = getAdapter(self.brain, IDiscoverGeoTags)
-        >>> tags = discover('Title')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'Title'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['Spain', 'Valencia']
 
-        Keyword arguments:
-        metadata -- object metadata to look in for geotags
-        """
+    """
+    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
+    tags = schema.Iterable(title=u'Tags')
 
 class IDiscoverTags(Interface):
     """ Auto discover keywords from object metadata (title, description)
-    """
-    def __call__(metadata=['title', 'description']):
-        """ Return an iterable with discovered keywords:
+
+        metadata -- object metadata to look in for keywords
+        tags -- get/set (persist to ZODB) discovered keywords
 
         >>> from zope.component import getAdapter
         >>> from eea.alchemy.interfaces import IDiscoverTags
         >>> discover = getAdapter(self.sandbox, IDiscoverTags)
-        >>> tags = discover('title')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'title'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['new land cover']
 
         This adapter can also be applied on ZCatalog brains
 
         >>> discover = getAdapter(self.brain, IDiscoverTags)
-        >>> tags = discover('Title')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'Title'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['new land cover']
 
-        Keyword arguments:
-        metadata -- object metadata to look in for keywords
-        """
+    """
+    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
+    tags = schema.Iterable(title=u'Tags')
 
 class IDiscoverTime(Interface):
     """ Auto discover time coverage from object metadata (title, description)
-    """
-    def __call__(metadata=['title', 'description']):
-        """ Return an iterable with discovered time coverage:
+
+        metadata -- object metadata to look in for time periods
+        tags -- get/set (persist to ZODB) discovered keywords
 
         >>> from zope.component import getAdapter
         >>> from eea.alchemy.interfaces import IDiscoverTime
         >>> discover = getAdapter(self.sandbox, IDiscoverTime)
-        >>> tags = discover('description')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'description'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['1990-2000']
 
         This adapter can also be applied on ZCatalog brains
 
         >>> discover = getAdapter(self.brain, IDiscoverTime)
-        >>> tags = discover('Description')
-        >>> [tag.get('text', '') for tag in tags]
+        >>> discover.metadata = 'Description'
+        >>> [tag.get('text', '') for tag in discover.tags]
         ['1990-2000']
 
-        Keyword arguments:
-        metadata -- object metadata to look in for time periods
-        """
+    """
+    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
+    tags = schema.Iterable(title=u'Tags')

@@ -11,12 +11,17 @@ logger = logging.getLogger('eea.alchemy.discover')
 class DiscoverGeoTags(object):
     """ Common adapter to auto-discover geotags in context metadata
     """
+    implements(IDiscoverGeoTags)
+
     def __init__(self, context):
         self.context = context
         self._key = None
+        self._metadata = ('title', 'description')
 
     @property
     def key(self):
+        """ AlchemyAPI key
+        """
         if self._key:
             return self._key
 
@@ -31,36 +36,68 @@ class DiscoverGeoTags(object):
         self._key = key
         return key
 
-    def __call__(self, metadata=('title', 'description')):
-        if not self.key:
-            raise StopIteration
+    def metadata():
+        """ Object's metadata to look in
+        """
+        def getMetadata(self):
+            """ Getter
+            """
+            return self._metadata
 
-        if isinstance(metadata, (unicode, str)):
-            metadata = (metadata,)
+        def setMetadata(self, value):
+            """ Setter
+            """
+            if isinstance(value, (str, unicode)):
+                value = (value,)
+            self._metadata = value
 
-        string = ""
-        for prop in metadata:
-            if getattr(self.context, 'getField', None):
-                # ATContentType
-                field = self.context.getField(prop)
-                if not field:
+        return property(getMetadata, setMetadata)
+    metadata = metadata()
+
+    def tags():
+        """ Tags property
+        """
+        def getTags(self):
+            """ Getter
+            """
+            if not self.key:
+                raise StopIteration
+
+            string = ""
+            for prop in self.metadata:
+                if getattr(self.context, 'getField', None):
+                    # ATContentType
+                    field = self.context.getField(prop)
+                    if not field:
+                        continue
+                    text = field.getAccessor(self.context)()
+                else:
+                    # ZCatalog brain
+                    text = getattr(self.context, prop, '')
+
+                if not text:
                     continue
-                text = field.getAccessor(self.context)()
-            else:
-                # ZCatalog brain
-                text = getattr(self.context, prop, '')
 
-            if not text:
-                continue
+                if not isinstance(text, (unicode, str)):
+                    continue
 
-            if not isinstance(text, (unicode, str)):
-                continue
+                string += '\n' + text
 
-            string += '\n' + text
+            discover = getUtility(IDiscoverGeographicalCoverage)
+            if not discover:
+                raise StopIteration
 
-        discover = getUtility(IDiscoverGeographicalCoverage)
-        if not discover:
-            raise StopIteration
+            string = string.strip()
+            if not string:
+                raise StopIteration
 
-        for item in discover(self.key, string):
-            yield item
+            for item in discover(self.key, string):
+                yield item
+
+        def setTags(self, value):
+            """ Setter
+            """
+            logger.info('DiscoverGeoTags.setTags not implemented')
+
+        return property(getTags, setTags)
+    tags = tags()

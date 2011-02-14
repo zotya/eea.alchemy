@@ -23,9 +23,8 @@
 
   <browser:page
     for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
-    name="alchemy.results"
-    template="zpt/results.pt"
-    class=".app.tool.Results"
+    name="alchemy.update"
+    class=".app.tool.Update"
     permission="cmf.ManagePortal"
     />
 

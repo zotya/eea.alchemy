@@ -1,5 +1,5 @@
 <div class="alchemy-search">
-  <form action="@@alchemy.results" method="post">
+  <form action="@@alchemy.update" method="post">
     <fieldset class="alchemy-box">
       <legend>
         <span i18n:translate="">Portal types</span>
@@ -74,7 +74,7 @@
 
     <div style="clear: both"> </div>
     <div class="alchemy-button">
-      <input type="submit" value="Search" i18n:attributes="value" />
+      <input type="submit" value="Apply" i18n:attributes="value" />
     </div>
   </form>
 </div>
