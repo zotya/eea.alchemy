@@ -168,14 +168,14 @@ class IDiscoverTags(Interface):
         >>> discover = getAdapter(self.sandbox, IDiscoverTags)
         >>> discover.metadata = 'title'
         >>> [tag.get('text', '') for tag in discover.tags]
-        ['new land cover']
+        [u'new land cover']
 
         This adapter can also be applied on ZCatalog brains
 
         >>> discover = getAdapter(self.brain, IDiscoverTags)
         >>> discover.metadata = 'Title'
         >>> [tag.get('text', '') for tag in discover.tags]
-        ['new land cover']
+        [u'new land cover']
 
     """
     metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
