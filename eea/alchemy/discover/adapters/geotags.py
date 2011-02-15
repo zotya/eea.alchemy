@@ -16,6 +16,7 @@ class DiscoverGeoTags(object):
     def __init__(self, context):
         self.context = context
         self._key = None
+        self.field = 'location'
         self._metadata = ('title', 'description')
 
     @property
@@ -97,7 +98,45 @@ class DiscoverGeoTags(object):
         def setTags(self, value):
             """ Setter
             """
-            logger.info('DiscoverGeoTags.setTags not implemented')
+            doc = self.context
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+
+            field = doc.getField(self.field)
+            if not field:
+                logger.warn('%s has no %s schema field. location not set',
+                            doc.absolute_url(1), self.field)
+                return
+
+            mutator = field.getMutator(doc)
+            if not mutator:
+                logger.warn("Can't edit field %s for doc %s",
+                            self.field, doc.absolute_url(1))
+                return
+
+            current = field.getAccessor(doc)()
+            if current and isinstance(current, (str, unicode)):
+                # Location already set, skip as we don't want to mess it
+                return
+
+            tags = set(tag.get('text') for tag in self.tags)
+            if isinstance(current, (str, unicode)):
+                tags.add(current)
+            else:
+                tags.union(current)
+
+            if not tags:
+                return
+
+            tags = list(tags)
+            tags.sort()
+            if isinstance(current, (str, unicode)):
+                tags = ', '.join(tags)
+
+            logger.info('Update %s for %s. Before: %s, After: %s',
+                        self.field, doc.absolute_url(1), current, tags)
+            mutator(tags)
 
         return property(getTags, setTags)
     tags = tags()

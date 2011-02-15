@@ -15,7 +15,7 @@ class DiscoverTime(object):
     def __init__(self, context):
         self.context = context
         self.field = 'temporalCoverage'
-        self._metadata = ('Title', 'Description')
+        self._metadata = ('title', 'description')
 
     def metadata():
         """ Object's metadata to look in

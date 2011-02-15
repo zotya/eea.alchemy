@@ -33,7 +33,7 @@ jQuery.fn.EEAlchemy = function(settings){
 
       self.msg = jQuery('<div>').addClass('alchemy-msg').hide();
       self.msg.ajaxError(function(evt, request, settings){
-        self.options.search_end('ERROR: Please try again later');
+        self.options.search_end(form, 'ERROR: Please try again later');
       });
       jQuery('input[type=submit]', form).after(self.msg);
     },
