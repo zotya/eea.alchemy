@@ -61,7 +61,7 @@ class DiscoverGeoTags(object):
             """ Getter
             """
             if not self.key:
-                raise StopIteration
+                return
 
             string = ""
             for prop in self.metadata:
@@ -85,11 +85,11 @@ class DiscoverGeoTags(object):
 
             discover = getUtility(IDiscoverGeographicalCoverage)
             if not discover:
-                raise StopIteration
+                return
 
             string = string.strip()
             if not string:
-                raise StopIteration
+                return
 
             for item in discover(self.key, string):
                 yield item

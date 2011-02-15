@@ -16,6 +16,7 @@ class DiscoverTags(object):
     def __init__(self, context):
         self.context = context
         self._key = None
+        self.field = 'subject'
         self._metadata = ('title', 'description')
 
     @property
@@ -43,7 +44,7 @@ class DiscoverTags(object):
         ctool = getToolByName(self.context, 'portal_catalog')
         index = ctool.Indexes.get('Subject', None)
         if not index:
-            raise StopIteration
+            return
         for value in index.uniqueValues():
             yield value
 
@@ -71,9 +72,6 @@ class DiscoverTags(object):
         def getTags(self):
             """ Getter
             """
-            if not self.key:
-                raise StopIteration
-
             string = ""
             for prop in self.metadata:
                 if getattr(self.context, 'getField', None):
@@ -92,28 +90,43 @@ class DiscoverTags(object):
                 if not isinstance(text, (unicode, str)):
                     continue
 
-                string += '\n' + text
+                if isinstance(text, unicode):
+                    text = text.encode('utf-8')
 
-            discover = getUtility(IDiscoverKeywords)
-            if not discover:
-                raise StopIteration
+                string += '\n' + text
 
             string = string.strip()
             if not string:
-                raise StopIteration
+                return
 
-            duplicates = []
-            for item in discover(self.key, string):
-                duplicates.append(item['text'])
+            discover = getUtility(IDiscoverKeywords)
+            duplicates = set()
+            items = discover(self.key, string)
+            for item in items:
+                keyword = item.get('text')
+                if not isinstance(keyword, unicode):
+                    keyword = keyword.decode('utf-8')
+                    item['text'] = keyword
+
+                keyword = keyword.lower()
+                if keyword in duplicates:
+                    continue
+
+                duplicates.add(keyword)
                 yield item
 
             # Search in portal_catalog existing keywords
             for keyword in self.existing:
-                if keyword in duplicates:
+                if isinstance(keyword, str):
+                    keyword = keyword.decode('utf-8')
+
+                lower = keyword.lower()
+                if lower in duplicates:
                     continue
-                if keyword.lower() not in string.lower():
+                if lower not in string.decode('utf-8').lower():
                     continue
 
+                duplicates.add(lower)
                 yield {
                     'relevance': '100.0',
                     'text': keyword
@@ -122,7 +135,50 @@ class DiscoverTags(object):
         def setTags(self, value):
             """ Setter
             """
-            logger.exception('DiscoverTags.setTags not implemented')
+            doc = self.context
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+
+            field = doc.getField(self.field)
+            if not field:
+                logger.warn('%s has no %s schema field. Keywords not set',
+                            doc.absolute_url(1), self.field)
+                return
+
+            mutator = field.getMutator(doc)
+            if not mutator:
+                logger.warn("Can't edit field %s for doc %s",
+                            self.field, doc.absolute_url(1))
+                return
+
+            tags = set(tag.get('text') for tag in self.tags)
+            current = field.getAccessor(doc)()
+            if isinstance(current, (str, unicode)):
+                current = (current,)
+
+            duplicates = set(key.lower() for key in tags)
+            for tag in current:
+                if isinstance(tag, str):
+                    tag = tag.decode('utf-8')
+                lower = tag.lower()
+                if lower in duplicates:
+                    continue
+
+                tags.add(tag)
+                duplicates.add(lower)
+
+            if not set(tag.lower() for tag in tags).difference(
+                set(tag.lower() for tag in current)):
+                return
+
+            tags = list(tags)
+            tags.sort()
+
+            logger.info('Update %s for %s. Before: %s, After: %s',
+                        self.field, doc.absolute_url(1), current, tags)
+            mutator(tags)
+            doc.reindexObject(idxs=['Subject'])
 
         return property(getTags, setTags)
     tags = tags()

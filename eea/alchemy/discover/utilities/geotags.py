@@ -51,13 +51,13 @@ class DiscoverGeographicalCoverage(object):
 
         if not self.alchemy:
             logger.exception('You need to provide a valid Alchemy API key')
-            raise StopIteration
+            return
 
         try:
             res = self.alchemy.TextGetRankedNamedEntities(text)
         except Exception, err:
             logger.exception(err)
-            raise StopIteration
+            return
 
         for entity in res.get('entities', []):
             etype = entity.get('type', '')

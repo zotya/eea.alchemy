@@ -30,6 +30,12 @@ jQuery.fn.EEAlchemy = function(settings){
         self.options.search(form);
         return false;
       });
+
+      self.msg = jQuery('<div>').addClass('alchemy-msg').hide();
+      self.msg.ajaxError(function(evt, request, settings){
+        self.options.search_end('ERROR: Please try again later');
+      });
+      jQuery('input[type=submit]', form).after(self.msg);
     },
 
     // Validate search form
@@ -69,10 +75,8 @@ jQuery.fn.EEAlchemy = function(settings){
 
     search_end: function(form, message){
       jQuery('#eea-alchemy-loader').hide();
-      var msg = jQuery('<div>')
-        .addClass('alchemy-msg')
-        .text(message);
-      jQuery('input[type=submit]', form).after(msg);
+      self.msg.text(message);
+      self.msg.show();
     },
 
     search: function(form){

@@ -63,11 +63,11 @@ class DiscoverTime(object):
 
             discover = getUtility(IDiscoverTemporalCoverage)
             if not discover:
-                raise StopIteration
+                return
 
             string = string.strip()
             if not string:
-                raise StopIteration
+                return
 
             for item in discover(string):
                 yield item

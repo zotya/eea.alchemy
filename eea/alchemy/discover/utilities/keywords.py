@@ -41,13 +41,13 @@ class DiscoverKeywords(object):
         self._key = key
         if not self.alchemy:
             logger.exception('You need to provide a valid Alchemy API key')
-            raise StopIteration
+            return
 
         try:
             res = self.alchemy.TextGetRankedKeywords(text)
         except Exception, err:
             logger.exception(err)
-            raise StopIteration
+            return
 
         for keyword in res.get('keywords', []):
             yield keyword
