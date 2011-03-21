@@ -8,6 +8,8 @@ product_globals = globals()
 # Import PloneTestCase - this registers more products with Zope as a side effect
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
+import logging
+logger = logging.getLogger('eea.alchemy.tests.base')
 
 @onsetup
 def setup_eea_alchemy():
@@ -26,9 +28,9 @@ def setup_eea_alchemy():
 
     try:
         ptc.installPackage('eea.alchemy')
-    except AttributeError:
+    except AttributeError, err:
         #BBB Plone 2.5
-        pass
+        logger.info(err)
 
     from zope.component import provideUtility
     provideUtility(FakeAlchemyAPI(), IAlchemyAPI)
@@ -37,8 +39,9 @@ def setup_eea_alchemy():
     #BBB Plone 2.5
     try:
         import Products.FiveSite
-    except ImportError:
-        pass
+        Products.FiveSite
+    except ImportError, err:
+        logger.info(err)
     else:
         ptc.installProduct('FiveSite')
 

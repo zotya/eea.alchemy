@@ -1,5 +1,5 @@
 import urllib
-import sys
+#import sys
 import simplejson as json
 
 class AlchemyAPI_Params(object):
@@ -390,8 +390,8 @@ class AlchemyAPI(object):
         if len(self._apiKey) < 5:
             raise 'Error setting API key.'
     def loadAPIKey(self, filename):
-        file = open(filename, 'r')
-        line = file.readline()
+        lfile = open(filename, 'r')
+        line = lfile.readline()
         self._apiKey = line.strip();
         if len(self._apiKey) < 5:
             raise 'Error loading API key.'

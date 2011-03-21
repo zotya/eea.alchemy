@@ -17,108 +17,111 @@ class DiscoverTime(object):
         self.field = 'temporalCoverage'
         self._metadata = ('title', 'description')
 
-    def metadata():
-        """ Object's metadata to look in
+    #def metadata():
+    #    """ Object's metadata to look in
+    #    """
+    def getMetadata(self):
+        """ Getter
         """
-        def getMetadata(self):
-            """ Getter
-            """
-            return self._metadata
+        return self._metadata
 
-        def setMetadata(self, value):
-            """ Setter
-            """
-            if isinstance(value, (str, unicode)):
-                value = (value,)
-            self._metadata = value
-
-        return property(getMetadata, setMetadata)
-    metadata = metadata()
-
-    def tags():
-        """ Tags property
+    def setMetadata(self, value):
+        """ Setter
         """
-        def getTags(self):
-            """ Getter
-            """
-            string = ""
-            for prop in self.metadata:
-                if getattr(self.context, 'getField', None):
-                    # ATContentType
-                    field = self.context.getField(prop)
-                    if not field:
-                        continue
-                    text = field.getAccessor(self.context)()
-                else:
-                    # ZCatalog brain
-                    text = getattr(self.context, prop, '')
+        if isinstance(value, (str, unicode)):
+            value = (value,)
+        self._metadata = value
 
-                if not text:
+    #return property(getMetadata, setMetadata)
+    #metadata = metadata()
+    metadata = property(getMetadata, setMetadata)
+
+    #def tags():
+    #    """ Tags property
+    #    """
+    def getTags(self):
+        """ Getter
+        """
+        string = ""
+        for prop in self.metadata:
+            if getattr(self.context, 'getField', None):
+                # ATContentType
+                field = self.context.getField(prop)
+                if not field:
                     continue
+                text = field.getAccessor(self.context)()
+            else:
+                # ZCatalog brain
+                text = getattr(self.context, prop, '')
 
-                if not isinstance(text, (unicode, str)):
-                    continue
+            if not text:
+                continue
 
-                string += '\n' + text
+            if not isinstance(text, (unicode, str)):
+                continue
 
-            discover = getUtility(IDiscoverTemporalCoverage)
-            if not discover:
-                return
+            string += '\n' + text
 
-            string = string.strip()
-            if not string:
-                return
+        discover = getUtility(IDiscoverTemporalCoverage)
+        if not discover:
+            return
 
-            for item in discover(string):
-                yield item
+        string = string.strip()
+        if not string:
+            return
 
-        def setTags(self, value):
-            """ Setter
-            """
-            doc = self.context
-            # ZCatalog brain
-            if getattr(doc, 'getObject', None):
-                doc = doc.getObject()
+        for item in discover(string):
+            yield item
 
-            field = doc.getField(self.field)
-            if not field:
-                logger.warn('%s has no %s schema field. Time coverage not set',
-                            doc.absolute_url(1), self.field)
-                return
+    def setTags(self, value):
+        """ Setter
+        """
+        doc = self.context
+        # ZCatalog brain
+        if getattr(doc, 'getObject', None):
+            doc = doc.getObject()
 
-            mutator = field.getMutator(doc)
-            if not mutator:
-                logger.warn("Can't edit field %s for doc %s",
-                            self.field, doc.absolute_url(1))
-                return
+        field = doc.getField(self.field)
+        if not field:
+            logger.warn('%s has no %s schema field. Time coverage not set',
+                        doc.absolute_url(1), self.field)
+            return
 
-            tags = set()
-            for tag in self.tags:
-                text = tag.get('text')
-                if not text:
-                    continue
-                try:
-                    start, end = text.split('-')
-                    start, end = int(start), int(end)
-                    tag = range(start, end+1)
-                except Exception, err:
-                    logger.exception(err)
-                    continue
-                else:
-                    tags = tags.union(tag)
+        mutator = field.getMutator(doc)
+        if not mutator:
+            logger.warn("Can't edit field %s for doc %s",
+                        self.field, doc.absolute_url(1))
+            return
 
-            current = [int(year) for year in field.getAccessor(doc)()]
-            tags = tags.union(current)
-            tags = list(tags)
-            tags.sort(reverse=True)
-            if not set(tags).difference(current):
-                return
+        tags = set()
+        for tag in self.tags:
+            text = tag.get('text')
+            if not text:
+                continue
+            try:
+                start, end = text.split('-')
+                start, end = int(start), int(end)
+                tag = range(start, end+1)
+            except Exception, err:
+                logger.exception(err)
+                continue
+            else:
+                tags = tags.union(tag)
 
-            tags = [str(year) for year in tags]
-            logger.info('Update %s for %s. Before: %s, After: %s',
-                        self.field, doc.absolute_url(1), current, tags)
-            mutator(tags)
-            doc.reindexObject(idxs=['getTemporalCoverage'])
+        current = [int(year) for year in field.getAccessor(doc)()]
+        tags = tags.union(current)
+        tags = list(tags)
+        tags.sort(reverse=True)
+        if not set(tags).difference(current):
+            return
 
-        return property(getTags, setTags)
-    tags = tags()
+        tags = [str(yr) for yr in tags]
+        logger.info('Update %s for %s. Before: %s, After: %s',
+                    self.field, doc.absolute_url(1), current, tags)
+        mutator(tags)
+        doc.reindexObject(idxs=['getTemporalCoverage'])
+
+    #return property(getTags, setTags)
+    #tags = tags()
+    tags = property(getTags, setTags)
+

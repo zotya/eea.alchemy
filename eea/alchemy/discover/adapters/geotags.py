@@ -37,106 +37,106 @@ class DiscoverGeoTags(object):
         self._key = key
         return key
 
-    def metadata():
-        """ Object's metadata to look in
+    #def metadata():
+    #    """ Object's metadata to look in
+    #    """
+    def getMetadata(self):
+        """ Getter
         """
-        def getMetadata(self):
-            """ Getter
-            """
-            return self._metadata
+        return self._metadata
 
-        def setMetadata(self, value):
-            """ Setter
-            """
-            if isinstance(value, (str, unicode)):
-                value = (value,)
-            self._metadata = value
-
-        return property(getMetadata, setMetadata)
-    metadata = metadata()
-
-    def tags():
-        """ Tags property
+    def setMetadata(self, value):
+        """ Setter
         """
-        def getTags(self):
-            """ Getter
-            """
-            if not self.key:
-                return
+        if isinstance(value, (str, unicode)):
+            value = (value,)
+        self._metadata = value
 
-            string = ""
-            for prop in self.metadata:
-                if getattr(self.context, 'getField', None):
-                    # ATContentType
-                    field = self.context.getField(prop)
-                    if not field:
-                        continue
-                    text = field.getAccessor(self.context)()
-                else:
-                    # ZCatalog brain
-                    text = getattr(self.context, prop, '')
+    #return property(getMetadata, setMetadata)
+    metadata = property(getMetadata, setMetadata)
 
-                if not text:
+    #def tags():
+    #    """ Tags property
+    #    """
+    def getTags(self):
+        """ Getter
+        """
+        if not self.key:
+            return
+
+        string = ""
+        for prop in self.metadata:
+            if getattr(self.context, 'getField', None):
+                # ATContentType
+                field = self.context.getField(prop)
+                if not field:
                     continue
-
-                if not isinstance(text, (unicode, str)):
-                    continue
-
-                string += '\n' + text
-
-            discover = getUtility(IDiscoverGeographicalCoverage)
-            if not discover:
-                return
-
-            string = string.strip()
-            if not string:
-                return
-
-            for item in discover(self.key, string):
-                yield item
-
-        def setTags(self, value):
-            """ Setter
-            """
-            doc = self.context
-            # ZCatalog brain
-            if getattr(doc, 'getObject', None):
-                doc = doc.getObject()
-
-            field = doc.getField(self.field)
-            if not field:
-                logger.warn('%s has no %s schema field. location not set',
-                            doc.absolute_url(1), self.field)
-                return
-
-            mutator = field.getMutator(doc)
-            if not mutator:
-                logger.warn("Can't edit field %s for doc %s",
-                            self.field, doc.absolute_url(1))
-                return
-
-            current = field.getAccessor(doc)()
-            if current and isinstance(current, (str, unicode)):
-                # Location already set, skip as we don't want to mess it
-                return
-
-            tags = set(tag.get('text') for tag in self.tags)
-            if isinstance(current, (str, unicode)):
-                tags.add(current)
+                text = field.getAccessor(self.context)()
             else:
-                tags.union(current)
+                # ZCatalog brain
+                text = getattr(self.context, prop, '')
 
-            if not tags:
-                return
+            if not text:
+                continue
 
-            tags = list(tags)
-            tags.sort()
-            if isinstance(current, (str, unicode)):
-                tags = ', '.join(tags)
+            if not isinstance(text, (unicode, str)):
+                continue
 
-            logger.info('Update %s for %s. Before: %s, After: %s',
-                        self.field, doc.absolute_url(1), current, tags)
-            mutator(tags)
+            string += '\n' + text
 
-        return property(getTags, setTags)
-    tags = tags()
+        discover = getUtility(IDiscoverGeographicalCoverage)
+        if not discover:
+            return
+
+        string = string.strip()
+        if not string:
+            return
+
+        for item in discover(self.key, string):
+            yield item
+
+    def setTags(self, value):
+        """ Setter
+        """
+        doc = self.context
+        # ZCatalog brain
+        if getattr(doc, 'getObject', None):
+            doc = doc.getObject()
+
+        field = doc.getField(self.field)
+        if not field:
+            logger.warn('%s has no %s schema field. location not set',
+                        doc.absolute_url(1), self.field)
+            return
+
+        mutator = field.getMutator(doc)
+        if not mutator:
+            logger.warn("Can't edit field %s for doc %s",
+                        self.field, doc.absolute_url(1))
+            return
+
+        current = field.getAccessor(doc)()
+        if current and isinstance(current, (str, unicode)):
+            # Location already set, skip as we don't want to mess it
+            return
+
+        tags = set(tag.get('text') for tag in self.tags)
+        if isinstance(current, (str, unicode)):
+            tags.add(current)
+        else:
+            tags.union(current)
+
+        if not tags:
+            return
+
+        tags = list(tags)
+        tags.sort()
+        if isinstance(current, (str, unicode)):
+            tags = ', '.join(tags)
+
+        logger.info('Update %s for %s. Before: %s, After: %s',
+                    self.field, doc.absolute_url(1), current, tags)
+        mutator(tags)
+
+    #return property(getTags, setTags)
+    tags = property(getTags, setTags)
