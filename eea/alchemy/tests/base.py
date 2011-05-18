@@ -18,10 +18,10 @@ def setup_eea_alchemy():
     The @onsetup decorator causes the execution of this body to be deferred
     until the setup of the Plone site testing layer.
     """
-    #fiveconfigure.debug_mode = True
-    #import eea.alchemy
-    #zcml.load_config('configure.zcml', eea.alchemy)
-    #fiveconfigure.debug_mode = False
+    fiveconfigure.debug_mode = True
+    import eea.alchemy
+    zcml.load_config('configure.zcml', eea.alchemy)
+    fiveconfigure.debug_mode = False
 
     ptc.installPackage('eea.alchemy')
 

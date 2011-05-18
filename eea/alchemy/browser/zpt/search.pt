@@ -7,7 +7,7 @@
       </legend>
       <div class="alchemy-box-content">
       <ul>
-        <tal:types repeat="term python:template.portal_types">
+        <tal:types repeat="term python:view.portal_types">
         <li>
           <input type="checkbox" tal:attributes="
             name string:portal_type;
@@ -31,7 +31,7 @@
       </legend>
       <div class="alchemy-box-content">
         <ul>
-          <tal:schema repeat="term python:template.atschema">
+          <tal:schema repeat="term python:view.atschema">
           <li>
             <input type="checkbox" checked="checked" tal:attributes="
               name string:lookin;
@@ -55,7 +55,7 @@
       </legend>
       <div class="alchemy-box-content">
         <ul>
-          <tal:schema repeat="term python:template.discover">
+          <tal:schema repeat="term python:view.discover">
           <li>
             <input type="checkbox" checked="checked" tal:attributes="
               name string:discover;
