@@ -13,6 +13,7 @@ def setupAlchemy(site):
         alchemy = getattr(ptool, 'alchemyapi')
         alchemy.manage_addProperty('key', '', 'string')
 
+
 def importVarious(self):
     """ Various imports
     """
@@ -23,14 +24,12 @@ def importVarious(self):
     setup_tool = getToolByName(site, 'portal_setup')
 
     # jQuery
-    setup_tool.setImportContext('profile-eea.jquery:01-jquery')
-    setup_tool.runAllImportSteps()
+    setup_tool.runAllImportStepsFromProfile('profile-eea.jquery:01-jquery')
 
     # jQuery UI
-    setup_tool.setImportContext('profile-eea.jquery:02-ui')
-    setup_tool.runAllImportSteps()
+    setup_tool.runAllImportStepsFromProfile('profile-eea.jquery:02-ui')
 
-    setup_tool.setImportContext('profile-eea.alchemy:default')
+    #setup_tool.setImportContext('profile-eea.alchemy:default')
 
     # Setup alchemy API
     setupAlchemy(site)

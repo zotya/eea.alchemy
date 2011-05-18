@@ -18,32 +18,25 @@ def setup_eea_alchemy():
     The @onsetup decorator causes the execution of this body to be deferred
     until the setup of the Plone site testing layer.
     """
-    fiveconfigure.debug_mode = True
-    import Products.Five
-    zcml.load_config('meta.zcml', Products.Five)
+    #fiveconfigure.debug_mode = True
+    #import eea.alchemy
+    #zcml.load_config('configure.zcml', eea.alchemy)
+    #fiveconfigure.debug_mode = False
 
-    import eea.alchemy
-    zcml.load_config('configure.zcml', eea.alchemy)
-    fiveconfigure.debug_mode = False
-
-    try:
-        ptc.installPackage('eea.alchemy')
-    except AttributeError, err:
-        #BBB Plone 2.5
-        logger.info(err)
+    ptc.installPackage('eea.alchemy')
 
     from zope.component import provideUtility
     provideUtility(FakeAlchemyAPI(), IAlchemyAPI)
-    ptc.installProduct('Five')
+    #ptc.installProduct('Five')
 
     #BBB Plone 2.5
-    try:
-        import Products.FiveSite
-        Products.FiveSite
-    except ImportError, err:
-        logger.info(err)
-    else:
-        ptc.installProduct('FiveSite')
+    #try:
+        #import Products.FiveSite
+        #Products.FiveSite
+    #except ImportError, err:
+        #logger.info(err)
+    #else:
+        #ptc.installProduct('FiveSite')
 
 setup_eea_alchemy()
 ptc.setupPloneSite(extension_profiles=('eea.alchemy:default',))
