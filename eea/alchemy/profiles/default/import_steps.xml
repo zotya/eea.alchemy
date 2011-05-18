@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<import-steps>
-  <!--<import-step id="eea-alchemy-various" version="20110113-01"
-    title="EEA Alchemy Various"
-    handler="eea.alchemy.setuphandlers.importVarious">
-    Additional import steps
-  </import-step>-->
-</import-steps>

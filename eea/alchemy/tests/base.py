@@ -3,12 +3,12 @@
 from Products.Five import zcml
 from Products.Five import fiveconfigure
 from fake import FakeAlchemyAPI, IAlchemyAPI
-product_globals = globals()
-
-# Import PloneTestCase - this registers more products with Zope as a side effect
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
+from zope.component import provideUtility
+import eea.alchemy
 import logging
+
 logger = logging.getLogger('eea.alchemy.tests.base')
 
 @onsetup
@@ -19,24 +19,10 @@ def setup_eea_alchemy():
     until the setup of the Plone site testing layer.
     """
     fiveconfigure.debug_mode = True
-    import eea.alchemy
     zcml.load_config('configure.zcml', eea.alchemy)
     fiveconfigure.debug_mode = False
 
-    ptc.installPackage('eea.alchemy')
-
-    from zope.component import provideUtility
     provideUtility(FakeAlchemyAPI(), IAlchemyAPI)
-    #ptc.installProduct('Five')
-
-    #BBB Plone 2.5
-    #try:
-        #import Products.FiveSite
-        #Products.FiveSite
-    #except ImportError, err:
-        #logger.info(err)
-    #else:
-        #ptc.installProduct('FiveSite')
 
 setup_eea_alchemy()
 ptc.setupPloneSite(extension_profiles=('eea.alchemy:default',))

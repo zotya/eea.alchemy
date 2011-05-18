@@ -1,10 +1,12 @@
-<configure
-  xmlns="http://namespaces.zope.org/zope"
-  i18n_domain="eea.alchemy">
+<configure xmlns="http://namespaces.zope.org/zope"
+           i18n_domain="eea">
 
   <include package="eea.jquery" />
-  <include file="profiles.zcml" />
+  <include package="eea.faceted.vocabularies" />
+
   <include package=".browser" />
   <include package=".discover" />
+
+  <include file="profiles.zcml" />
 
 </configure>

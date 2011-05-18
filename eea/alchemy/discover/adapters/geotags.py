@@ -37,9 +37,6 @@ class DiscoverGeoTags(object):
         self._key = key
         return key
 
-    #def metadata():
-    #    """ Object's metadata to look in
-    #    """
     def getMetadata(self):
         """ Getter
         """
@@ -52,12 +49,8 @@ class DiscoverGeoTags(object):
             value = (value,)
         self._metadata = value
 
-    #return property(getMetadata, setMetadata)
     metadata = property(getMetadata, setMetadata)
 
-    #def tags():
-    #    """ Tags property
-    #    """
     def getTags(self):
         """ Getter
         """
@@ -138,5 +131,4 @@ class DiscoverGeoTags(object):
                     self.field, doc.absolute_url(1), current, tags)
         mutator(tags)
 
-    #return property(getTags, setTags)
     tags = property(getTags, setTags)

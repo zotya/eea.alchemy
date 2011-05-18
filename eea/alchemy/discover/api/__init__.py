@@ -1,8 +1,11 @@
+""" Alchemy API
+"""
 import urllib
-#import sys
-import simplejson as json
+import json
 
 class AlchemyAPI_Params(object):
+    """ Alchemy API params
+    """
     _url = ""
     _html = ""
     _text = ""
@@ -46,7 +49,6 @@ class AlchemyAPI_Params(object):
         if self._customParameters != "":
             retString += self._customParameters
         return retString
-
 
 class AlchemyAPI_NamedEntityParams(AlchemyAPI_Params):
     _disambiguate = 0
@@ -182,7 +184,6 @@ class AlchemyAPI_CategoryParams(AlchemyAPI_Params):
             retString += "&xpath=" + urllib.quote(self._xPath)
         return retString
 
-
 class AlchemyAPI_LanguageParams(AlchemyAPI_Params):
     _sourceText = ""
     _cQuery = ""
@@ -214,7 +215,6 @@ class AlchemyAPI_LanguageParams(AlchemyAPI_Params):
         if self._xPath != "":
             retString += "&xpath=" + urllib.quote(self._xPath)
         return retString
-
 
 class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
     _sourceText = ""
@@ -272,7 +272,6 @@ class AlchemyAPI_ConceptParams(AlchemyAPI_Params):
         if self._xPath != "":
             retString += "&xpath=" + urllib.quote(self._xPath)
         return retString
-
 
 class AlchemyAPI_KeywordParams(AlchemyAPI_Params):
     _sourceText = ""
@@ -339,7 +338,6 @@ class AlchemyAPI_KeywordParams(AlchemyAPI_Params):
             retString += "&keywordExtractMode=" + urllib.quote(self._keywordExtractMode)
         return retString
 
-
 class AlchemyAPI_TextParams(AlchemyAPI_Params):
     _useMetaData = ""
     _extractLinks = ""
@@ -364,7 +362,6 @@ class AlchemyAPI_TextParams(AlchemyAPI_Params):
         if self._extractLinks != "":
             retString += "&extractLinks=" + str(self._extractLinks)
         return retString
-
 
 class AlchemyAPI_ConstraintQueryParams(AlchemyAPI_Params):
     _cQuery = ""
@@ -591,7 +588,6 @@ class AlchemyAPI(object):
             raise 'Please load an API key.'
         if len(url) < 10:
             raise 'Please specify a URL to analyze.'
-
     def PostRequest(self, apiCall, apiPrefix, paramObject):
         endpoint = 'http://' + self._hostPrefix + '.alchemyapi.com/calls/' + apiPrefix + '/' + apiCall
         argText = 'apikey=' + self._apiKey + paramObject.getParameterString()
@@ -602,7 +598,6 @@ class AlchemyAPI(object):
         if result.get('status') != "OK":
             raise 'Error making API call.'
         return result
-
     def GetRequest(self, apiCall, apiPrefix, paramObject):
         endpoint = 'http://' + self._hostPrefix + '.alchemyapi.com/calls/' + apiPrefix + '/' + apiCall
         endpoint += '?apikey=' + self._apiKey + paramObject.getParameterString()

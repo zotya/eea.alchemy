@@ -1,3 +1,5 @@
+""" Fake
+"""
 from zope.interface import implements
 from eea.alchemy.discover.api import AlchemyAPI
 from eea.alchemy.interfaces import IAlchemyAPI
@@ -8,6 +10,8 @@ class FakeAlchemyAPI(AlchemyAPI):
     implements(IAlchemyAPI)
 
     def PostRequest(self, apiCall, apiPrefix, paramObject):
+        """ Post request
+        """
         template = {
             'entities': [],
             'language': 'english',

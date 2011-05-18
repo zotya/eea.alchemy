@@ -48,9 +48,6 @@ class DiscoverTags(object):
         for value in index.uniqueValues():
             yield value
 
-    #def metadata():
-    #    """ Object metadata to look in
-    #    """
     def getMetadata(self):
         """ Getter
         """
@@ -63,13 +60,8 @@ class DiscoverTags(object):
             value = (value,)
         self._metadata = value
 
-        #return property(getMetadata, setMetadata)
-    #metadata = metadata()
     metadata = property(getMetadata, setMetadata)
 
-    #def tags():
-    #    """ Tags property
-    #    """
     def getTags(self):
         """ Getter
         """
@@ -181,5 +173,4 @@ class DiscoverTags(object):
         mutator(tags)
         doc.reindexObject(idxs=['Subject'])
 
-    #return property(getTags, setTags)
     tags = property(getTags, setTags)
