@@ -10,7 +10,8 @@ VERSION = open(os.path.join(*PATH)).read().strip()
 setup(name=NAME,
       version=VERSION,
       description=("EEA Alchemy allows you to bulk auto-discover "
-                   "geographical coverage, temporal coverage, keywords and more"),
+                   "geographical coverage, temporal coverage, keywords "
+                   "and more"),
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[
