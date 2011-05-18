@@ -9,7 +9,7 @@ def setupAlchemy(site):
     """
     ptool = getToolByName(site, 'portal_properties')
     if 'alchemyapi' not in ptool.objectIds():
-        ptool.addPropertySheet(id='alchemyapi', title='Alcehmy API')
+        ptool.addPropertySheet(id='alchemyapi', title='Alchemy API')
         alchemy = getattr(ptool, 'alchemyapi')
         alchemy.manage_addProperty('key', '', 'string')
 
