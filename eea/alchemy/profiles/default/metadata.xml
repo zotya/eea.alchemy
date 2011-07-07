@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <metadata>
-    <version>1.0</version>
-    <dependencies>
-        <dependency>profile-eea.jquery:01-jquery</dependency>
-        <dependency>profile-eea.jquery:02-ui</dependency>
-    </dependencies>
+  <version>4.0</version>
+  <dependencies>
+    <dependency>profile-collective.js.jqueryui:default</dependency>
+  </dependencies>
 </metadata>

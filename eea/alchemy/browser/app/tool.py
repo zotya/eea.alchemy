@@ -56,7 +56,13 @@ class Search(BrowserView):
         """ Available portal types
         """
         voc = queryUtility(IVocabularyFactory,
-                           name=u"eea.faceted.vocabularies.FacetedPortalTypes")
+            name=u"eea.faceted.vocabularies.FacetedPortalTypes",
+            default=queryUtility(IVocabularyFactory,
+                name=u"plone.app.vocabularies.PortalTypes"))
+
+        if not voc:
+            return
+
         for term in voc(self.context):
             yield term
 
