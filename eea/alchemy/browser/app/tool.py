@@ -2,7 +2,7 @@
 """
 import logging
 from zope.component import queryUtility, queryAdapter
-from zope.app.schema.vocabulary import IVocabularyFactory
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from Products.statusmessages.interfaces import IStatusMessage
 
