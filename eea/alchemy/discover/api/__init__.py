@@ -1,6 +1,7 @@
 import urllib
 #import sys
 import simplejson as json
+from pprint import pformat
 
 class AlchemyAPI_Params(object):
     _url = ""
@@ -600,7 +601,7 @@ class AlchemyAPI(object):
         handle.close()
         result = json.loads(result)
         if result.get('status') != "OK":
-            raise 'Error making API call.'
+            raise 'Error making API call: %s' % pformat(result)
         return result
 
     def GetRequest(self, apiCall, apiPrefix, paramObject):
@@ -611,5 +612,5 @@ class AlchemyAPI(object):
         handle.close()
         result = json.loads(result)
         if result.get('status') != "OK":
-            raise 'Error making API call.'
+            raise 'Error making API call: %s' % pformat(result)
         return result

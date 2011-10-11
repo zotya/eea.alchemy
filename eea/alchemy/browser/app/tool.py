@@ -130,7 +130,7 @@ class Update(BrowserView):
         """
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
-        brains = ctool(Language='all', portal_type=ptype)
+        brains = ctool(Language='en', portal_type=ptype)
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 

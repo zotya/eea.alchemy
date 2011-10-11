@@ -3,6 +3,8 @@ Changelog
 
 0.2-dev - (unreleased)
 ----------------------
+ * Bug fix: Discover only for the English version of the document
+   [voineali #4614]
 
 0.1 - (2011-04-19)
 ------------------
