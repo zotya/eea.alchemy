@@ -1,6 +1,9 @@
 Changelog
 =========
 
+0.3-dev - (unreleased)
+----------------------
+
 0.2 - (2011-10-11)
 ------------------
  * Bug fix: Discover only for the English version of the document
