@@ -15,11 +15,6 @@ from eea.alchemy.interfaces import IDiscoverTime
 
 logger = logging.getLogger('eea.alchemy.tool')
 
-SCHEMA = (
-    ('Title', 'Title'),
-    ('Description', 'Description')
-)
-
 DISCOVER = (
     ('location', 'Geographical coverage'),
     ('temporalCoverage', 'Temporal coverage'),
@@ -56,12 +51,7 @@ class Search(BrowserView):
         """ Available portal types
         """
         voc = queryUtility(IVocabularyFactory,
-            name=u"eea.faceted.vocabularies.FacetedPortalTypes",
-            default=queryUtility(IVocabularyFactory,
-                name=u"plone.app.vocabularies.PortalTypes"))
-
-        if not voc:
-            return
+                           name=u"eea.faceted.vocabularies.FacetedPortalTypes")
 
         for term in voc(self.context):
             yield term
@@ -70,8 +60,13 @@ class Search(BrowserView):
     def atschema(self):
         """ Archetypes base schema
         """
-        for term in SCHEMA:
-            yield SimpleTerm(term[0], term[0], term[1])
+        voc = queryUtility(IVocabularyFactory,
+                           name=u"eea.faceted.vocabularies.CatalogIndexes")
+
+        for term in voc(self.context):
+            if not term.value:
+                continue
+            yield term
 
     @property
     def discover(self):

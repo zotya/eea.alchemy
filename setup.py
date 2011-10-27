@@ -31,6 +31,7 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'eea.faceted.vocabularies',
           'collective.js.jqueryui',
       ],
       entry_points="""

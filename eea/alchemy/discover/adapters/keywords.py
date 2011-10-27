@@ -150,7 +150,12 @@ class DiscoverTags(object):
         if isinstance(current, (str, unicode)):
             current = (current,)
 
-        duplicates = set(key.lower() for key in tags)
+        duplicates = set()
+        for tag in tags:
+            if isinstance(tag, str):
+                tag = tag.decode('utf-8')
+            duplicates.add(tag.lower())
+
         for tag in current:
             if isinstance(tag, str):
                 tag = tag.decode('utf-8')
@@ -167,8 +172,9 @@ class DiscoverTags(object):
 
         tags = list(tags)
         tags.sort()
+        tags = tuple(tags)
 
-        logger.info('Update %s for %s. Before: %s, After: %s',
+        logger.info('Update %s for %s.\n Before: %s,\n After:  %s',
                     self.field, doc.absolute_url(1), current, tags)
         mutator(tags)
         doc.reindexObject(idxs=['Subject'])

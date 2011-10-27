@@ -5,6 +5,9 @@ Changelog
 4.0-dev - (unreleased)
 ----------------------
 
+* Feature: Added possibility to auto-discover tags not only in Title and Description.
+  [voineali #4633]
+
 * Feature: Added upgrade steps
   [voineali #4392]
 

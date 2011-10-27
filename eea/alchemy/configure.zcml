@@ -1,7 +1,8 @@
 <configure xmlns="http://namespaces.zope.org/zope"
   i18n_domain="eea">
 
-  <include package="collective.js.jqueryui" />
+  <includeDependencies package="." />
+
   <include file="profiles.zcml" />
 
   <include package=".browser" />
