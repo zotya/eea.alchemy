@@ -18,10 +18,10 @@ Changelog
 0.1 - (2011-04-19)
 ------------------
 
- * Cleanup: of pyflakes warnings
-   [ichimdav #4141]
+* Cleanup: of pyflakes warnings
+  [ichimdav #4141]
 
- * Cleanup: of pylint violations
-   [ichimdav #4140]
+* Cleanup: of pylint violations
+  [ichimdav #4140]
 
- * Initial release
+* Initial release
