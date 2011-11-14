@@ -1,5 +1,2 @@
-""" Initialize
+""" EEA Alchemy package
 """
-def initialize(context):
-    """ Zope 2 """
-    pass

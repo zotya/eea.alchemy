@@ -1,14 +1,7 @@
-<configure
-  xmlns="http://namespaces.zope.org/zope"
-  xmlns:zcml="http://namespaces.zope.org/zcml"
-  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-  xmlns:five="http://namespaces.zope.org/five"
-  xmlns:cmf="http://namespaces.zope.org/cmf"
-  i18n_domain="eea.alchemy">
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+           i18n_domain="eea">
 
-  <five:registerPackage package="." initialize=".initialize" />
-
-  <!-- Default -->
   <genericsetup:registerProfile
     name="default"
     title="EEA Alchemy"

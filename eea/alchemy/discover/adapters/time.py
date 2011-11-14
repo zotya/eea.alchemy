@@ -17,9 +17,6 @@ class DiscoverTime(object):
         self.field = 'temporalCoverage'
         self._metadata = ('title', 'description')
 
-    #def metadata():
-    #    """ Object's metadata to look in
-    #    """
     def getMetadata(self):
         """ Getter
         """
@@ -32,13 +29,8 @@ class DiscoverTime(object):
             value = (value,)
         self._metadata = value
 
-    #return property(getMetadata, setMetadata)
-    #metadata = metadata()
     metadata = property(getMetadata, setMetadata)
 
-    #def tags():
-    #    """ Tags property
-    #    """
     def getTags(self):
         """ Getter
         """
@@ -121,7 +113,5 @@ class DiscoverTime(object):
         mutator(tags)
         doc.reindexObject(idxs=['getTemporalCoverage'])
 
-    #return property(getTags, setTags)
-    #tags = tags()
     tags = property(getTags, setTags)
 

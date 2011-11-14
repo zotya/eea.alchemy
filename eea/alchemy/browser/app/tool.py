@@ -2,7 +2,7 @@
 """
 import logging
 from zope.component import queryUtility, queryAdapter
-from zope.app.schema.vocabulary import IVocabularyFactory
+from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
 from Products.statusmessages.interfaces import IStatusMessage
 
@@ -14,11 +14,6 @@ from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverTime
 
 logger = logging.getLogger('eea.alchemy.tool')
-
-SCHEMA = (
-    ('Title', 'Title'),
-    ('Description', 'Description')
-)
 
 DISCOVER = (
     ('location', 'Geographical coverage'),
@@ -57,6 +52,7 @@ class Search(BrowserView):
         """
         voc = queryUtility(IVocabularyFactory,
                            name=u"eea.faceted.vocabularies.FacetedPortalTypes")
+
         for term in voc(self.context):
             yield term
 
@@ -64,8 +60,13 @@ class Search(BrowserView):
     def atschema(self):
         """ Archetypes base schema
         """
-        for term in SCHEMA:
-            yield SimpleTerm(term[0], term[0], term[1])
+        voc = queryUtility(IVocabularyFactory,
+                           name=u"eea.faceted.vocabularies.CatalogIndexes")
+
+        for term in voc(self.context):
+            if not term.value:
+                continue
+            yield term
 
     @property
     def discover(self):
@@ -130,7 +131,7 @@ class Update(BrowserView):
         """
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
-        brains = ctool(Language='en', portal_type=ptype)
+        brains = ctool(Language='all', portal_type=ptype)
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
