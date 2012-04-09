@@ -38,6 +38,58 @@ class DiscoverTags(object):
         return key
 
     @property
+    def preview(self):
+        """ Discovery preview
+        """
+        doc = self.context
+        # ZCatalog brain
+        if getattr(doc, 'getObject', None):
+            doc = doc.getObject()
+
+        field = doc.getField(self.field)
+        if not field:
+            logger.warn('%s has no %s schema field. Keywords not set',
+                        doc.absolute_url(1), self.field)
+            return
+
+        mutator = field.getMutator(doc)
+        if not mutator:
+            logger.warn("Can't edit field %s for doc %s",
+                        self.field, doc.absolute_url(1))
+            return
+
+        tags = set(tag.get('text') for tag in self.tags)
+        current = field.getAccessor(doc)()
+        if isinstance(current, (str, unicode)):
+            current = (current,)
+
+        duplicates = set()
+        for tag in tags:
+            if isinstance(tag, str):
+                tag = tag.decode('utf-8')
+            duplicates.add(tag.lower())
+
+        for tag in current:
+            if isinstance(tag, str):
+                tag = tag.decode('utf-8')
+            lower = tag.lower()
+            if lower in duplicates:
+                continue
+
+            tags.add(tag)
+            duplicates.add(lower)
+
+        if not set(tag.lower() for tag in tags).difference(
+            set(tag.lower() for tag in current)):
+            return
+
+        tags = list(tags)
+        tags.sort()
+        tags = tuple(tags)
+
+        return (tags, 'Update %s for %s.\n Before: %s,\n After:  %s' % (self.field, doc.absolute_url(1), current, tags))
+
+    @property
     def existing(self):
         """ Get existing keywords from ZCatalog
         """
@@ -128,55 +180,22 @@ class DiscoverTags(object):
     def setTags(self, value):
         """ Setter
         """
-        doc = self.context
-        # ZCatalog brain
-        if getattr(doc, 'getObject', None):
-            doc = doc.getObject()
+        discovery_data = self.preview
 
-        field = doc.getField(self.field)
-        if not field:
-            logger.warn('%s has no %s schema field. Keywords not set',
-                        doc.absolute_url(1), self.field)
-            return
+        if discovery_data:
+            discovery_tags = discovery_data[0]
+            discovery_info = discovery_data[1]
+            doc = self.context
 
-        mutator = field.getMutator(doc)
-        if not mutator:
-            logger.warn("Can't edit field %s for doc %s",
-                        self.field, doc.absolute_url(1))
-            return
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+            field = doc.getField(self.field)
+            mutator = field.getMutator(doc)
 
-        tags = set(tag.get('text') for tag in self.tags)
-        current = field.getAccessor(doc)()
-        if isinstance(current, (str, unicode)):
-            current = (current,)
+            logger.info(discovery_info)
 
-        duplicates = set()
-        for tag in tags:
-            if isinstance(tag, str):
-                tag = tag.decode('utf-8')
-            duplicates.add(tag.lower())
-
-        for tag in current:
-            if isinstance(tag, str):
-                tag = tag.decode('utf-8')
-            lower = tag.lower()
-            if lower in duplicates:
-                continue
-
-            tags.add(tag)
-            duplicates.add(lower)
-
-        if not set(tag.lower() for tag in tags).difference(
-            set(tag.lower() for tag in current)):
-            return
-
-        tags = list(tags)
-        tags.sort()
-        tags = tuple(tags)
-
-        logger.info('Update %s for %s.\n Before: %s,\n After:  %s',
-                    self.field, doc.absolute_url(1), current, tags)
-        mutator(tags)
-        doc.reindexObject(idxs=['Subject'])
+            mutator(discovery_tags)
+            doc.reindexObject(idxs=['Subject'])
 
     tags = property(getTags, setTags)

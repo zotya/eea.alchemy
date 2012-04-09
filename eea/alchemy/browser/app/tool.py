@@ -1,6 +1,7 @@
 """ Alchemy controllers
 """
 import logging
+import transaction
 from zope.component import queryUtility, queryAdapter
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm
@@ -114,7 +115,7 @@ class Update(BrowserView):
             self._form = self.request.form
         return self._form
 
-    def discover(self, brain, interface=None):
+    def discover(self, brain, interface=None, preview=False):
         """ Discover tags in brain
         """
         discover = queryAdapter(brain, interface)
@@ -124,7 +125,14 @@ class Update(BrowserView):
 
         lookin = self.form.get('lookin', [])
         discover.metadata = lookin
-        discover.tags = 'Update'
+        if preview:
+            discovery_data = discover.preview
+            if discovery_data:
+                return discovery_data[1]
+            else:
+                return
+        else:
+            discover.tags = 'Update'
 
     def save(self):
         """ Auto-discover tags and persist them in ZODB
@@ -138,24 +146,61 @@ class Update(BrowserView):
         logger.info('Applying alchemy %s auto-discover on %s %s objects. '
                     'Looking in %s', lookfor, len(brains), ptype, lookin)
 
+        count = 0
         for brain in brains:
+            count += 1
             if "location" in lookfor:
                 self.discover(brain, IDiscoverGeoTags)
-
             if 'temporalCoverage' in lookfor:
                 self.discover(brain, IDiscoverTime)
-
             if 'subject' in lookfor:
                 self.discover(brain, IDiscoverTags)
+            if not (count % 10):
+                transaction.commit()
+
         return 'Auto-discover complete'
+
+    def preview(self):
+        """ Preview auto-discovered tags
+        """
+        preview_report = '';
+        ctool = getToolByName(self.context, 'portal_catalog')
+        ptype = self.form.get('portal_type', None)
+        brains = ctool(Language='all', portal_type=ptype)
+        lookfor = self.form.get('discover', [])
+        lookin = self.form.get('lookin', [])
+
+        preview_report = '<strong>Applying alchemy %s auto-discover on %s %s objects. Looking in %s:</strong><ol>' % (lookfor, len(brains), ptype, lookin)
+        count = 0
+        for brain in brains:
+            count += 1
+
+            if "location" in lookfor:
+                data = self.discover(brain, IDiscoverGeoTags, True)
+            if 'temporalCoverage' in lookfor:
+                data = self.discover(brain, IDiscoverTime, True)
+            if 'subject' in lookfor:
+                data = self.discover(brain, IDiscoverTags, True)
+
+            if data:
+                preview_report += '<li>%s</li>' % data
+            if not (count % 10):
+                transaction.commit()
+        preview_report += '</ol>'
+
+        return preview_report
 
     def __call__(self, **kwargs):
         if self.request:
             kwargs.update(self.request.form)
         self._form = kwargs
         redirect = kwargs.get('redirect', '@@alchemy-tags.html')
+        preview = kwargs.get('preview', None)
         try:
-            msg = self.save()
+            if preview:
+                msg = self.preview()
+            else:
+                msg = self.save()
             return self._redirect(msg, redirect)
         except Exception, err:
             logger.exception(err)

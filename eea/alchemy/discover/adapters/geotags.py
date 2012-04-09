@@ -37,6 +37,49 @@ class DiscoverGeoTags(object):
         self._key = key
         return key
 
+    @property
+    def preview(self):
+        """ Discovery preview
+        """
+        doc = self.context
+        # ZCatalog brain
+        if getattr(doc, 'getObject', None):
+            doc = doc.getObject()
+
+        field = doc.getField(self.field)
+        if not field:
+            logger.warn('%s has no %s schema field. location not set',
+                        doc.absolute_url(1), self.field)
+            return
+
+        mutator = field.getMutator(doc)
+        if not mutator:
+            logger.warn("Can't edit field %s for doc %s",
+                        self.field, doc.absolute_url(1))
+            return
+
+        current = field.getAccessor(doc)()
+        if current and isinstance(current, (str, unicode)):
+            # Location already set, skip as we don't want to mess it
+            return
+
+        tags = set(tag.get('text') for tag in self.tags)
+        if current:
+            if isinstance(current, (str, unicode)):
+                tags.add(current)
+            else:
+                tags = tags.union(current)
+
+        if not tags:
+            return
+
+        tags = list(tags)
+        tags.sort()
+        if isinstance(current, (str, unicode)):
+            tags = ', '.join(tags)
+
+        return (tags, 'Update %s for %s. Before: %s, After: %s' % (self.field, doc.absolute_url(1), current, tags))
+
     def getMetadata(self):
         """ Getter
         """
@@ -91,44 +134,22 @@ class DiscoverGeoTags(object):
     def setTags(self, value):
         """ Setter
         """
-        doc = self.context
-        # ZCatalog brain
-        if getattr(doc, 'getObject', None):
-            doc = doc.getObject()
+        discovery_data = self.preview
 
-        field = doc.getField(self.field)
-        if not field:
-            logger.warn('%s has no %s schema field. location not set',
-                        doc.absolute_url(1), self.field)
-            return
+        if discovery_data:
+            discovery_tags = discovery_data[0]
+            discovery_info = discovery_data[1]
+            doc = self.context
 
-        mutator = field.getMutator(doc)
-        if not mutator:
-            logger.warn("Can't edit field %s for doc %s",
-                        self.field, doc.absolute_url(1))
-            return
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+            field = doc.getField(self.field)
+            mutator = field.getMutator(doc)
 
-        current = field.getAccessor(doc)()
-        if current and isinstance(current, (str, unicode)):
-            # Location already set, skip as we don't want to mess it
-            return
+            logger.info(discovery_info)
 
-        tags = set(tag.get('text') for tag in self.tags)
-        if isinstance(current, (str, unicode)):
-            tags.add(current)
-        else:
-            tags.union(current)
-
-        if not tags:
-            return
-
-        tags = list(tags)
-        tags.sort()
-        if isinstance(current, (str, unicode)):
-            tags = ', '.join(tags)
-
-        logger.info('Update %s for %s. Before: %s, After: %s',
-                    self.field, doc.absolute_url(1), current, tags)
-        mutator(tags)
+            mutator(discovery_tags)
+            doc.reindexObject(idxs=['location'])
 
     tags = property(getTags, setTags)

@@ -74,7 +74,8 @@
 
     <div style="clear: both"> </div>
     <div class="alchemy-button">
-      <input type="submit" value="Apply" i18n:attributes="value" />
+      <input type="submit" value="Apply" name="alchemy-apply" id="alchemy-apply" i18n:attributes="value" />
+      <input type="submit" value="Preview" name="alchemy-preview" id="alchemy-preview" i18n:attributes="value" />
     </div>
   </form>
 </div>

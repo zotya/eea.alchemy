@@ -17,6 +17,52 @@ class DiscoverTime(object):
         self.field = 'temporalCoverage'
         self._metadata = ('title', 'description')
 
+    @property
+    def preview(self):
+        """ Discovery preview
+        """
+        doc = self.context
+        # ZCatalog brain
+        if getattr(doc, 'getObject', None):
+            doc = doc.getObject()
+
+        field = doc.getField(self.field)
+        if not field:
+            logger.warn('%s has no %s schema field. Time coverage not set',
+                        doc.absolute_url(1), self.field)
+            return
+
+        mutator = field.getMutator(doc)
+        if not mutator:
+            logger.warn("Can't edit field %s for doc %s",
+                        self.field, doc.absolute_url(1))
+            return
+
+        tags = set()
+        for tag in self.tags:
+            text = tag.get('text')
+            if not text:
+                continue
+            try:
+                start, end = text.split('-')
+                start, end = int(start), int(end)
+                tag = range(start, end+1)
+            except Exception, err:
+                logger.exception(err)
+                continue
+            else:
+                tags = tags.union(tag)
+
+        current = [int(year) for year in field.getAccessor(doc)()]
+        tags = tags.union(current)
+        tags = list(tags)
+        tags.sort(reverse=True)
+        if not set(tags).difference(current):
+            return
+
+        tags = [str(yr) for yr in tags]
+        return (tags, 'Update %s for %s. Before: %s, After: %s' % (self.field, doc.absolute_url(1), current, tags))
+
     def getMetadata(self):
         """ Getter
         """
@@ -68,50 +114,22 @@ class DiscoverTime(object):
     def setTags(self, value):
         """ Setter
         """
-        doc = self.context
-        # ZCatalog brain
-        if getattr(doc, 'getObject', None):
-            doc = doc.getObject()
+        discovery_data = self.preview
 
-        field = doc.getField(self.field)
-        if not field:
-            logger.warn('%s has no %s schema field. Time coverage not set',
-                        doc.absolute_url(1), self.field)
-            return
+        if discovery_data:
+            discovery_tags = discovery_data[0]
+            discovery_info = discovery_data[1]
+            doc = self.context
+            # ZCatalog brain
+            if getattr(doc, 'getObject', None):
+                doc = doc.getObject()
+            field = doc.getField(self.field)
+            mutator = field.getMutator(doc)
 
-        mutator = field.getMutator(doc)
-        if not mutator:
-            logger.warn("Can't edit field %s for doc %s",
-                        self.field, doc.absolute_url(1))
-            return
+            logger.info(discovery_info)
 
-        tags = set()
-        for tag in self.tags:
-            text = tag.get('text')
-            if not text:
-                continue
-            try:
-                start, end = text.split('-')
-                start, end = int(start), int(end)
-                tag = range(start, end+1)
-            except Exception, err:
-                logger.exception(err)
-                continue
-            else:
-                tags = tags.union(tag)
-
-        current = [int(year) for year in field.getAccessor(doc)()]
-        tags = tags.union(current)
-        tags = list(tags)
-        tags.sort(reverse=True)
-        if not set(tags).difference(current):
-            return
-
-        tags = [str(yr) for yr in tags]
-        logger.info('Update %s for %s. Before: %s, After: %s',
-                    self.field, doc.absolute_url(1), current, tags)
-        mutator(tags)
-        doc.reindexObject(idxs=['getTemporalCoverage'])
+            mutator(discovery_tags)
+            doc.reindexObject(idxs=['getTemporalCoverage'])
 
     tags = property(getTags, setTags)
 

@@ -7,6 +7,7 @@ Search form
 jQuery.fn.EEAlchemy = function(settings){
   var self = this;
   self.valid = false;
+  self.preview = true;
 
   self.options = {
     initialize: function(){
@@ -24,6 +25,10 @@ jQuery.fn.EEAlchemy = function(settings){
       });
 
       form.submit(function(){
+        if(form.attr('alchemy-apply').className == 'submitting'){
+          self.preview = false;
+        }
+
         if(!self.valid){
           return false;
         }
@@ -35,7 +40,7 @@ jQuery.fn.EEAlchemy = function(settings){
       self.msg.ajaxError(function(evt, request, settings){
         self.options.search_end(form, 'ERROR: Please try again later');
       });
-      jQuery('input[type=submit]', form).after(self.msg);
+      jQuery('#alchemy-preview', form).after(self.msg);
     },
 
     // Validate search form
@@ -75,13 +80,22 @@ jQuery.fn.EEAlchemy = function(settings){
 
     search_end: function(form, message){
       jQuery('#eea-alchemy-loader').hide();
-      self.msg.text(message);
+      if(self.preview){
+        self.msg.append(message);
+        self.msg.css('text-align', 'left');
+      }
+      else{
+        self.msg.text(message);
+      }
       self.msg.show();
     },
 
     search: function(form){
       var query = form.serialize();
       query += '&redirect=';
+      if (self.preview) {
+          query += '&preview=true';
+      }
       var action = form.attr('action');
       self.options.search_start(form);
       jQuery.get(action, query, function(data){
