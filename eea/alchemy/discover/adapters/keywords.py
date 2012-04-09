@@ -87,7 +87,8 @@ class DiscoverTags(object):
         tags.sort()
         tags = tuple(tags)
 
-        return (tags, 'Update %s for %s.\n Before: %s,\n After:  %s' % (self.field, doc.absolute_url(1), current, tags))
+        return (tags, 'Update %s for %s.\n Before: %s,\n After:  %s' %
+                         (self.field, doc.absolute_url(1), current, tags))
 
     @property
     def existing(self):

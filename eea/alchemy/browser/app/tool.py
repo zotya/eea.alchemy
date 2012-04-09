@@ -163,14 +163,14 @@ class Update(BrowserView):
     def preview(self):
         """ Preview auto-discovered tags
         """
-        preview_report = '';
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
         brains = ctool(Language='all', portal_type=ptype)
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
-        preview_report = '<strong>Applying alchemy %s auto-discover on %s %s objects. Looking in %s:</strong><ol>' % (lookfor, len(brains), ptype, lookin)
+        preview_report = '<strong>Applying alchemy %s auto-discover on %s %s objects. Looking in %s:</strong><ol>' %
+                                (lookfor, len(brains), ptype, lookin)
         count = 0
         for brain in brains:
             count += 1

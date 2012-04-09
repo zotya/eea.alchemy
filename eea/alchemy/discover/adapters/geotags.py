@@ -78,7 +78,8 @@ class DiscoverGeoTags(object):
         if isinstance(current, (str, unicode)):
             tags = ', '.join(tags)
 
-        return (tags, 'Update %s for %s. Before: %s, After: %s' % (self.field, doc.absolute_url(1), current, tags))
+        return (tags, 'Update %s for %s. Before: %s, After: %s' %
+                        (self.field, doc.absolute_url(1), current, tags))
 
     def getMetadata(self):
         """ Getter

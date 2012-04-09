@@ -61,7 +61,8 @@ class DiscoverTime(object):
             return
 
         tags = [str(yr) for yr in tags]
-        return (tags, 'Update %s for %s. Before: %s, After: %s' % (self.field, doc.absolute_url(1), current, tags))
+        return (tags, 'Update %s for %s. Before: %s, After: %s' %
+                            (self.field, doc.absolute_url(1), current, tags))
 
     def getMetadata(self):
         """ Getter
