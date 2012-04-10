@@ -84,7 +84,7 @@ jQuery.fn.EEAlchemy = function(settings){
         jQuery('select', form).empty();
         var batch = 0;
         var batch_size = '';
-        data = parseInt(data);
+        data = parseInt(data, 10);
         while(batch < data){
           if(batch+300 < data){
             batch_size = batch+'-'+(batch+300);
