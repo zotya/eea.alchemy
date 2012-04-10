@@ -14,6 +14,8 @@ jQuery.fn.EEAlchemy = function(settings){
       var form = jQuery('form', self);
 
       jQuery('input[type=submit]', form).hide();
+      jQuery('select', form).hide();
+      jQuery('.alchemy-button label', form).hide();
       var img = jQuery('<img>')
         .attr('src', '++resource++eea.alchemy.loader.gif')
         .attr('id', 'eea-alchemy-loader')
@@ -50,6 +52,8 @@ jQuery.fn.EEAlchemy = function(settings){
       var portal_type = jQuery('input[name=portal_type]:checked', form).length;
       if(!portal_type){
         jQuery('input[type=submit]', form).hide();
+        jQuery('select', form).hide();
+        jQuery('.alchemy-button label', form).hide();
         return false;
       }
 
@@ -57,6 +61,8 @@ jQuery.fn.EEAlchemy = function(settings){
       var lookin = jQuery('input[name=lookin]:checked', form).length;
       if(!lookin){
         jQuery('input[type=submit]', form).hide();
+        jQuery('select', form).hide();
+        jQuery('.alchemy-button label', form).hide();
         return false;
       }
 
@@ -64,12 +70,34 @@ jQuery.fn.EEAlchemy = function(settings){
       var discover = jQuery('input[name=discover]:checked', form).length;
       if(!discover){
         jQuery('input[type=submit]', form).hide();
+        jQuery('select', form).hide();
+        jQuery('.alchemy-button label', form).hide();
         return false;
       }
 
       // Valid
       self.valid = true;
+      var action = '@@alchemy.batch';
+      var query = form.serialize();
       jQuery('input[type=submit]', form).show();
+      jQuery.get(action, query, function(data){
+        jQuery('select', form).empty();
+        var batch = 0;
+        var batch_size = '';
+        data = parseInt(data);
+        while(batch < data){
+          if(batch+300 < data){
+            batch_size = batch+'-'+(batch+300);
+          }
+          else {
+            batch_size = batch+'-'+data;
+          }
+          jQuery('select', form).append('<option value="'+batch_size+'">'+batch_size+'</option>');
+          batch = batch + 300;
+        }
+      });
+      jQuery('select', form).show();
+      jQuery('.alchemy-button label', form).show();
     },
 
     search_start: function(form){

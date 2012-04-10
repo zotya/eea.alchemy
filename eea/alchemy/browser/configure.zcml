@@ -19,6 +19,11 @@
                 class=".app.tool.Update"
                 permission="cmf.ManagePortal" />
 
+  <browser:page for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+                name="alchemy.batch"
+                class=".app.tool.Batch"
+                permission="cmf.ManagePortal" />
+
   <browser:resource name="eea.alchemy.css"
                     file="css/tool.css" />
 

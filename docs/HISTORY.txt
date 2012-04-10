@@ -3,6 +3,8 @@ Changelog
 
 4.3-dev - (unreleased)
 ----------------------
+ * Feature: added batch selection on bulk auto-dicover
+   [ghicaale #5008]
  * Feature: added preview feature for the bulk auto-discover
    [ghicaale #5008]
  * Feature: added transaction commits for faster reindex on bulk auto-discover

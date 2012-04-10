@@ -140,6 +140,7 @@ class Update(BrowserView):
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
         brains = ctool(Language='all', portal_type=ptype)
+        batch = self.form.get('alchemy-batch', [0, 0])
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
@@ -147,7 +148,7 @@ class Update(BrowserView):
                     'Looking in %s', lookfor, len(brains), ptype, lookin)
 
         count = 0
-        for brain in brains:
+        for brain in brains[int(batch.split('-')[0]):int(batch.split('-')[1])]:
             count += 1
             if "location" in lookfor:
                 self.discover(brain, IDiscoverGeoTags)
@@ -166,6 +167,7 @@ class Update(BrowserView):
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
         brains = ctool(Language='all', portal_type=ptype)
+        batch = self.form.get('alchemy-batch', [0, 0])
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
@@ -173,7 +175,7 @@ class Update(BrowserView):
                           'objects. Looking in %s:</strong><ol>' % (
                               lookfor, len(brains), ptype, lookin))
         count = 0
-        for brain in brains:
+        for brain in brains[int(batch.split('-')[0]):int(batch.split('-')[1])]:
             count += 1
 
             if "location" in lookfor:
@@ -206,3 +208,15 @@ class Update(BrowserView):
         except Exception, err:
             logger.exception(err)
             return self._redirect(err, redirect)
+
+class Batch(BrowserView):
+    """ Batch info
+    """
+
+    def __call__(self, **kwargs):
+        if self.request:
+            kwargs.update(self.request.form)
+        ptype = kwargs.get('portal_type', '')
+        ctool = getToolByName(self.context, 'portal_catalog')
+        brains = ctool(Language='all', portal_type=ptype)
+        return len(brains)

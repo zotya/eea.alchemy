@@ -74,6 +74,10 @@
 
     <div style="clear: both"> </div>
     <div class="alchemy-button">
+      <label for="alchemy-batch" i18n:translate="">Select batch to be process:</label>
+      <select name="alchemy-batch" id="alchemy-batch">
+        <option value="empty">---</option>
+      </select>
       <input type="submit" value="Apply" name="alchemy-apply" id="alchemy-apply" i18n:attributes="value" />
       <input type="submit" value="Preview" name="alchemy-preview" id="alchemy-preview" i18n:attributes="value" />
     </div>
