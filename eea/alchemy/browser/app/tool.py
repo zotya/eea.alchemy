@@ -140,7 +140,7 @@ class Update(BrowserView):
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
         brains = ctool(Language='all', portal_type=ptype)
-        batch = self.form.get('alchemy-batch', [0, 0])
+        batch = self.form.get('alchemy-batch', '0-0')
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
@@ -167,7 +167,7 @@ class Update(BrowserView):
         ctool = getToolByName(self.context, 'portal_catalog')
         ptype = self.form.get('portal_type', None)
         brains = ctool(Language='all', portal_type=ptype)
-        batch = self.form.get('alchemy-batch', [0, 0])
+        batch = self.form.get('alchemy-batch', '0-0')
         lookfor = self.form.get('discover', [])
         lookin = self.form.get('lookin', [])
 
