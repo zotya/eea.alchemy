@@ -3,7 +3,8 @@
     <fieldset class="alchemy-box">
       <legend>
         <span i18n:translate="">Portal types</span>
-        <span title="Required" class="fieldRequired">(Required)</span>
+        <span class="fieldRequired" 
+              i18n:translate="">(Required)</span>
       </legend>
       <div class="alchemy-box-content">
       <ul>
@@ -27,7 +28,8 @@
     <fieldset class="alchemy-box">
       <legend>
         <span i18n:translate="">Look in</span>
-        <span title="Required" class="fieldRequired">(Required)</span>
+        <span class="fieldRequired" 
+              i18n:translate="">(Required)</span>
       </legend>
       <div class="alchemy-box-content">
         <ul>
@@ -51,7 +53,8 @@
     <fieldset class="alchemy-box">
       <legend>
        <span i18n:translate="">Discover</span>
-       <span title="Required" class="fieldRequired">(Required)</span>
+       <span class="fieldRequired"
+             i18n:translate="">(Required)</span>
       </legend>
       <div class="alchemy-box-content">
         <ul>

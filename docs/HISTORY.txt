@@ -5,6 +5,8 @@ Changelog
 ----------------------
 * Bug fix: fixed markup of HISTORY.txt file
   [ciobabog refs #5231]
+* Bug Fix: Fixed i18n missing tags in eea.alchemy 
+  [prospchr refs #5162]
 
 4.3 - (2012-04-26)
 ------------------
