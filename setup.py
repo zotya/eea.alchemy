@@ -21,7 +21,7 @@ setup(name=NAME,
         ],
       keywords='eea alchemy tags tagging',
       author='Alin Voinea (Eaudeweb), European Environment Agency (EEA)',
-      author_email="webadmin@eea europa eu",
+      author_email="webadmin@eea.europa.eu",
       url='http://svn.eionet.europa.eu/projects/'
           'Zope/browser/trunk/eea.alchemy',
       license='GPL',
