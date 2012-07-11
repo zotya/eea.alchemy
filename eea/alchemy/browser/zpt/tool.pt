@@ -29,7 +29,7 @@
   <a href=""
     class="link-parent"
     tal:attributes="href string:$portal_url/plone_control_panel"
-    i18n:translate="label_up_to_plone_setup">Up to Site Setup</a>
+    i18n:translate="">Up to Site Setup</a>
 
   <p class="documentDescription" i18n:translate="">
     Use the form bellow to auto-discover and update documents geotags,
