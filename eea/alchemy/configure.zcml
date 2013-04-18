@@ -6,6 +6,7 @@
   <include file="profiles.zcml" />
 
   <include package=".browser" />
+  <include package=".controlpanel" />
   <include package=".discover" />
 
   <include package=".upgrades" />

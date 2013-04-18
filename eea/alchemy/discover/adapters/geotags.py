@@ -2,10 +2,11 @@
 """
 import logging
 from zope.interface import implements
-from zope.component import getUtility
-from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility, queryAdapter
+from zope.component.hooks import getSite
 from eea.alchemy.interfaces import IDiscoverGeoTags
 from eea.alchemy.interfaces import IDiscoverGeographicalCoverage
+from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 logger = logging.getLogger('eea.alchemy.discover')
 
 class DiscoverGeoTags(object):
@@ -23,19 +24,17 @@ class DiscoverGeoTags(object):
     def key(self):
         """ AlchemyAPI key
         """
-        if self._key:
+        if self._key is not None:
             return self._key
 
-        ptool = getToolByName(self.context, 'portal_properties')
-        atool = getattr(ptool, 'alchemyapi', None)
-        key = getattr(atool, 'key', '')
-        if not key:
+        site = getSite()
+        settings = queryAdapter(site, IAlchemySettings)
+        self._key = settings.token
+        if not self._key:
             logger.exception(
-                'AlchemyAPI key not set in portal_properties/alchemyapi')
+                'AlchemyAPI key not set in Site Setup > Alchemy Settings')
             return self._key
-
-        self._key = key
-        return key
+        return self._key
 
     @property
     def preview(self):
@@ -78,7 +77,7 @@ class DiscoverGeoTags(object):
         if isinstance(current, (str, unicode)):
             tags = ', '.join(tags)
 
-        return (tags, 'Update %s for %s. Before: %s, After: %s' %
+        return (tags, 'Update %s for %s. \n Before: %s \n After: %s' %
                         (self.field, doc.absolute_url(1), current, tags))
 
     def getMetadata(self):

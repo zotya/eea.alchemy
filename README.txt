@@ -19,7 +19,9 @@ location and temporal coverage using http://www.alchemyapi.com/ web service.
 Main features
 =============
 
-- Auto-discover keywords, locations and temporal coverage
+- Auto-discover keywords, locations and temporal coverage;
+- Auto highlight keywords within a page content based on selected
+  tags and link them to a custom search page.
 
 
 Planed features
@@ -30,43 +32,31 @@ Planed features
   other fields (Title, Description)
 
 
-Installation
-============
+Install
+=======
 
-The easiest way to get eea.alchemy support in Plone 4 using this
-package is to work with installations based on `zc.buildout`_.
-Other types of installations should also be possible, but might turn out
-to be somewhat tricky.
-
-To get started you will simply need to add the package to your "eggs" and
-"zcml" sections, run buildout, restart your Plone instance and install the
-"eea.alchemy" package using the quick-installer or via the "Add-on
-Products" section in "Site Setup".
-
-  .. _`zc.buildout`: http://pypi.python.org/pypi/zc.buildout/
-
-You can download a sample buildout at:
-
-  https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.alchemy/buildouts
+- Add eea.alchemy to your eggs section in your buildout and re-run buildout. You
+  can download a sample buildout from
+  https://github.com/collective/eea.alchemy/tree/master/buildouts/plone4
+- Install eea.alchemy within Site Setup > Add-ons
 
 
 Getting started
 ===============
 
 1. Get your alchemy key here: http://www.alchemyapi.com/api/register.html
-2. Update your alchemy API key within ZMI > Plone > portal_properties > alchemyapi
-3. Within Plone Control panel go to Alchemy Tags.
+2. Update your alchemy API key within Site Setup > Alchemy Settings
+3. Within Plone Control panel go to Alchemy Discoverer.
 
 
 Source code
 ===========
 
 Latest source code (Plone 4 compatible):
-   https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.alchemy/trunk
+  https://github.com/collective/eea.alchemy
 
 Plone 2 and 3 compatible:
-   https://svn.eionet.europa.eu/repositories/Zope/trunk/eea.alchemy/branches/plone25
-
+  https://github.com/collective/eea.alchemy/tree/plone25
 
 Copyright and license
 =====================
