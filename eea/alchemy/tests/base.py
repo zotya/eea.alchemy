@@ -2,6 +2,7 @@
 """
 from Products.Five import zcml
 from Products.Five import fiveconfigure
+from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 from eea.alchemy.tests.fake import FakeAlchemyAPI, IAlchemyAPI
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
@@ -70,5 +71,5 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
         brains = self.portal.portal_catalog(getId=sid)
         self._brain = brains[0]
 
-        atool = self.portal.portal_properties.alchemyapi
-        atool.key = '12345665766867'
+        atool = IAlchemySettings(self.portal)
+        atool.token = u'12345665766867'
