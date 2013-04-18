@@ -10,7 +10,7 @@ class DiscoverTemporalCoverage(object):
     implements(IDiscoverTemporalCoverage)
 
     def __call__(self, text=""):
-        pattern = re.compile('[12][0189]\d\d\s*\-\s*[12][0189]\d\d')
+        pattern = re.compile(r'[12][0189]\d\d\s*\-\s*[12][0189]\d\d')
         found = pattern.findall(text)
         found = [time.replace(' ', '') for time in found]
 
