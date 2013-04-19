@@ -3,8 +3,12 @@ Changelog
 
 5.0-dev - (unreleased)
 ----------------------
+* Upgrade step: (optional) Manually reorder JS / CSS resources
+  (++resource++eea.alchemy.js, ++resource++eea.alchemy.css) within ZMI >
+  portal_javascripts / portal_css in order to optimize requests per page.
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for EEA Alchemy
+
 * WIP Feature: Auto highlight keywords within a page content based on selected
   tags and link them to a custom search page
   [voineali refs #9486]

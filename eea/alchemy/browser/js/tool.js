@@ -4,7 +4,7 @@
 
 Search form
 **/
-jQuery.fn.EEAlchemy = function(settings){
+jQuery.fn.EEAlchemyDiscoverer = function(settings){
   var self = this;
   self.valid = false;
   self.preview = true;
@@ -152,7 +152,7 @@ jQuery(document).ready(function(){
   jQuery(".discussion").remove();
 
   // Initialize
-  jQuery('#eea-alchemy .alchemy-search').EEAlchemy();
+  jQuery('#eea-alchemy .alchemy-search').EEAlchemyDiscoverer();
 });
 
 }());
