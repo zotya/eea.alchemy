@@ -92,6 +92,6 @@ More details under docs/License.txt
 Funding
 =======
 
-  EEA_ - European Enviroment Agency (EU)
+EEA_ - European Environment Agency (EU)
 
 .. _EEA: http://www.eea.europa.eu/
