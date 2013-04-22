@@ -1,7 +1,7 @@
 if(window.EEA === undefined){
   var EEA = {
     who: 'eea.alchemy',
-    version: '5.0',
+    version: '5.0'
   };
 }
 
@@ -18,7 +18,7 @@ EEA.Alchemy = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.Alchemy.prototype = {
   initialize: function(){
