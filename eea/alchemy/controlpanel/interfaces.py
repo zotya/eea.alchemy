@@ -23,7 +23,7 @@ class IAlchemySettings(Interface):
     )
 
     autoTaggingFields = schema.List(
-        title=_(u"Tag fields"),
+        title=_(u"Tagging fields"),
         description=_(u"Lookup these fields for tags"),
         required=True,
         default=[u"subject"],
@@ -31,8 +31,20 @@ class IAlchemySettings(Interface):
     )
 
     autoTaggingLink = schema.TextLine(
-        title=_(u"Tag's link"),
+        title=_(u"Tagging link"),
         description=_(u"Hyperlink to the following address"),
         required=True,
         default=u"@@search?SearchableText="
+    )
+
+    autoTaggingBlackList = schema.List(
+        title=_(u'Tagging blacklist'),
+        description=_(u"Do not apply auto-tagging if the tag is a child of the "
+                      "following HTML elements. "
+                      "(use CSS selectors like: div.documentByLine) "
+                      "By default auto-tagging will not be applied on text "
+                      "that is already a child of an <a> HTML tag"),
+        required=False,
+        default=[u"h1", u"h2", u"h3"],
+        value_type=schema.TextLine()
     )

@@ -1,7 +1,9 @@
+===========
 EEA Alchemy
 ===========
 Auto-discover geographical coverage, temporal coverage and keywords from
-documents common metadata (title, description, body, etc).
+documents common metadata (title, description, body, etc) and auto highlight
+keywords within a page content based on selected tags.
 
 
 Contents
@@ -44,10 +46,25 @@ Install
 Getting started
 ===============
 
+Auto discover keywords, location or temporal coverage
+-----------------------------------------------------
+
 1. Get your alchemy key here: http://www.alchemyapi.com/api/register.html
 2. Update your alchemy API key within Site Setup > Alchemy Settings
 3. Within Plone Control panel go to Alchemy Discoverer.
 
+Auto tagging
+------------
+
+1. *Enable auto-tagging* within **Site Setup > Alchemy Settings**
+2. Edit your document and add some tags for it within **/edit > Categorization.**
+   For example, if you're writing a news article about *water pollution* go to
+   **/edit > Categorization** and add *water pollution* within tags field
+   (also known as *keywords*, *subjects*, *topics*).
+   Now when you navigate to the 8*View** page of this article,
+   you'll notice that all occurrences of *water pollution* within your news
+   article body are links to a custom search page which is also configurable
+   within **Alchemy Settings ControlPanel**
 
 Source code
 ===========

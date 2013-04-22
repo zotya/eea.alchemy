@@ -41,6 +41,7 @@ class View(BrowserView):
         return {
             'enabled': self.settings.autoTagging,
             'link': self.settings.autoTaggingLink,
+            'blacklist': self.settings.autoTaggingBlackList,
             'search': tuple(search)
         }
 

@@ -86,3 +86,16 @@ class ControlPanelAdapter(SchemaAdapterBase):
         """ Update autoTaggingLink
         """
         self.settings.autoTaggingLink = value
+
+    @property
+    def autoTaggingBlackList(self):
+        """ Blacklist
+        """
+        name = u"autoTaggingBlackList"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @autoTaggingBlackList.setter
+    def autoTaggingBlackList(self, value):
+        """ Update blacklist
+        """
+        self.settings.autoTaggingBlackList = value
