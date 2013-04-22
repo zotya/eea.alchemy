@@ -22,7 +22,7 @@
 
     <genericsetup:upgradeDepends
       title="Import all steps from eea.alchemy profile"
-      import_steps="controlpanel plone.app.registry"
+      import_profile="eea.alchemy:default"
       />
 
   </genericsetup:upgradeSteps>
