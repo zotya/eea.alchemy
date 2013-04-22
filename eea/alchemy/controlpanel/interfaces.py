@@ -34,7 +34,7 @@ class IAlchemySettings(Interface):
         title=_(u"Tagging link"),
         description=_(u"Hyperlink to the following address"),
         required=True,
-        default=u"@@search?SearchableText="
+        default=u"@@search?Subject="
     )
 
     autoTaggingBlackList = schema.List(
