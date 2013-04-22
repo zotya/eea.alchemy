@@ -61,7 +61,7 @@ Auto tagging
    For example, if you're writing a news article about *water pollution* go to
    **/edit > Categorization** and add *water pollution* within tags field
    (also known as *keywords*, *subjects*, *topics*).
-   Now when you navigate to the 8*View** page of this article,
+   Now when you navigate to the **View** page of this article,
    you'll notice that all occurrences of *water pollution* within your news
    article body are links to a custom search page which is also configurable
    within **Alchemy Settings ControlPanel**
