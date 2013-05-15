@@ -1,5 +1,5 @@
 <configure xmlns="http://namespaces.zope.org/zope"
-           i18n_domain="eea">
+  i18n_domain="eea">
 
   <class class=".api.AlchemyAPI">
     <implements interface="eea.alchemy.interfaces.IAlchemyAPI" />
@@ -14,27 +14,72 @@
   </class>
 
   <utility provides="eea.alchemy.interfaces.IAlchemyAPI"
-           factory=".api.AlchemyAPI" />
+    factory=".api.AlchemyAPI" />
 
-  <utility provides="eea.alchemy.interfaces.IDiscoverTemporalCoverage"
-           factory=".utilities.time.DiscoverTemporalCoverage" />
+  <!-- Temporal Coverage Utilities -->
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverTemporalCoverage"
+    factory=".utilities.time.DiscoverTemporalCoverage" />
 
-  <utility provides="eea.alchemy.interfaces.IDiscoverGeographicalCoverage"
-           factory=".utilities.geotags.DiscoverGeographicalCoverage" />
+  <utility
+    name="temporalCoverage"
+    provides="eea.alchemy.interfaces.IDiscoverUtility"
+    factory=".utilities.time.DiscoverTemporalCoverage" />
 
-  <utility provides="eea.alchemy.interfaces.IDiscoverKeywords"
-           factory=".utilities.keywords.DiscoverKeywords" />
+  <!-- Geographical Coverage Utilities -->
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverGeographicalCoverage"
+    factory=".utilities.geotags.DiscoverGeographicalCoverage" />
 
-  <adapter for="eea.alchemy.interfaces.IAlchemyDiscoverable"
-           provides="eea.alchemy.interfaces.IDiscoverGeoTags"
-           factory=".adapters.geotags.DiscoverGeoTags" />
+  <utility
+    name="location"
+    provides="eea.alchemy.interfaces.IDiscoverUtility"
+    factory=".utilities.geotags.DiscoverGeographicalCoverage" />
 
-  <adapter for="eea.alchemy.interfaces.IAlchemyDiscoverable"
-           provides="eea.alchemy.interfaces.IDiscoverTags"
-           factory=".adapters.keywords.DiscoverTags" />
+  <!-- Keywords Utilities -->
+  <utility
+    provides="eea.alchemy.interfaces.IDiscoverKeywords"
+    factory=".utilities.keywords.DiscoverKeywords" />
 
-  <adapter for="eea.alchemy.interfaces.IAlchemyDiscoverable"
-           provides="eea.alchemy.interfaces.IDiscoverTime"
-           factory=".adapters.time.DiscoverTime" />
+  <utility
+    name="subject"
+    provides="eea.alchemy.interfaces.IDiscoverUtility"
+    factory=".utilities.keywords.DiscoverKeywords" />
+
+  <!-- Geographical Coverage Adapters -->
+  <adapter
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverGeoTags"
+    factory=".adapters.geotags.DiscoverGeoTags" />
+
+  <adapter
+    name="location"
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverAdapter"
+    factory=".adapters.geotags.DiscoverGeoTags" />
+
+  <!-- Keywords Adapters -->
+  <adapter
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverTags"
+    factory=".adapters.keywords.DiscoverTags" />
+
+  <adapter
+    name="subject"
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverAdapter"
+    factory=".adapters.keywords.DiscoverTags" />
+
+  <!-- Time Coverage Adapters -->
+  <adapter
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverTime"
+    factory=".adapters.time.DiscoverTime" />
+
+  <adapter
+    name="temporalCoverage"
+    for="eea.alchemy.interfaces.IAlchemyDiscoverable"
+    provides="eea.alchemy.interfaces.IDiscoverAdapter"
+    factory=".adapters.time.DiscoverTime" />
 
 </configure>
