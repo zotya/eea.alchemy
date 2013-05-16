@@ -99,3 +99,29 @@ class ControlPanelAdapter(SchemaAdapterBase):
         """ Update blacklist
         """
         self.settings.autoTaggingBlackList = value
+
+    @property
+    def autoRelations(self):
+        """ Enable auto-relations
+        """
+        name = u"autoRelations"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @autoRelations.setter
+    def autoRelations(self, value):
+        """ Enable / disable auto-relations
+        """
+        self.settings.autoRelations = value
+
+    @property
+    def autoRelationsFields(self):
+        """ Fields
+        """
+        name = u"autoRelationsFields"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @autoRelationsFields.setter
+    def autoRelationsFields(self, value):
+        """ Update autoRelationsFields
+        """
+        self.settings.autoRelationsFields = value

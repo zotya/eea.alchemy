@@ -1,42 +1,23 @@
-""" Auto-discover geotags API
+""" Auto-discover relatedItems
 """
 import logging
 from zope.interface import implements
-from zope.component import getUtility, queryAdapter
-from zope.component.hooks import getSite
-from eea.alchemy.interfaces import IDiscoverGeoTags
+from zope.component import getUtility
+from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
-from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 from eea.alchemy.config import EEAMessageFactory as _
 logger = logging.getLogger('eea.alchemy.discover')
 
-class DiscoverGeoTags(object):
-    """ Common adapter to auto-discover geotags in context metadata
+class DiscoverRelatedItems(object):
+    """ Common adapter to auto-discover related items in context metadata
     """
-    implements(IDiscoverGeoTags)
-    title = _(u'Geographical coverage')
+    implements(IDiscoverRelatedItems)
+    title = _(u'Related items')
 
     def __init__(self, context):
         self.context = context
-        self._key = None
-        self.field = 'location'
-        self._metadata = ('title', 'description')
-
-    @property
-    def key(self):
-        """ AlchemyAPI key
-        """
-        if self._key is not None:
-            return self._key
-
-        site = getSite()
-        settings = queryAdapter(site, IAlchemySettings)
-        self._key = settings.token
-        if not self._key:
-            logger.exception(
-                'AlchemyAPI key not set in Site Setup > Alchemy Settings')
-            return self._key
-        return self._key
+        self.field = 'relatedItems'
+        self._metadata = ('text', 'body')
 
     @property
     def preview(self):
@@ -49,7 +30,7 @@ class DiscoverGeoTags(object):
 
         field = doc.getField(self.field)
         if not field:
-            logger.warn('%s has no %s schema field. location not set',
+            logger.warn('%s has no %s schema field. Related items not set',
                         doc.absolute_url(1), self.field)
             return
 
@@ -59,28 +40,32 @@ class DiscoverGeoTags(object):
                         self.field, doc.absolute_url(1))
             return
 
-        current = field.getAccessor(doc)()
-        if current and isinstance(current, (str, unicode)):
-            # Location already set, skip as we don't want to mess it
-            return
+        tags = set()
+        for tag in self.tags:
+            text = tag.get('text')
+        return ([], 'XXX')
+            #if not text:
+                #continue
+            #try:
+                #start, end = text.split('-')
+                #start, end = int(start), int(end)
+                #tag = range(start, end+1)
+            #except Exception, err:
+                #logger.exception(err)
+                #continue
+            #else:
+                #tags = tags.union(tag)
 
-        tags = set(tag.get('text') for tag in self.tags)
-        if current:
-            if isinstance(current, (str, unicode)):
-                tags.add(current)
-            else:
-                tags = tags.union(current)
+        #current = [int(year) for year in field.getAccessor(doc)()]
+        #tags = tags.union(current)
+        #tags = list(tags)
+        #tags.sort(reverse=True)
+        #if not set(tags).difference(current):
+            #return
 
-        if not tags:
-            return
-
-        tags = list(tags)
-        tags.sort()
-        if isinstance(current, (str, unicode)):
-            tags = ', '.join(tags)
-
-        return (tags, 'Update %s for %s. \n Before: %s \n After: %s' %
-                        (self.field, doc.absolute_url(1), current, tags))
+        #tags = [str(yr) for yr in tags]
+        #return (tags, 'Update %s for %s. Before: %s, After: %s' %
+                            #(self.field, doc.absolute_url(1), current, tags))
 
     @property
     def metadata(self):
@@ -100,9 +85,6 @@ class DiscoverGeoTags(object):
     def tags(self):
         """ Getter
         """
-        if not self.key:
-            return
-
         string = ""
         for prop in self.metadata:
             if getattr(self.context, 'getField', None):
@@ -123,7 +105,7 @@ class DiscoverGeoTags(object):
 
             string += '\n' + text
 
-        discover = getUtility(IDiscoverUtility, name=u'location')
+        discover = getUtility(IDiscoverUtility, name=u'links')
         if not discover:
             return
 
@@ -131,7 +113,7 @@ class DiscoverGeoTags(object):
         if not string:
             return
 
-        for item in discover(self.key, string):
+        for item in discover(string):
             yield item
 
     @tags.setter
@@ -154,4 +136,4 @@ class DiscoverGeoTags(object):
         logger.info(info)
 
         mutator(tags)
-        doc.reindexObject(idxs=[self.field])
+        doc.reindexObject(idxs=['relatedItems'])

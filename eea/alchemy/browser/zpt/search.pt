@@ -2,9 +2,7 @@
   <form action="@@alchemy.update" method="post">
     <fieldset class="alchemy-box">
       <legend>
-        <span i18n:translate="">Portal types</span>
-        <span class="fieldRequired" 
-              i18n:translate="">(Required)</span>
+        <span i18n:translate="">Content-Types</span>
       </legend>
       <div class="alchemy-box-content">
       <ul>
@@ -28,8 +26,6 @@
     <fieldset class="alchemy-box">
       <legend>
         <span i18n:translate="">Look in</span>
-        <span class="fieldRequired" 
-              i18n:translate="">(Required)</span>
       </legend>
       <div class="alchemy-box-content">
         <ul>
@@ -52,9 +48,7 @@
 
     <fieldset class="alchemy-box">
       <legend>
-       <span i18n:translate="">Discover</span>
-       <span class="fieldRequired"
-             i18n:translate="">(Required)</span>
+       <span i18n:translate="">Look for</span>
       </legend>
       <div class="alchemy-box-content">
         <ul>

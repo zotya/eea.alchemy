@@ -33,14 +33,14 @@ class IAlchemyDiscoverable(Interface):
 class IDiscoverUtility(Interface):
     """ Abstract utility used to discover entities within given text
     """
-    def __call__(key, text=""):
+    def __call__(kwargs):
         """ Return an iterable with discovered entieties
         """
 
 class IDiscoverTemporalCoverage(IDiscoverUtility):
     """ Auto discover temportal coverage from text
     """
-    def __call__(key, text=""):
+    def __call__(kwargs):
         """ Return an iterable with discovered time periods:
 
         >>> from zope.component import getUtility
@@ -70,7 +70,7 @@ class IDiscoverTemporalCoverage(IDiscoverUtility):
 class IDiscoverGeographicalCoverage(IDiscoverUtility):
     """ Auto discover geographical coverage from text
     """
-    def __call__(key, text=""):
+    def __call__(kwargs):
         """ Return an iterable with discovered geotags
 
         >>> from zope.component import getUtility
@@ -103,7 +103,7 @@ class IDiscoverGeographicalCoverage(IDiscoverUtility):
 class IDiscoverKeywords(IDiscoverUtility):
     """ Auto discover keywords from text
     """
-    def __call__(key, text=""):
+    def __call__(kwargs):
         """ Return an iterable with discovered keywords
 
         >>> from zope.component import getUtility
@@ -127,7 +127,48 @@ class IDiscoverKeywords(IDiscoverUtility):
         text -- string to look in for geotags
         """
 
+class IDiscoverLinks(IDiscoverUtility):
+    """ Extract internal links from text
+    """
+    def __call__(kwargs):
+        """ Return an iterable with discovered links
 
+        >>> from zope.component import getUtility
+        >>> from eea.alchemy.interfaces import IDiscoverUtility
+
+        >>> discover = getUtility(IDiscoverUtility, name='links')
+        >>> text = "<p>"
+        >>> text += "<a href='http://example.com/a'>This</a> is a long article "
+        >>> text += "also <a href='https://example.com/b/c/d'>example.com</a> "
+        >>> text += "while <a href='http://foobar.com/b/c/d/'>this external</a>"
+        >>> text += " article shouldn't be included in the results. "
+        >>> text += "Neither this: https://example.com/a/b as it's not a link"
+        >>> text += "</p>"
+        >>> res = discover(text, match="http://example.com")
+
+        res
+        [{
+          'count': '1',
+          'relevance': '100.0',
+          'type': 'Link',
+          'text': '/a'
+        }, ...]
+
+        >>> res.next()['text']
+        '/a'
+
+        >>> res.next()['text']
+        '/b/c/d'
+
+        >>> res.next()
+        Traceback (most recent call last):
+        ...
+        StopIteration
+
+        Keyword arguments:
+        text -- search in text
+        match -- filter links by this match expression
+        """
 #
 # Adapters
 #
@@ -229,3 +270,19 @@ class IDiscoverTime(IDiscoverAdapter):
     title = schema.TextLine(title=_(u'Friendly name'))
     metadata = schema.List(title=_(u'Metadata'), value_type=schema.TextLine())
     tags = schema.Iterable(title=_(u'Tags'))
+
+class IDiscoverRelatedItems(IDiscoverAdapter):
+    """ Auto discover related items from object metadata (description, text)
+
+    metadata -- object metadata to look in for related items
+    tags -- get/set (persist to ZODB) discovered related items
+
+    >>> from zope.component import getAdapter
+    >>> from eea.alchemy.interfaces import IDiscoverAdapter
+    >>> discover = getAdapter(self.sandbox,
+    ... IDiscoverAdapter, name='relatedItems')
+    >>> discover.metadata = 'description'
+    >>> [tag.get('text', '') for tag in discover.tags]
+    ['/Plone/new-article', '/Plone/new-event']
+
+    """

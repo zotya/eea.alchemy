@@ -19,18 +19,19 @@
 <body>
 <div metal:fill-slot="prefs_configlet_main" id="eea-alchemy">
 
-  <h1 class="documentFirstHeading" i18n:translate="">
-    Auto-discover geographical coverage, temporal coverage and keywords
-  </h1>
-
   <a href=""
     class="link-parent"
     tal:attributes="href string:$portal_url/plone_control_panel"
-    i18n:translate="">Up to Site Setup</a>
+    i18n:translate="">Site Setup</a>
+
+  <h1 class="documentFirstHeading" i18n:translate="">
+    Alchemy Discoverer
+  </h1>
 
   <p class="documentDescription" i18n:translate="">
-    Use the form bellow to auto-discover and update documents geotags,
-    temportal coverage and keywords
+    Use the form bellow to auto-discover and update documents metadata (like
+    location, keywords, related items, etc).
+    Start by selecting Content-Types for which you want to discover metadata.
   </p>
 
   <div tal:replace="structure here/@@alchemy.search" />

@@ -56,13 +56,20 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
         """
         sid = self.folder.invokeFactory('Folder', id='sandbox')
         sandbox = self.folder._getOb(sid)
+        _ = self.folder.invokeFactory('Document', id='new-article')
+        _ = self.folder.invokeFactory('Event', id='new-event')
         sandbox.processForm(data=1, metadata=1, values={
             'title': (
                 "Formation of new land cover in the region of Valencia, Spain"
             ),
             'description': (
                 "Urban sprawl 1990-2000 in the province of Venice "
-                "using a 1 km x 1 km grid"
+                "using a 1 km x 1 km grid. See more: "
+                ""
+                "<a href='http://nohost/Plone/new-article'>article</a> or "
+                "<a href='https://nohost/Plone/new-event'>event</a> or "
+                "if you prefer this "
+                "<a href='http://foobar.com/new-article'>external article</a>"
             ),
         })
         self._sandbox = sandbox

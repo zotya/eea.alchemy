@@ -4,7 +4,7 @@ import logging
 from zope.interface import implements
 from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverTime
-from eea.alchemy.interfaces import IDiscoverTemporalCoverage
+from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
 logger = logging.getLogger('eea.alchemy.discover')
 
@@ -104,7 +104,7 @@ class DiscoverTime(object):
 
             string += '\n' + text
 
-        discover = getUtility(IDiscoverTemporalCoverage)
+        discover = getUtility(IDiscoverUtility, name=u'temporalCoverage')
         if not discover:
             return
 

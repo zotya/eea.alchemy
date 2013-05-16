@@ -7,7 +7,7 @@ from zope.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.interfaces import IDiscoverTags
-from eea.alchemy.interfaces import IDiscoverKeywords
+from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 logger = logging.getLogger('eea.alchemy.discover')
 
@@ -148,7 +148,7 @@ class DiscoverTags(object):
         if not string:
             return
 
-        discover = getUtility(IDiscoverKeywords)
+        discover = getUtility(IDiscoverUtility, name=u'subject')
         duplicates = set()
         items = discover(self.key, string)
         for item in items:
