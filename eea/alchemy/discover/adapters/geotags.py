@@ -7,12 +7,14 @@ from zope.component.hooks import getSite
 from eea.alchemy.interfaces import IDiscoverGeoTags
 from eea.alchemy.interfaces import IDiscoverGeographicalCoverage
 from eea.alchemy.controlpanel.interfaces import IAlchemySettings
+from eea.alchemy.config import EEAMessageFactory as _
 logger = logging.getLogger('eea.alchemy.discover')
 
 class DiscoverGeoTags(object):
     """ Common adapter to auto-discover geotags in context metadata
     """
     implements(IDiscoverGeoTags)
+    title = _(u'Geographical coverage')
 
     def __init__(self, context):
         self.context = context
@@ -80,21 +82,22 @@ class DiscoverGeoTags(object):
         return (tags, 'Update %s for %s. \n Before: %s \n After: %s' %
                         (self.field, doc.absolute_url(1), current, tags))
 
-    def getMetadata(self):
+    @property
+    def metadata(self):
         """ Getter
         """
         return self._metadata
 
-    def setMetadata(self, value):
+    @metadata.setter
+    def metadata(self, value):
         """ Setter
         """
         if isinstance(value, (str, unicode)):
             value = (value,)
         self._metadata = value
 
-    metadata = property(getMetadata, setMetadata)
-
-    def getTags(self):
+    @property
+    def tags(self):
         """ Getter
         """
         if not self.key:
@@ -131,25 +134,24 @@ class DiscoverGeoTags(object):
         for item in discover(self.key, string):
             yield item
 
-    def setTags(self, value):
+    @tags.setter
+    def tags(self, value):
         """ Setter
         """
-        discovery_data = self.preview
+        data = self.preview
+        if not data:
+            return
 
-        if discovery_data:
-            discovery_tags = discovery_data[0]
-            discovery_info = discovery_data[1]
-            doc = self.context
+        tags, info = data
 
+        doc = self.context
+        if getattr(doc, 'getObject', None):
             # ZCatalog brain
-            if getattr(doc, 'getObject', None):
-                doc = doc.getObject()
-            field = doc.getField(self.field)
-            mutator = field.getMutator(doc)
+            doc = doc.getObject()
+        field = doc.getField(self.field)
+        mutator = field.getMutator(doc)
 
-            logger.info(discovery_info)
+        logger.info(info)
 
-            mutator(discovery_tags)
-            doc.reindexObject(idxs=['location'])
-
-    tags = property(getTags, setTags)
+        mutator(tags)
+        doc.reindexObject(idxs=[self.field])

@@ -13,6 +13,9 @@ Changelog
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for EEA Alchemy
   [voineali refs #9486]
+* Feature: Refactoring discover utilities and adapters in order to be able
+  to easily extend alchemy functionality outside eea.alchemy package
+  [voineali refs #9486]
 * Feature: Auto highlight keywords within a page content based on selected
   tags and link them to a custom search page
   [voineali refs #9486]

@@ -2,6 +2,7 @@
 """
 from zope.interface import Interface
 from zope import schema
+from eea.alchemy.config import EEAMessageFactory as _
 
 class IAlchemyAPI(Interface):
     """ Utility to use AlchemyAPI (http://alchemyapi.com) using zope.components
@@ -32,14 +33,14 @@ class IAlchemyDiscoverable(Interface):
 class IDiscoverUtility(Interface):
     """ Abstract utility used to discover entities within given text
     """
-    def __call__(text=""):
+    def __call__(key, text=""):
         """ Return an iterable with discovered entieties
         """
 
 class IDiscoverTemporalCoverage(IDiscoverUtility):
     """ Auto discover temportal coverage from text
     """
-    def __call__(text=""):
+    def __call__(key, text=""):
         """ Return an iterable with discovered time periods:
 
         >>> from zope.component import getUtility
@@ -135,8 +136,9 @@ class IDiscoverAdapter(Interface):
         (title, description, etc)
 
     """
-    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
-    tags = schema.Iterable(title=u'Tags')
+    title = schema.TextLine(title=_(u'Friendly name'))
+    metadata = schema.List(title=_(u'Metadata'), value_type=schema.TextLine())
+    tags = schema.Iterable(title=_(u'Tags'))
 
 class IDiscoverGeoTags(IDiscoverAdapter):
     """ Auto discover location from object metadata (title, description)
@@ -171,8 +173,9 @@ class IDiscoverGeoTags(IDiscoverAdapter):
         ['Spain', 'Valencia']
 
     """
-    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
-    tags = schema.Iterable(title=u'Tags')
+    title = schema.TextLine(title=_(u'Friendly name'))
+    metadata = schema.List(title=_(u'Metadata'), value_type=schema.TextLine())
+    tags = schema.Iterable(title=_(u'Tags'))
 
 class IDiscoverTags(IDiscoverAdapter):
     """ Auto discover keywords from object metadata (title, description)
@@ -196,8 +199,9 @@ class IDiscoverTags(IDiscoverAdapter):
         [u'new land cover']
 
     """
-    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
-    tags = schema.Iterable(title=u'Tags')
+    title = schema.TextLine(title=_(u'Friendly name'))
+    metadata = schema.List(title=_(u'Metadata'), value_type=schema.TextLine())
+    tags = schema.Iterable(title=_(u'Tags'))
 
 class IDiscoverTime(IDiscoverAdapter):
     """ Auto discover time coverage from object metadata (title, description)
@@ -222,5 +226,6 @@ class IDiscoverTime(IDiscoverAdapter):
         ['1990-2000']
 
     """
-    metadata = schema.List(title=u'Metadata', value_type=schema.TextLine())
-    tags = schema.Iterable(title=u'Tags')
+    title = schema.TextLine(title=_(u'Friendly name'))
+    metadata = schema.List(title=_(u'Metadata'), value_type=schema.TextLine())
+    tags = schema.Iterable(title=_(u'Tags'))

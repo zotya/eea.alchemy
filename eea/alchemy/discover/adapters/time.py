@@ -5,12 +5,14 @@ from zope.interface import implements
 from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverTime
 from eea.alchemy.interfaces import IDiscoverTemporalCoverage
+from eea.alchemy.config import EEAMessageFactory as _
 logger = logging.getLogger('eea.alchemy.discover')
 
 class DiscoverTime(object):
     """ Common adapter to auto-discover time periods in context metadata
     """
     implements(IDiscoverTime)
+    title = _(u'Temporal coverage')
 
     def __init__(self, context):
         self.context = context
@@ -64,21 +66,22 @@ class DiscoverTime(object):
         return (tags, 'Update %s for %s. Before: %s, After: %s' %
                             (self.field, doc.absolute_url(1), current, tags))
 
-    def getMetadata(self):
+    @property
+    def metadata(self):
         """ Getter
         """
         return self._metadata
 
-    def setMetadata(self, value):
+    @metadata.setter
+    def metadata(self, value):
         """ Setter
         """
         if isinstance(value, (str, unicode)):
             value = (value,)
         self._metadata = value
 
-    metadata = property(getMetadata, setMetadata)
-
-    def getTags(self):
+    @property
+    def tags(self):
         """ Getter
         """
         string = ""
@@ -112,25 +115,24 @@ class DiscoverTime(object):
         for item in discover(string):
             yield item
 
-    def setTags(self, value):
+    @tags.setter
+    def tags(self, value):
         """ Setter
         """
-        discovery_data = self.preview
+        data = self.preview
+        if not data:
+            return
 
-        if discovery_data:
-            discovery_tags = discovery_data[0]
-            discovery_info = discovery_data[1]
-            doc = self.context
+        tags, info = data
+
+        doc = self.context
+        if getattr(doc, 'getObject', None):
             # ZCatalog brain
-            if getattr(doc, 'getObject', None):
-                doc = doc.getObject()
-            field = doc.getField(self.field)
-            mutator = field.getMutator(doc)
+            doc = doc.getObject()
+        field = doc.getField(self.field)
+        mutator = field.getMutator(doc)
 
-            logger.info(discovery_info)
+        logger.info(info)
 
-            mutator(discovery_tags)
-            doc.reindexObject(idxs=['getTemporalCoverage'])
-
-    tags = property(getTags, setTags)
-
+        mutator(tags)
+        doc.reindexObject(idxs=['getTemporalCoverage'])
