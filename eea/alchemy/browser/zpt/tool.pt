@@ -10,6 +10,7 @@
   disable_column_two python:request.set('disable_plone.leftcolumn',1);
   disable_column_two python:request.set('disable_plone.rightcolumn',1);" />
 
+  <link rel="stylesheet" type="text/css" href="++resource++eea.alchemy.bootstrap.css" />
   <link rel="stylesheet" type="text/css" href="++resource++eea.alchemy.tool.css" />
   <script type="text/javascript" src="++resource++eea.alchemy.tool.js"></script>
 </metal:override>

@@ -1,19 +1,16 @@
 #eea-alchemy .alchemy-search {
   width: 95%;
+  margin: auto;
 }
 
 #eea-alchemy .alchemy-box {
-  float: left;
-  width: 27%;
-  height: 21em;
-  margin: 5px;
+  height: 23em;
   border-color: #cccccc;
   border-width: 1px;
   border-style: dotted;
   display: none;
   box-shadow: 3px 3px 3px #CCC;
   border-radius: 10px;
-  padding: 0 1em;
 }
 
 #eea-alchemy legend {
@@ -37,15 +34,50 @@
   height: 75%;
   overflow-y: auto;
   overflow-x: hiddden;
+  margin-top: 1em;
 }
 
 #eea-alchemy .alchemy-button {
-  width: 99%;
-  padding: 0.5em;
-  text-align: right;
   display: none;
+  text-align: right;
+  border-radius: 10px;
 }
 
 #eea-alchemy .alchemy-msg {
   color: #95b229;
+}
+
+#eea-alchemy .alchemy-box select {
+  width: 100%;
+  background: whiteSmoke;
+  font-size: 1rem;
+}
+
+#eea-alchemy .alchemy-console {
+  background: #000;
+  color: #fff;
+  font-family: monospace;
+  line-height: 1;
+  font-size: 12px;
+  margin-top: 0;
+  border: 1px solid #fff;
+}
+
+#eea-alchemy .alchemy-console p {
+  padding: 0.3em;
+}
+
+#eea-alchemy .alchemy-console .info {
+  color: white;
+}
+
+#eea-alchemy .alchemy-console .error {
+  color: red;
+}
+
+#eea-alchemy .alchemy-console .warning {
+  color: orange;
+}
+
+#eea-alchemy .alchemy-console-buttons {
 }

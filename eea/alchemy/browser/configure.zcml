@@ -56,6 +56,11 @@
     />
 
   <browser:resource
+    name="eea.alchemy.bootstrap.css"
+    file="css/bootstrap.css"
+    />
+
+  <browser:resource
     name="eea.alchemy.tool.js"
     file="js/tool.js"
     />
@@ -68,6 +73,11 @@
   <browser:resource
     name="eea.alchemy.loader.gif"
     file="png/loader.gif"
+    />
+
+  <browser:resourceDirectory
+    name="eea.alchemy.images"
+    directory="png/"
     />
 
 </configure>
