@@ -9,7 +9,7 @@ from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.controlpanel.interfaces import IAlchemySettings
-logger = logging.getLogger('eea.alchemy.discover')
+logger = logging.getLogger('eea.alchemy')
 
 class DiscoverTags(object):
     """ Common adapter to auto-discover keywords in context metadata
@@ -89,7 +89,7 @@ class DiscoverTags(object):
         tags.sort()
         tags = tuple(tags)
 
-        return (tags, 'Update %s for %s.\n Before: %s \n After:  %s' %
+        return (tags, 'Update %s for %s. Before: %s  After:  %s' %
                          (self.field, doc.absolute_url(1), current, tags))
 
     @property

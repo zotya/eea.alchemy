@@ -6,7 +6,7 @@ from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverTime
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
-logger = logging.getLogger('eea.alchemy.discover')
+logger = logging.getLogger('eea.alchemy')
 
 class DiscoverTime(object):
     """ Common adapter to auto-discover time periods in context metadata

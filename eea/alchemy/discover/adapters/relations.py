@@ -6,7 +6,7 @@ from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
-logger = logging.getLogger('eea.alchemy.discover')
+logger = logging.getLogger('eea.alchemy')
 
 class DiscoverRelatedItems(object):
     """ Common adapter to auto-discover related items in context metadata
@@ -43,7 +43,7 @@ class DiscoverRelatedItems(object):
         tags = set()
         for tag in self.tags:
             text = tag.get('text')
-        return ([], 'XXX')
+        return ([], 'Related items adapter not implemented yet')
             #if not text:
                 #continue
             #try:

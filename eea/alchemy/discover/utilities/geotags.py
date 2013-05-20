@@ -5,7 +5,7 @@ from zope.interface import implements
 from zope.component import getUtility
 from eea.alchemy.interfaces import IAlchemyAPI
 from eea.alchemy.interfaces import IDiscoverGeographicalCoverage
-logger = logging.getLogger('eea.alchemy.discover.geotags')
+logger = logging.getLogger('eea.alchemy')
 
 ENTITY_TYPES = [
     'City',

@@ -8,7 +8,7 @@ from eea.alchemy.interfaces import IDiscoverGeoTags
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 from eea.alchemy.config import EEAMessageFactory as _
-logger = logging.getLogger('eea.alchemy.discover')
+logger = logging.getLogger('eea.alchemy')
 
 class DiscoverGeoTags(object):
     """ Common adapter to auto-discover geotags in context metadata
@@ -79,7 +79,7 @@ class DiscoverGeoTags(object):
         if isinstance(current, (str, unicode)):
             tags = ', '.join(tags)
 
-        return (tags, 'Update %s for %s. \n Before: %s \n After: %s' %
+        return (tags, 'Update %s for %s. Before: %s  After: %s' %
                         (self.field, doc.absolute_url(1), current, tags))
 
     @property

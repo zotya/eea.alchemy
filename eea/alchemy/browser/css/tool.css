@@ -53,31 +53,40 @@
   font-size: 1rem;
 }
 
+#eea-alchemy .alchemy-console-box {
+  height: 50em;
+}
+
 #eea-alchemy .alchemy-console {
   background: #000;
   color: #fff;
   font-family: monospace;
   line-height: 1;
   font-size: 12px;
-  margin-top: 0;
   border: 1px solid #fff;
+  height: 85%;
 }
 
 #eea-alchemy .alchemy-console p {
   padding: 0.3em;
 }
 
-#eea-alchemy .alchemy-console .info {
+#eea-alchemy .alchemy-console .INFO {
   color: white;
 }
 
-#eea-alchemy .alchemy-console .error {
+#eea-alchemy .alchemy-console .ERROR {
   color: red;
 }
 
-#eea-alchemy .alchemy-console .warning {
+#eea-alchemy .alchemy-console .WARNING {
   color: orange;
 }
 
 #eea-alchemy .alchemy-console-buttons {
+  text-align: right;
+}
+
+#eea-alchemy .auto-scrolling {
+  float: left;
 }

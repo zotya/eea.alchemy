@@ -5,7 +5,7 @@ from zope.interface import implements
 from zope.component import getUtility
 from eea.alchemy.interfaces import IAlchemyAPI
 from eea.alchemy.interfaces import IDiscoverKeywords
-logger = logging.getLogger('eea.alchemy.discover.keywords')
+logger = logging.getLogger('eea.alchemy')
 
 class DiscoverKeywords(object):
     """ Auto discover keywords

@@ -4,14 +4,13 @@ import logging
 import transaction
 from zope.component import queryUtility, queryAdapter
 from zope.schema.interfaces import IVocabularyFactory
-from Products.statusmessages.interfaces import IStatusMessage
 
 from Products.Five.browser import BrowserView
 from Products.CMFCore.utils import getToolByName
 
 from eea.alchemy.interfaces import IDiscoverAdapter
 
-logger = logging.getLogger('eea.alchemy.tool')
+logger = logging.getLogger('eea.alchemy')
 
 class Alchemy(BrowserView):
     """ Main Controller
@@ -61,7 +60,7 @@ class Search(BrowserView):
             yield term
 
     @property
-    def discover(self):
+    def lookfor(self):
         """ Discoverable tags
         """
         voc = queryUtility(IVocabularyFactory,
@@ -84,120 +83,90 @@ class Update(BrowserView):
 
     def __init__(self, context, request):
         super(Update, self).__init__(context, request)
-        self._form = {}
+        self.action = 'preview'
+        self.logger = None
+        self.portal_type = ''
+        self.lookin = 'Description'
+        self.lookfor = 'subject'
 
-    def _redirect(self, msg='', to=''):
-        """ Return or redirect
+    def setup(self):
+        """ Setup server-sent events
         """
-        if not to:
-            return msg
+        # Custom logging
+        formatter = logging.Formatter(
+            "event: %(levelname)s\n"
+            "data: %(asctime)s - %(name)s - %(levelname)s -  %(message)s\n\n")
+        self.logger = logging.StreamHandler(self.request.response)
+        self.logger.setLevel(logging.INFO)
+        self.logger.setFormatter(formatter)
+        logger.addHandler(self.logger)
 
-        if not self.request:
-            return msg
+        # Override response content-type
+        self.request.response.setHeader(
+            'Content-Type', 'text/event-stream; charset=utf-8')
 
-        if msg:
-            IStatusMessage(self.request).addStatusMessage(str(msg), type='info')
-        self.request.response.redirect(to)
-        return msg
-
-    @property
-    def form(self):
-        """ Request form
+    def cleanup(self):
+        """ Cleanup server-sent events
         """
-        if not self._form:
-            self._form = self.request.form
-        return self._form
+        # Close open connections and remove custom logger
+        try:
+            self.request.response.write('event: CLOSE\ndata: Done\n\n')
+            logger.removeHandler(self.logger)
+        except Exception, err:
+            logger.exception(err)
 
-    def discover(self, brain, name=u'', preview=False):
-        """ Discover tags in brain
+    def run(self, **kwargs):
+        """ Run a mini server-sent events
         """
-        discover = queryAdapter(brain, IDiscoverAdapter, name=name)
-        if not discover:
-            logger.warn('No %s adapter found for %s', name, brain)
-            return
+        form = getattr(self.request, 'form', {})
+        form.update(kwargs)
 
-        lookin = self.form.get('lookin', [])
-        discover.metadata = lookin
-        if not preview:
-            discover.tags = 'Update'
-            return
-
-        data = discover.preview
-        return data[1] if data else None
-
-    def save(self):
-        """ Auto-discover tags and persist them in ZODB
-        """
-        ctool = getToolByName(self.context, 'portal_catalog')
-        ptype = self.form.get('portal_type', None)
-        brains = ctool(Language='all', portal_type=ptype)
-        batch = self.form.get('alchemy-batch', '0-0')
-        lookin = self.form.get('lookin', [])
-        lookfor = self.form.get('discover', [])
+        action = form.get('action', 'Preview') or 'Preview'
+        action = action.lower()
+        portal_catalog = getToolByName(self.context, 'portal_catalog')
+        portal_type = form.get('portal_type', None)
+        brains = portal_catalog(Language='all', portal_type=portal_type)
+        batch = form.get('alchemy-batch', '0-0')
+        lookin = form.get('lookin', [])
+        lookfor = form.get('lookfor', [])
         if isinstance(lookfor, (str, unicode)):
             lookfor = (lookfor,)
 
         logger.info('Applying alchemy %s auto-discover on %s %s objects. '
-                    'Looking in %s', lookfor, len(brains), ptype, lookin)
+                    'Looking in %s', lookfor, len(brains), portal_type, lookin)
 
         start, end = (int(x) for x in batch.split('-'))
         for count, brain in enumerate(brains[start:end]):
             for name in lookfor:
-                self.discover(brain, name=name)
+                self.discover(brain, lookin, name)
 
-            # Intermediary commit transactions as this can be a very
-            # long process
-            if count % 10 == 0:
+            if (action == u'apply') and (count % 10 == 0):
+                logger.warn('Commit transaction %s/%s', count, end)
                 transaction.commit()
 
-        return 'Auto-discover complete'
+        if action != u'apply':
+            logger.warn("Preview mode selected, aborting transaction!")
+            transaction.abort()
 
-    def preview(self):
-        """ Preview auto-discovered tags
+    def discover(self, brain, lookin, lookfor):
+        """ Discover tags in brain
         """
-        ctool = getToolByName(self.context, 'portal_catalog')
-        ptype = self.form.get('portal_type', None)
-        brains = ctool(Language='all', portal_type=ptype)
-        batch = self.form.get('alchemy-batch', '0-0')
-        lookin = self.form.get('lookin', [])
-        lookfor = self.form.get('discover', [])
-        if isinstance(lookfor, (unicode, str)):
-            lookfor = (lookfor,)
+        discover = queryAdapter(brain, IDiscoverAdapter, name=lookfor)
+        if not discover:
+            logger.warn('No %s adapter found for %s', lookfor, brain)
+            return
 
-        report = [(
-            '<strong>Applying alchemy %s auto-discover on %s %s '
-            'objects. Looking in %s:</strong><ol>' % (
-                lookfor, len(brains), ptype, lookin)
-        )]
-
-        start, end = (int(x) for x in batch.split('-'))
-        for count, brain in enumerate(brains[start:end]):
-            for name in lookfor:
-                data = self.discover(brain, name=name, preview=True)
-            if data:
-                report.append('<li>%s</li>' % data)
-
-            if count % 10 == 0:
-                transaction.commit()
-
-        report.append('</ol>')
-        return u'\n'.join(report)
+        discover.metadata = lookin
+        discover.tags = 'Update'
 
     def __call__(self, **kwargs):
-        if self.request:
-            kwargs.update(self.request.form)
-        self._form = kwargs
-        redirect = kwargs.get('redirect', '@@alchemy-tags.html')
-        preview = kwargs.get('preview', None)
         try:
-            if preview:
-                msg = self.preview()
-            else:
-                msg = self.save()
-            return self._redirect(msg, redirect)
+            self.setup()
+            self.run(**kwargs)
         except Exception, err:
             logger.exception(err)
-            return self._redirect(err, redirect)
+        finally:
+            self.cleanup()
 
 class Batch(BrowserView):
     """ Batch info

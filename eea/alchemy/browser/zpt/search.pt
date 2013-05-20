@@ -1,5 +1,5 @@
 <div class="alchemy-search bootstrap">
-  <form action="@@alchemy.update" method="post">
+  <form action="@@alchemy.update" tal:attributes="action string:${here/absolute_url}/@@alchemy.update" method="post">
     <div class="row-fluid">
       <fieldset class="alchemy-box span3">
         <legend>
@@ -53,10 +53,10 @@
         </legend>
         <div class="alchemy-box-content">
           <ul>
-            <tal:schema repeat="term python:view.discover">
+            <tal:schema repeat="term python:view.lookfor">
             <li>
               <input type="checkbox" tal:attributes="
-                name string:discover;
+                name string:lookfor;
                 id python:term.value;
                 title python:term.title;
                 value python:term.value" />
@@ -90,14 +90,17 @@
     </div>
 
     <div class="row-fluid">
-      <fieldset class="alchemy-box span12">
+      <fieldset class="alchemy-box alchemy-console-box span12">
         <legend>
           <span i18n:translate="">Console output</span>
         </legend>
+        <div class="alchemy-box-content alchemy-console"></div>
         <div class="alchemy-console-buttons">
+          <div class="auto-scrolling">
+            <input type="checkbox" id="auto-scrolling" name="auto-scrolling" checked="checked" />
+            <label for="auto-scrolling">Auto scrolling</label>
+          </div>
           <button class="btn btn-mini btn-inverse">Clear</button>
-        </div>
-        <div class="alchemy-box-content alchemy-console">
         </div>
       </fieldset>
     </div>

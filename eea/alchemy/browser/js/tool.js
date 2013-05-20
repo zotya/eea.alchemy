@@ -16,7 +16,8 @@ EEA.AlchemyDiscoverer.Events = {
   lookInChanged: 'eea-alchemy-lookin-changed',
   lookForChanged: 'eea-alchemy-lookfor-changed',
   batchChanged: 'eea-alchemy-batch-changed',
-  formSubmit: 'eea-alchemy-form-submit'
+  formSubmit: 'eea-alchemy-form-submit',
+  serverEvent: 'eea-alchemy-server-event'
 };
 
 EEA.AlchemyDiscoverer.ContentTypesBox = function(context, options){
@@ -212,6 +213,7 @@ EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
   initialize: function(){
     var self = this;
     self.button = self.context.find('button');
+    self.autoScroll = self.context.find('#auto-scrolling');
 
     // Handle events
     self.button.click(function(){
@@ -228,22 +230,24 @@ EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
     // Form submit
     jQuery(document).bind(EEA.AlchemyDiscoverer.Events.formSubmit, function(evt, options){
       self.context.fadeIn();
-      self.info(options.button.attr('value'));
-      self.error(options.button.attr('value'));
-      self.warning(options.button.attr('value'));
+      self.warn('Running: ' + options.action);
+    });
+
+    jQuery(document).bind(EEA.AlchemyDiscoverer.Events.serverEvent, function(evt, options){
+      self.log(options.data, options.type);
     });
   },
 
   info: function(msg){
-    return this.log(msg, 'info');
+    return this.log(msg, 'INFO');
   },
 
   error: function(msg){
-    return this.log(msg, 'error');
+    return this.log(msg, 'ERROR');
   },
 
-  warning: function(msg){
-    return this.log(msg, 'warning');
+  warn: function(msg){
+    return this.log(msg, 'WARNING');
   },
 
   log: function(msg, level){
@@ -251,20 +255,12 @@ EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
     level = level || 'info';
     var output = jQuery('<p>')
       .addClass(level)
-      .text(msg +
-        "Lorem Ipsum is simply dummy text of the " +
-        "printing and typesetting industry. Lorem Ipsum " +
-        "has been the industry's standard dummy text ever " +
-        "since the 1500s, when an unknown printer took a galley " +
-        "of type and scrambled it to make a type specimen book. " +
-        "It has survived not only five centuries, but also the leap " +
-        "into electronic typesetting, remaining essentially unchanged. " +
-        "It was popularised in the 1960s with the release of Letraset " +
-        "sheets containing Lorem Ipsum passages, and more recently with " +
-        "desktop publishing software like Aldus PageMaker including versions " +
-        "of Lorem Ipsum.")
+      .text(msg + "")
       .appendTo(self.console);
-    self.console.scrollTop(self.console[0].scrollHeight - self.console.height());
+
+    if(self.autoScroll.attr('checked')){
+      self.console.scrollTop(self.console[0].scrollHeight - self.console.height());
+    }
   },
 
   clear: function(){
@@ -332,9 +328,32 @@ EEA.AlchemyDiscoverer.Form.prototype = {
 
   submit: function(button){
     var self = this;
-    options = {};
-    options.button = button;
-    jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.formSubmit, options);
+    var query = self.form.serialize() + '&action=' + button.attr('value');
+    var action = self.form.attr('action') + '?' + query;
+
+    jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.formSubmit, {action: action});
+
+    // Server-sent events
+    var sse = new EventSource(action);
+    sse.addEventListener('INFO', function(message){
+      jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, message);
+    }, false);
+
+    sse.addEventListener('WARNING', function(message){
+      jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, message);
+    }, false);
+
+    sse.addEventListener('ERROR', function(message){
+      jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, message);
+    }, false);
+
+    sse.addEventListener('CLOSE', function(message){
+      jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, {
+        data: message.data,
+        type: 'info'
+      });
+      sse.close();
+    }, false);
   }
 };
 
