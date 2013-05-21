@@ -230,7 +230,7 @@ EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
     // Form submit
     jQuery(document).bind(EEA.AlchemyDiscoverer.Events.formSubmit, function(evt, options){
       self.context.fadeIn();
-      self.warn('Running: ' + options.action);
+      self.info('Running: ' + options.action);
     });
 
     jQuery(document).bind(EEA.AlchemyDiscoverer.Events.serverEvent, function(evt, options){
@@ -342,11 +342,6 @@ EEA.AlchemyDiscoverer.Form.prototype = {
     self.setup();
     var sse = new EventSource(action);
 
-    // XXX Remove me
-    sse.onmessage = function(message){
-      console.log(message.type);
-    };
-
     sse.addEventListener('INFO', function(message){
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, message);
     }, false);
@@ -372,7 +367,7 @@ EEA.AlchemyDiscoverer.Form.prototype = {
   fallbackSubmit: function(button){
     var self = this;
     jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, {
-      data: ("Your browser doesn't support Server-sent events, " +
+      data: ("!!! Your browser doesn't support Server-sent events, " +
              "therefore realtime logging will be disabled !!!"),
       type: 'WARNING'
     });

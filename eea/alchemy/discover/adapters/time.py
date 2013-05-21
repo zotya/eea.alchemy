@@ -6,18 +6,19 @@ from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverTime
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
+from eea.alchemy.discover.adapters import Discover
 logger = logging.getLogger('eea.alchemy')
 
-class DiscoverTime(object):
+class DiscoverTime(Discover):
     """ Common adapter to auto-discover time periods in context metadata
     """
     implements(IDiscoverTime)
     title = _(u'Temporal coverage')
 
     def __init__(self, context):
-        self.context = context
-        self.field = 'temporalCoverage'
-        self._metadata = ('title', 'description')
+        super(DiscoverTime, self).__init__(context)
+        self.field = u'temporalCoverage'
+        self.index = u'getTemporalCoverage'
 
     @property
     def preview(self):
@@ -30,8 +31,8 @@ class DiscoverTime(object):
 
         field = doc.getField(self.field)
         if not field:
-            logger.warn('%s has no %s schema field. Time coverage not set',
-                        doc.absolute_url(1), self.field)
+            logger.warn('%s has no %s schema field. %s not set',
+                        doc.absolute_url(1), self.field, self.title)
             return
 
         mutator = field.getMutator(doc)
@@ -67,20 +68,6 @@ class DiscoverTime(object):
                             (self.field, doc.absolute_url(1), current, tags))
 
     @property
-    def metadata(self):
-        """ Getter
-        """
-        return self._metadata
-
-    @metadata.setter
-    def metadata(self, value):
-        """ Setter
-        """
-        if isinstance(value, (str, unicode)):
-            value = (value,)
-        self._metadata = value
-
-    @property
     def tags(self):
         """ Getter
         """
@@ -104,7 +91,7 @@ class DiscoverTime(object):
 
             string += '\n' + text
 
-        discover = getUtility(IDiscoverUtility, name=u'temporalCoverage')
+        discover = getUtility(IDiscoverUtility, name=self.field)
         if not discover:
             return
 
@@ -114,25 +101,3 @@ class DiscoverTime(object):
 
         for item in discover(string):
             yield item
-
-    @tags.setter
-    def tags(self, value):
-        """ Setter
-        """
-        data = self.preview
-        if not data:
-            return
-
-        tags, info = data
-
-        doc = self.context
-        if getattr(doc, 'getObject', None):
-            # ZCatalog brain
-            doc = doc.getObject()
-        field = doc.getField(self.field)
-        mutator = field.getMutator(doc)
-
-        logger.info(info)
-
-        mutator(tags)
-        doc.reindexObject(idxs=['getTemporalCoverage'])

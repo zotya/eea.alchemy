@@ -2,42 +2,25 @@
 """
 import logging
 from zope.interface import implements
-from zope.component import getUtility, queryAdapter
-from zope.component.hooks import getSite
+from zope.component import getUtility
 from Products.CMFCore.utils import getToolByName
+
 from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverUtility
-from eea.alchemy.controlpanel.interfaces import IAlchemySettings
+from eea.alchemy.discover.adapters import Discover
 logger = logging.getLogger('eea.alchemy')
 
-class DiscoverTags(object):
+class DiscoverTags(Discover):
     """ Common adapter to auto-discover keywords in context metadata
     """
     implements(IDiscoverTags)
     title = _(u'Keywords')
 
     def __init__(self, context):
-        self.context = context
-        self._key = None
-        self.field = 'subject'
-        self._metadata = ('title', 'description')
-
-    @property
-    def key(self):
-        """ AlchemyAPI key
-        """
-        if self._key is not None:
-            return self._key
-
-        site = getSite()
-        settings = queryAdapter(site, IAlchemySettings)
-        self._key = settings.token
-        if not self._key:
-            logger.exception(
-                'AlchemyAPI key not set in Site Setup > Alchemy Settings')
-            return self._key
-        return self._key
+        super(DiscoverTags, self).__init__(context)
+        self.field = u'subject'
+        self.index = u'Subject'
 
     @property
     def preview(self):
@@ -50,8 +33,8 @@ class DiscoverTags(object):
 
         field = doc.getField(self.field)
         if not field:
-            logger.warn('%s has no %s schema field. Keywords not set',
-                        doc.absolute_url(1), self.field)
+            logger.warn('%s has no %s schema field. %s not set',
+                        doc.absolute_url(1), self.field, self.title)
             return
 
         mutator = field.getMutator(doc)
@@ -90,32 +73,18 @@ class DiscoverTags(object):
         tags = tuple(tags)
 
         return (tags, 'Update %s for %s. Before: %s  After:  %s' %
-                         (self.field, doc.absolute_url(1), current, tags))
+                (self.field, doc.absolute_url(1), current, tags))
 
     @property
     def existing(self):
         """ Get existing keywords from ZCatalog
         """
         ctool = getToolByName(self.context, 'portal_catalog')
-        index = ctool.Indexes.get('Subject', None)
+        index = ctool.Indexes.get(self.index, None)
         if not index:
             return
         for value in index.uniqueValues():
             yield value
-
-    @property
-    def metadata(self):
-        """ Getter
-        """
-        return self._metadata
-
-    @metadata.setter
-    def metadata(self, value):
-        """ Setter
-        """
-        if isinstance(value, (str, unicode)):
-            value = (value,)
-        self._metadata = value
 
     @property
     def tags(self):
@@ -148,7 +117,7 @@ class DiscoverTags(object):
         if not string:
             return
 
-        discover = getUtility(IDiscoverUtility, name=u'subject')
+        discover = getUtility(IDiscoverUtility, name=self.field)
         duplicates = set()
         items = discover(self.key, string)
         for item in items:
@@ -181,25 +150,3 @@ class DiscoverTags(object):
                 'text': keyword
             }
 
-    @tags.setter
-    def tags(self, value):
-        """ Setter
-        """
-        data = self.preview
-        if not data:
-            return
-
-        tags, info = data
-
-        doc = self.context
-        if getattr(doc, 'getObject', None):
-            # ZCatalog brain
-            doc = doc.getObject()
-
-        field = doc.getField(self.field)
-        mutator = field.getMutator(doc)
-
-        logger.info(info)
-
-        mutator(tags)
-        doc.reindexObject(idxs=['Subject'])

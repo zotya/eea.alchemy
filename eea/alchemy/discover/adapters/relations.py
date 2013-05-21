@@ -6,18 +6,19 @@ from zope.component import getUtility
 from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
+from eea.alchemy.discover.adapters import Discover
 logger = logging.getLogger('eea.alchemy')
 
-class DiscoverRelatedItems(object):
+class DiscoverRelatedItems(Discover):
     """ Common adapter to auto-discover related items in context metadata
     """
     implements(IDiscoverRelatedItems)
     title = _(u'Related items')
 
     def __init__(self, context):
-        self.context = context
+        super(DiscoverTime, self).__init__(context)
         self.field = 'relatedItems'
-        self._metadata = ('text', 'body')
+        self.index = 'relatedItems'
 
     @property
     def preview(self):
@@ -30,8 +31,8 @@ class DiscoverRelatedItems(object):
 
         field = doc.getField(self.field)
         if not field:
-            logger.warn('%s has no %s schema field. Related items not set',
-                        doc.absolute_url(1), self.field)
+            logger.warn('%s has no %s schema field. %s not set',
+                        doc.absolute_url(1), self.field, self.title)
             return
 
         mutator = field.getMutator(doc)
@@ -43,43 +44,8 @@ class DiscoverRelatedItems(object):
         tags = set()
         for tag in self.tags:
             text = tag.get('text')
-        return ([], 'Related items adapter not implemented yet')
-            #if not text:
-                #continue
-            #try:
-                #start, end = text.split('-')
-                #start, end = int(start), int(end)
-                #tag = range(start, end+1)
-            #except Exception, err:
-                #logger.exception(err)
-                #continue
-            #else:
-                #tags = tags.union(tag)
-
-        #current = [int(year) for year in field.getAccessor(doc)()]
-        #tags = tags.union(current)
-        #tags = list(tags)
-        #tags.sort(reverse=True)
-        #if not set(tags).difference(current):
-            #return
-
-        #tags = [str(yr) for yr in tags]
-        #return (tags, 'Update %s for %s. Before: %s, After: %s' %
-                            #(self.field, doc.absolute_url(1), current, tags))
-
-    @property
-    def metadata(self):
-        """ Getter
-        """
-        return self._metadata
-
-    @metadata.setter
-    def metadata(self, value):
-        """ Setter
-        """
-        if isinstance(value, (str, unicode)):
-            value = (value,)
-        self._metadata = value
+            if not text:
+                continue
 
     @property
     def tags(self):
@@ -115,25 +81,3 @@ class DiscoverRelatedItems(object):
 
         for item in discover(string):
             yield item
-
-    @tags.setter
-    def tags(self, value):
-        """ Setter
-        """
-        data = self.preview
-        if not data:
-            return
-
-        tags, info = data
-
-        doc = self.context
-        if getattr(doc, 'getObject', None):
-            # ZCatalog brain
-            doc = doc.getObject()
-        field = doc.getField(self.field)
-        mutator = field.getMutator(doc)
-
-        logger.info(info)
-
-        mutator(tags)
-        doc.reindexObject(idxs=['relatedItems'])
