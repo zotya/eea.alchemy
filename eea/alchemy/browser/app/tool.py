@@ -52,7 +52,7 @@ class Search(BrowserView):
         """ Archetypes base schema
         """
         voc = queryUtility(IVocabularyFactory,
-                           name=u"eea.faceted.vocabularies.CatalogIndexes")
+                           name=u"eea.alchemy.vocabularies.SchemaAndCatalog")
 
         for term in voc(self.context):
             if not term.value:

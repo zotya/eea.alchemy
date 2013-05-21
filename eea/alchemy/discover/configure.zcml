@@ -107,4 +107,19 @@
     factory=".vocabularies.DiscoverAdapters"
     />
 
+  <utility
+    name="eea.alchemy.vocabularies.SchemaFields"
+    factory=".vocabularies.SchemaFields"
+    />
+
+  <utility
+    name="eea.alchemy.vocabularies.CatalogMetadata"
+    factory=".vocabularies.CatalogMetadata"
+    />
+
+  <utility
+    name="eea.alchemy.vocabularies.SchemaAndCatalog"
+    factory=".vocabularies.SchemaAndCatalog"
+    />
+
 </configure>

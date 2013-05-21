@@ -55,38 +55,3 @@ class Discover(object):
         if isinstance(value, (str, unicode)):
             value = (value,)
         self._metadata = value
-
-    @property
-    def preview(self):
-        """ Preview discovered tags
-        """
-        return ([], 'Not implemented yet')
-
-    @property
-    def tags(self):
-        """ Get tags
-        """
-        return []
-
-    @tags.setter
-    def tags(self, value):
-        """ Setter
-        """
-        data = self.preview
-        if not data:
-            return
-
-        tags, info = data
-
-        doc = self.context
-        if getattr(doc, 'getObject', None):
-            # ZCatalog brain
-            doc = doc.getObject()
-
-        field = doc.getField(self.field)
-        mutator = field.getMutator(doc)
-
-        logger.info(info)
-
-        mutator(tags)
-        doc.reindexObject(idxs=[self.index])
