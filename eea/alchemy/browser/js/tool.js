@@ -32,7 +32,7 @@ EEA.AlchemyDiscoverer.ContentTypesBox = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.AlchemyDiscoverer.ContentTypesBox.prototype = {
   initialize: function(){
@@ -63,7 +63,7 @@ EEA.AlchemyDiscoverer.LookInBox = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.AlchemyDiscoverer.LookInBox.prototype = {
   initialize: function(){
@@ -102,7 +102,7 @@ EEA.AlchemyDiscoverer.LookForBox = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.AlchemyDiscoverer.LookForBox.prototype = {
   initialize: function(){
@@ -141,7 +141,7 @@ EEA.AlchemyDiscoverer.BatchBox = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.AlchemyDiscoverer.BatchBox.prototype = {
   initialize: function(){
@@ -207,7 +207,7 @@ EEA.AlchemyDiscoverer.ConsoleBox = function(context, options){
   }
 
   self.initialize();
-}
+};
 
 EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
   initialize: function(){
@@ -252,7 +252,7 @@ EEA.AlchemyDiscoverer.ConsoleBox.prototype = {
 
   log: function(msg, level){
     var self = this;
-    level = level || 'info';
+    level = level || 'INFO';
     var output = jQuery('<p>')
       .addClass(level)
       .text(msg + "")
@@ -291,7 +291,7 @@ EEA.AlchemyDiscoverer.Form.prototype = {
     self.form = self.context.find('form');
     self.buttons = jQuery('.alchemy-button', self.context);
 
-    boxes = self.context.find('.alchemy-box')
+    boxes = self.context.find('.alchemy-box');
     self.ctypes = new EEA.AlchemyDiscoverer.ContentTypesBox(jQuery(boxes[0]));
     self.lookin = new EEA.AlchemyDiscoverer.LookInBox(jQuery(boxes[1]));
     self.lookfor = new EEA.AlchemyDiscoverer.LookForBox(jQuery(boxes[2]));
@@ -328,14 +328,25 @@ EEA.AlchemyDiscoverer.Form.prototype = {
 
   submit: function(button){
     var self = this;
+
+    // Support old browsers
+    if(!window.EventSource){
+      return self.fallbackSubmit(button);
+    }
+
     var query = self.form.serialize() + '&action=' + button.attr('value');
     var action = self.form.attr('action') + '?' + query;
-
     jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.formSubmit, {action: action});
-    self.buttons.find('input').attr('disabled', true);
 
     // Server-sent events
+    self.setup();
     var sse = new EventSource(action);
+
+    // XXX Remove me
+    sse.onmessage = function(message){
+      console.log(message.type);
+    };
+
     sse.addEventListener('INFO', function(message){
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, message);
     }, false);
@@ -351,12 +362,44 @@ EEA.AlchemyDiscoverer.Form.prototype = {
     sse.addEventListener('CLOSE', function(message){
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, {
         data: message.data,
-        type: 'info'
+        type: 'INFO'
       });
       sse.close();
-      self.buttons.find('input').removeClass('submitting');
-      self.buttons.find('input').attr('disabled', false);
+      self.cleanup();
     }, false);
+  },
+
+  fallbackSubmit: function(button){
+    var self = this;
+    jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, {
+      data: ("Your browser doesn't support Server-sent events, " +
+             "therefore realtime logging will be disabled !!!"),
+      type: 'WARNING'
+    });
+
+    var query = self.form.serialize() + '&action=' + button.attr('value');
+    var action = self.form.attr('action');
+    jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.formSubmit, {action: action + '?' + query});
+
+    self.setup();
+    jQuery.get(action, query, function(data){
+      jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.serverEvent, {
+        data: data,
+        type: 'INFO'
+      });
+      self.cleanup();
+    });
+  },
+
+  setup: function(){
+    var self = this;
+    self.buttons.find('input').attr('disabled', true);
+  },
+
+  cleanup: function(){
+    var self = this;
+    self.buttons.find('input').removeClass('submitting');
+    self.buttons.find('input').attr('disabled', false);
   }
 };
 

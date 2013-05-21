@@ -57,11 +57,11 @@
             <li>
               <input type="checkbox" tal:attributes="
                 name string:lookfor;
-                id python:term.value;
+                id python:term.value + '-option';
                 title python:term.title;
                 value python:term.value" />
               <label tal:attributes="
-                for python:term.value;
+                for python:term.value + '-option';
                 title python:term.title"
                 tal:content="python:term.title" />
             </li>

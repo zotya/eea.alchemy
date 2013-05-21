@@ -132,10 +132,11 @@ class Update(BrowserView):
         if isinstance(lookfor, (str, unicode)):
             lookfor = (lookfor,)
 
-        logger.info('Applying alchemy %s auto-discover on %s %s objects. '
-                    'Looking in %s', lookfor, len(brains), portal_type, lookin)
-
         start, end = (int(x) for x in batch.split('-'))
+        logger.info("Content-Type: %s -- Lookin: %s -- "
+                    "Lookfor: %s -- Batch: %s -- Action: %s",
+            portal_type, lookin, lookfor, batch, action)
+
         for count, brain in enumerate(brains[start:end]):
             for name in lookfor:
                 self.discover(brain, lookin, name)
