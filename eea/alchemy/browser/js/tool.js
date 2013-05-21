@@ -332,6 +332,7 @@ EEA.AlchemyDiscoverer.Form.prototype = {
     var action = self.form.attr('action') + '?' + query;
 
     jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.formSubmit, {action: action});
+    self.buttons.find('input').attr('disabled', true);
 
     // Server-sent events
     var sse = new EventSource(action);
@@ -353,6 +354,8 @@ EEA.AlchemyDiscoverer.Form.prototype = {
         type: 'info'
       });
       sse.close();
+      self.buttons.find('input').removeClass('submitting');
+      self.buttons.find('input').attr('disabled', false);
     }, false);
   }
 };

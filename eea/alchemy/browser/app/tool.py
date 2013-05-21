@@ -140,7 +140,7 @@ class Update(BrowserView):
             for name in lookfor:
                 self.discover(brain, lookin, name)
 
-            if (action == u'apply') and (count % 10 == 0):
+            if (action == u'apply') and ((count + 1) % 10 == 0):
                 logger.warn('Commit transaction %s/%s', count, end)
                 transaction.commit()
 
