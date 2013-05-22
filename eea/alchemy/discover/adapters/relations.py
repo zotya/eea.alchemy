@@ -9,6 +9,7 @@ from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.discover.adapters import Discover
+from eea.alchemy.relations import canRelate
 logger = logging.getLogger('eea.alchemy')
 
 class DiscoverRelatedItems(Discover):
@@ -21,6 +22,7 @@ class DiscoverRelatedItems(Discover):
         super(DiscoverRelatedItems, self).__init__(context)
         self.field = 'relatedItems'
         self.index = 'relatedItems'
+        self._tags = []
 
     @property
     def preview(self):
@@ -44,31 +46,8 @@ class DiscoverRelatedItems(Discover):
             return
 
         current = [IUUID(obj, None) for obj in field.getAccessor(doc)()]
-        tags = []
-        for tag in self.tags:
-            text = tag.get('text')
-            if not text:
-                continue
+        tags = [tag.get('text') for tag in self.tags]
 
-            if text.startswith('resolveuid/'):
-                uid = text.split('/')[1]
-                if uid not in tags:
-                    tags.append(uid)
-                continue
-
-            try:
-                obj = doc.unrestrictedTraverse(text)
-            except Exception, err:
-                logger.exception(err)
-                continue
-            else:
-                uid = IUUID(obj, None)
-                if uid and uid not in tags:
-                    tags.append(uid)
-                continue
-
-        myuid = IUUID(doc, None)
-        tags = [tag for tag in tags if (tag and tag != myuid)]
         if not set(tags).difference(current):
             return
 
@@ -80,10 +59,10 @@ class DiscoverRelatedItems(Discover):
         """ Getter
         """
         doc = self.context
+        getObject = getattr(doc, 'getObject', None)
         string = ""
         for prop in self.metadata:
             text = ''
-            getObject = getattr(doc, 'getObject', None)
 
             # ZCatalog brain
             if getObject:
@@ -115,8 +94,40 @@ class DiscoverRelatedItems(Discover):
             return
 
         site = getSite().absolute_url()
+        if getObject:
+            doc = getObject()
+
+        myuid = IUUID(doc, None)
         for item in discover(string, match=site):
-            yield item
+            text = item.get('text')
+            if text.startswith('resolveuid/'):
+                uid = text.split('/')[1]
+                if uid == myuid:
+                    continue
+
+                if canRelate(doc, uid=uid):
+                    item['text'] = uid
+                    yield item
+                    continue
+
+            try:
+                obj = doc.unrestrictedTraverse(text)
+            except Exception, err:
+                logger.exception(err)
+                continue
+            else:
+                if not canRelate(doc, obj):
+                    continue
+
+                uid = IUUID(obj, None)
+                if not uid:
+                    continue
+
+                if uid == myuid:
+                    continue
+                item['text'] = uid
+                yield item
+                continue
 
     @tags.setter
     def tags(self, value):

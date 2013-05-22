@@ -8,6 +8,7 @@
   <include package=".browser" />
   <include package=".controlpanel" />
   <include package=".discover" />
+  <include package=".relations" />
 
   <include package=".upgrades" />
 

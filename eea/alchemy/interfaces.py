@@ -282,10 +282,8 @@ class IDiscoverRelatedItems(IDiscoverAdapter):
     >>> discover = getAdapter(self.page,
     ... IDiscoverAdapter, name='relatedItems')
     >>> discover.metadata = 'text'
-    >>> [tag.get('text', '') for tag in discover.tags]
-    ['...new-article', '...an-event', 'Members/test_user_1_/new-event']
-
-    >>> len(discover.preview[0])
+    >>> tags = [tag.get('text', '') for tag in discover.tags]
+    >>> len(tags)
     2
 
     >>> discover.tags = 'Update'

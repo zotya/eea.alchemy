@@ -74,10 +74,10 @@ class DiscoverGeoTags(Discover):
             return
 
         doc = self.context
+        getObject = getattr(doc, 'getObject', None)
         string = ""
         for prop in self.metadata:
             text = ''
-            getObject = getattr(doc, 'getObject', None)
 
             # ZCatalog brain
             if getObject:
