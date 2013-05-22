@@ -37,17 +37,35 @@ EEA.AlchemyDiscoverer.ContentTypesBox = function(context, options){
 EEA.AlchemyDiscoverer.ContentTypesBox.prototype = {
   initialize: function(){
     var self = this;
+    self.filter = self.context.find('input[type="text"]');
+    self.checkboxes = self.context.find('input[type="checkbox"]');
 
     self.context.fadeIn();
 
     // Handle events
-    jQuery('input', self.context).click(function(evt){
+    self.checkboxes.click(function(evt){
       var options = {};
       options.checked = jQuery(this).parents('.alchemy-box').find(':checked');
       options.element = jQuery(this);
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.contentTypesChanged, options);
     });
 
+    self.filter.bind('input', function(){
+      self.search(jQuery(this).val());
+    });
+  },
+
+  search: function(text){
+    var self = this;
+    self.checkboxes.each(function(){
+      var parent = jQuery(this).parents('li');
+      var label = parent.find('label').text().toLowerCase();
+      if(label.indexOf(text.toLowerCase()) === -1){
+        parent.hide();
+      }else{
+        parent.show();
+      }
+    });
   }
 };
 
@@ -68,13 +86,19 @@ EEA.AlchemyDiscoverer.LookInBox = function(context, options){
 EEA.AlchemyDiscoverer.LookInBox.prototype = {
   initialize: function(){
     var self = this;
+    self.filter = self.context.find('input[type="text"]');
+    self.checkboxes = self.context.find('input[type="checkbox"]');
 
     // Handle events
-    jQuery('input', self.context).click(function(evt){
+    self.checkboxes.click(function(evt){
       var options = {};
       options.checked = jQuery(this).parents('.alchemy-box').find(':checked');
       options.element = jQuery(this);
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.lookInChanged, options);
+    });
+
+    self.filter.bind('input', function(){
+      self.search(jQuery(this).val());
     });
 
     // Content-Type
@@ -85,6 +109,19 @@ EEA.AlchemyDiscoverer.LookInBox.prototype = {
         self.context.fadeOut();
       }else{
         self.context.fadeIn();
+      }
+    });
+  },
+
+  search: function(text){
+    var self = this;
+    self.checkboxes.each(function(){
+      var parent = jQuery(this).parents('li');
+      var label = parent.find('label').text().toLowerCase();
+      if(label.indexOf(text.toLowerCase()) === -1){
+        parent.hide();
+      }else{
+        parent.show();
       }
     });
   }
@@ -107,13 +144,19 @@ EEA.AlchemyDiscoverer.LookForBox = function(context, options){
 EEA.AlchemyDiscoverer.LookForBox.prototype = {
   initialize: function(){
     var self = this;
+    self.filter = self.context.find('input[type="text"]');
+    self.checkboxes = self.context.find('input[type="checkbox"]');
 
     // Handle events
-    jQuery('input', self.context).click(function(evt, item){
+    self.checkboxes.click(function(evt, item){
       var options = {};
       options.checked = jQuery(this).parents('.alchemy-box').find(':checked');
       options.element = jQuery(this);
       jQuery(document).trigger(EEA.AlchemyDiscoverer.Events.lookForChanged, options);
+    });
+
+    self.filter.bind('input', function(){
+      self.search(jQuery(this).val());
     });
 
     // Look in
@@ -124,6 +167,19 @@ EEA.AlchemyDiscoverer.LookForBox.prototype = {
         self.context.fadeOut();
       }else{
         self.context.fadeIn();
+      }
+    });
+  },
+
+  search: function(text){
+    var self = this;
+    self.checkboxes.each(function(){
+      var parent = jQuery(this).parents('li');
+      var label = parent.find('label').text().toLowerCase();
+      if(label.indexOf(text.toLowerCase()) === -1){
+        parent.hide();
+      }else{
+        parent.show();
       }
     });
   }

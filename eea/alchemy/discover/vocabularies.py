@@ -34,14 +34,44 @@ class SchemaFields(object):
     """ Get all schema fields registered for portal_types
     """
     implements(IVocabularyFactory)
+    _schema = None
+
+    def schema(self, context=None):
+        if self._schema:
+            return self._schema
+
+        types = getToolByName(context, 'portal_types')
+        ctool = getToolByName(context, 'portal_catalog')
+        res = set()
+        for portal_type in types.objectIds():
+            brains = ctool(portal_type=portal_type)
+            if not brains:
+                continue
+
+            brain = brains[0]
+            try:
+                doc = brain.getObject()
+            except Exception, err:
+                continue
+
+            schema = getattr(doc, 'Schema', None)
+            if not schema:
+                continue
+
+            schema = schema()
+            for field in schema.fields():
+                res.add(field.getName())
+
+        self._schema = sorted(res, key=str.lower)
+        return self._schema
 
     def __call__(self, context=None):
         if not context:
             context = getSite()
-        types = getToolByName(context, 'portal_types')
-
-        items = []
-        return SimpleVocabulary(items)
+        schema = self.schema(context)
+        return SimpleVocabulary([
+            SimpleTerm(field, field, field) for field in schema
+        ])
 
 class CatalogMetadata(object):
     """ Get catalog metadata
@@ -73,7 +103,10 @@ class SchemaAndCatalog(object):
         # Schema
         voc = queryUtility(IVocabularyFactory,
                            name=u"eea.alchemy.vocabularies.SchemaFields")
+
+        existing = set()
         for term in voc(context):
+            existing.add(term.value)
             items.append(SimpleTerm(term.value, term.token,
                                     u'Schema: %s' % term.title))
 
@@ -81,6 +114,8 @@ class SchemaAndCatalog(object):
         voc = queryUtility(IVocabularyFactory,
                            name=u"eea.alchemy.vocabularies.CatalogMetadata")
         for term in voc(context):
+            if term.value in existing:
+                continue
             items.append(SimpleTerm(term.value, term.token,
                                     u'Catalog: %s' % term.title))
         return SimpleVocabulary(items)

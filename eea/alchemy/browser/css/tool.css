@@ -4,7 +4,7 @@
 }
 
 #eea-alchemy .alchemy-box {
-  height: 23em;
+  height: 24em;
   border-color: #cccccc;
   border-width: 1px;
   border-style: dotted;
@@ -32,9 +32,23 @@
 
 #eea-alchemy .alchemy-box-content {
   width: 100%;
-  height: 80%;
+  height: 75%;
   overflow-y: auto;
   overflow-x: hiddden;
+}
+
+#eea-alchemy .alchemy-box-content li {
+  display: table-row;
+}
+
+#eea-alchemy .alchemy-box-content li input {
+  display: table-cell;
+}
+
+#eea-alchemy .alchemy-box-content li label {
+  display: table-cell;
+  padding-left: 0.5em;
+  line-height: 1.65;
 }
 
 #eea-alchemy .alchemy-button {
@@ -89,4 +103,12 @@
 
 #eea-alchemy .auto-scrolling {
   float: left;
+}
+
+#eea-alchemy .alchemy-filter input {
+  width: 100%;
+  background: none;
+  border: 1px dotted #ccc;
+  font-size: 1.3em;
+  font-style: italic;
 }
