@@ -1,9 +1,11 @@
 ===========
 EEA Alchemy
 ===========
-Auto-discover geographical coverage, temporal coverage and keywords from
-documents common metadata (title, description, body, etc) and auto highlight
-keywords within a page content based on selected tags.
+Auto-discover geographical coverage, temporal coverage, related items and
+keywords from documents common metadata (title, description, body, etc),
+auto highlight keywords within a page content based on selected tags and
+auto-update related items based on internal links found within
+object's metadata.
 
 
 Contents
@@ -23,7 +25,9 @@ Main features
 
 - Auto-discover keywords, locations and temporal coverage;
 - Auto highlight keywords within a page content based on selected
-  tags and link them to a custom search page.
+  tags and link them to a custom search page;
+- Auto update related items based on internal links found within
+  object's metadata.
 
 
 Planed features
@@ -46,8 +50,8 @@ Install
 Getting started
 ===============
 
-Auto discover keywords, location or temporal coverage
------------------------------------------------------
+Auto discover keywords, location, related items or temporal coverage
+--------------------------------------------------------------------
 
 1. Get your alchemy key here: http://www.alchemyapi.com/api/register.html
 2. Update your alchemy API key within Site Setup > Alchemy Settings
@@ -66,13 +70,26 @@ Auto tagging
    article body are links to a custom search page which is also configurable
    within **Alchemy Settings ControlPanel**
 
+Auto relations
+--------------
+1. *Enable auto-relations* within **Site Setup > Alchemy Settings**
+2. Edit your document and add some internal links for it
+   within **/edit > Body Text.**
+   For example, if you're writing an article about an event add a internal link
+   to this event within **Body Text** field.
+   Now Save your article and you should see a notification message on top of
+   the page saying something like: **Automatically detected and added
+   one relation since it is linked in content.**
+   If you check the related content section for your article you'll notice that
+   the Event object was automatically added there.
+
+
 Source code
 ===========
 
-Latest source code (Plone 4 compatible):
+- Latest source code (Plone 4 compatible):
   https://github.com/collective/eea.alchemy
-
-Plone 2 and 3 compatible:
+- Plone 2 and 3 compatible:
   https://github.com/collective/eea.alchemy/tree/plone25
 
 Copyright and license
