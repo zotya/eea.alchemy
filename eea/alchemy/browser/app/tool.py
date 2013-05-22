@@ -21,7 +21,7 @@ class Alchemy(BrowserView):
         ...                         name=u'alchemy-tags.html')
 
         >>> print view()
-        <...Auto-discover geographical coverage, temporal coverage and...
+        <...Use the form bellow to auto-discover and update...
 
     """
 
@@ -34,7 +34,7 @@ class Search(BrowserView):
         ...                         name=u'alchemy.search')
 
         >>> print view()
-        <...Portal types... ...Look in... ...Discover...
+        <...Content-Types... ...Look in... ...Look for...
 
     """
     @property
@@ -76,7 +76,7 @@ class Update(BrowserView):
         >>> view = getMultiAdapter((portal, portal.REQUEST),
         ...                         name=u'alchemy.update')
 
-        >>> print view()
+        >>> print view.run()
         Auto-discover complete
 
     """
@@ -148,6 +148,7 @@ class Update(BrowserView):
         if action != u'apply':
             logger.warn("Preview mode selected, aborting transaction!")
             transaction.abort()
+        return u'Auto-discover complete'
 
     def discover(self, brain, lookin, lookfor):
         """ Discover tags in brain

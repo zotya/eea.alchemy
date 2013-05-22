@@ -31,7 +31,7 @@ setup(name=NAME,
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'BeautifulSoup',
+          'beautifulsoup4',
           'eea.faceted.vocabularies',
           'collective.js.jqueryui',
       ],

@@ -1,7 +1,8 @@
 """ Base test cases
 """
-from Products.Five import zcml
+from Zope2.App import zcml
 from Products.Five import fiveconfigure
+from plone.uuid.interfaces import IUUID
 from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 from eea.alchemy.tests.fake import FakeAlchemyAPI, IAlchemyAPI
 from Products.PloneTestCase import PloneTestCase as ptc
@@ -38,12 +39,19 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
     """
     _sandbox = None
     _brain = None
+    _page = None
 
     @property
     def sandbox(self):
         """ Sandbox
         """
         return self._sandbox
+
+    @property
+    def page(self):
+        """ A page
+        """
+        return self._page
 
     @property
     def brain(self):
@@ -56,8 +64,14 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
         """
         sid = self.folder.invokeFactory('Folder', id='sandbox')
         sandbox = self.folder._getOb(sid)
-        _ = self.folder.invokeFactory('Document', id='new-article')
-        _ = self.folder.invokeFactory('Event', id='new-event')
+        eid = self.folder.invokeFactory('Event', id='an-event')
+        eid = self.folder.invokeFactory('Event', id='new-event')
+        pid = self.folder.invokeFactory('Document', id='new-article')
+
+        page = self.folder._getOb(pid)
+        event = self.folder._getOb(eid)
+        uid = IUUID(event)
+
         sandbox.processForm(data=1, metadata=1, values={
             'title': (
                 "Formation of new land cover in the region of Valencia, Spain"
@@ -65,11 +79,6 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
             'description': (
                 "Urban sprawl 1990-2000 in the province of Venice "
                 "using a 1 km x 1 km grid. See more: "
-                ""
-                "<a href='http://nohost/Plone/new-article'>article</a> or "
-                "<a href='https://nohost/Plone/new-event'>event</a> or "
-                "if you prefer this "
-                "<a href='http://foobar.com/new-article'>external article</a>"
             ),
         })
         self._sandbox = sandbox
@@ -77,6 +86,26 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
         sid = sandbox.getId()
         brains = self.portal.portal_catalog(getId=sid)
         self._brain = brains[0]
+
+        page.processForm(data=1, metadata=1, values={
+            'title': (
+                "Formation of new land cover in the region of Valencia, Spain"
+            ),
+            'text': (
+                "Urban sprawl 1990-2000 in the province of Venice "
+                "using a 1 km x 1 km grid. See more: "
+                ""
+                "<a href='https://nohost/plone"
+                "/Members/test_user_1_/new-article'>article</a> or "
+                "<a href='/Members/test_user_1_/an-event'>event</a> or "
+                "<a href='resolveuid/%s'>other event</a> or "
+                "if you prefer this "
+                "<a href='http://foobar.com/new-article'>"
+                "external article</a>" % uid
+            ),
+        })
+
+        self._page = page
 
         atool = IAlchemySettings(self.portal)
         atool.token = u'12345665766867'

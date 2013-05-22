@@ -3,6 +3,8 @@
 import logging
 from zope.interface import implements
 from zope.component import getUtility
+from zope.component.hooks import getSite
+from plone.uuid.interfaces import IUUID
 from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
@@ -41,27 +43,60 @@ class DiscoverRelatedItems(Discover):
                         self.field, doc.absolute_url(1))
             return
 
-        tags = set()
+        current = [IUUID(obj, None) for obj in field.getAccessor(doc)()]
+        tags = []
         for tag in self.tags:
             text = tag.get('text')
             if not text:
                 continue
 
+            if text.startswith('resolveuid/'):
+                uid = text.split('/')[1]
+                if uid not in tags:
+                    tags.append(uid)
+                continue
+
+            try:
+                obj = doc.unrestrictedTraverse(text)
+            except Exception, err:
+                logger.exception(err)
+                continue
+            else:
+                uid = IUUID(obj, None)
+                if uid and uid not in tags:
+                    tags.append(uid)
+                continue
+
+        myuid = IUUID(doc, None)
+        tags = [tag for tag in tags if (tag and tag != myuid)]
+        if not set(tags).difference(current):
+            return
+
+        return (tags, 'Update %s for %s. Before: %s, After: %s' %
+                (self.field, doc.absolute_url(1), current, tags))
+
     @property
     def tags(self):
         """ Getter
         """
+        doc = self.context
         string = ""
         for prop in self.metadata:
-            if getattr(self.context, 'getField', None):
-                # ATContentType
-                field = self.context.getField(prop)
+            text = ''
+            getObject = getattr(doc, 'getObject', None)
+
+            # ZCatalog brain
+            if getObject:
+                text = getattr(doc, prop, '')
+                if not text:
+                    doc = getObject()
+
+            # ATContentType
+            if not text and getattr(doc, 'getField', None):
+                field = doc.getField(prop)
                 if not field:
                     continue
-                text = field.getAccessor(self.context)()
-            else:
-                # ZCatalog brain
-                text = getattr(self.context, prop, '')
+                text = field.getAccessor(doc)()
 
             if not text:
                 continue
@@ -79,7 +114,8 @@ class DiscoverRelatedItems(Discover):
         if not string:
             return
 
-        for item in discover(string):
+        site = getSite().absolute_url()
+        for item in discover(string, match=site):
             yield item
 
     @tags.setter

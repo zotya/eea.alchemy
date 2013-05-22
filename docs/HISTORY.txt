@@ -3,6 +3,20 @@ Changelog
 
 5.1-dev - (unreleased)
 ----------------------
+* Upgrade step: (optional) Manually **Enable auto relations** within Site Setup >
+  Alchemy Settings
+  [voineali refs #9486]
+* Feature: Auto discover internal links within a Plone Content-Type's text
+  and update 'relatedItems' field accordingly
+  [voineali refs #9486]
+* Feature: Refactoring Alchemy Discover UI:
+  - Improve user experience;
+  - Added real-time console.log in browser via server-sent events;
+  - Improved "Look in" facet by adding all schema fields and catalog metadata;
+  [voineali refs #9486]
+* Feature: Refactoring discover utilities and adapters in order to be able
+  to easily extend alchemy functionality outside eea.alchemy package
+  [voineali refs #9486]
 
 5.0 - (2013-05-20)
 ------------------
@@ -15,9 +29,6 @@ Changelog
   [voineali refs #9486]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for EEA Alchemy
-  [voineali refs #9486]
-* Feature: Refactoring discover utilities and adapters in order to be able
-  to easily extend alchemy functionality outside eea.alchemy package
   [voineali refs #9486]
 * Feature: Auto highlight keywords within a page content based on selected
   tags and link them to a custom search page

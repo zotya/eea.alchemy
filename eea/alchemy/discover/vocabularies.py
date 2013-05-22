@@ -37,6 +37,8 @@ class SchemaFields(object):
     _schema = None
 
     def schema(self, context=None):
+        """ Get schema
+        """
         if self._schema:
             return self._schema
 
@@ -51,7 +53,7 @@ class SchemaFields(object):
             brain = brains[0]
             try:
                 doc = brain.getObject()
-            except Exception, err:
+            except Exception:
                 continue
 
             schema = getattr(doc, 'Schema', None)

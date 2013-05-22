@@ -71,17 +71,24 @@ class DiscoverTime(Discover):
     def tags(self):
         """ Getter
         """
+        doc = self.context
         string = ""
         for prop in self.metadata:
-            if getattr(self.context, 'getField', None):
-                # ATContentType
-                field = self.context.getField(prop)
+            text = ''
+            getObject = getattr(doc, 'getObject', None)
+
+            # ZCatalog brain
+            if getObject:
+                text = getattr(doc, prop, '')
+                if not text:
+                    doc = getObject()
+
+            # ATContentType
+            if not text and getattr(doc, 'getField', None):
+                field = doc.getField(prop)
                 if not field:
                     continue
-                text = field.getAccessor(self.context)()
-            else:
-                # ZCatalog brain
-                text = getattr(self.context, prop, '')
+                text = field.getAccessor(doc)()
 
             if not text:
                 continue

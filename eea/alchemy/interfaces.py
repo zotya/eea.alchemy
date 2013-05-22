@@ -151,14 +151,14 @@ class IDiscoverLinks(IDiscoverUtility):
           'count': '1',
           'relevance': '100.0',
           'type': 'Link',
-          'text': '/a'
+          'text': 'a'
         }, ...]
 
         >>> res.next()['text']
-        '/a'
+        'a'
 
         >>> res.next()['text']
-        '/b/c/d'
+        'b/c/d'
 
         >>> res.next()
         Traceback (most recent call last):
@@ -279,10 +279,21 @@ class IDiscoverRelatedItems(IDiscoverAdapter):
 
     >>> from zope.component import getAdapter
     >>> from eea.alchemy.interfaces import IDiscoverAdapter
-    >>> discover = getAdapter(self.sandbox,
+    >>> discover = getAdapter(self.page,
     ... IDiscoverAdapter, name='relatedItems')
-    >>> discover.metadata = 'description'
+    >>> discover.metadata = 'text'
     >>> [tag.get('text', '') for tag in discover.tags]
-    ['/Plone/new-article', '/Plone/new-event']
+    ['...new-article', '...an-event', 'Members/test_user_1_/new-event']
+
+    >>> len(discover.preview[0])
+    2
+
+    >>> discover.tags = 'Update'
+    >>> relations = self.page.getRelatedItems()
+    >>> relations
+    [<ATEvent at ...an-event>, <ATEvent at ...new-event>]
+
+    >>> relations[1].getBRefs('relatesTo')
+    [<ATDocument at ...new-article>]
 
     """
