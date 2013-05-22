@@ -46,7 +46,7 @@ def auto_relations(obj, event):
             u"An error occured while trying to auto-relate content: %s" % err)
         level = u'error'
     else:
-        length = len(tags)
+        length = len(tags) if tags else 0
         if length == 1:
             text = 'one relation since it is linked in content'
         else:
