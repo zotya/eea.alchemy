@@ -113,6 +113,11 @@ jQuery(document).ready(function(){
 
   if(items.length){
     base = jQuery('base').attr('href') || '';
+
+    if(base && !base.endswith('/view')){
+      base = base.replace(/\/view$/g, '/');
+    }
+
     if(base && !base.endswith('/')){
       base += '/';
     }

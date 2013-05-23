@@ -6,6 +6,8 @@ Changelog
 * Upgrade step: (optional) Manually **Enable auto relations** within Site Setup >
   Alchemy Settings
   [voineali refs #9486]
+* Bug fix: Handle auto-tagging when BASE_URL endswith /view
+  [voineali refs #14592]
 * Feature: Auto discover internal links within a Plone Content-Type's text
   and update 'relatedItems' field accordingly
   [voineali refs #9486]
