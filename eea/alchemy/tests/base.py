@@ -9,9 +9,15 @@ from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
 from zope.component import provideUtility
 import eea.alchemy
-import logging
 
+import logging
 logger = logging.getLogger('eea.alchemy.tests.base')
+
+EEA_RELATIONS = True
+try:
+    import eea.relations
+except ImportError:
+    EEA_RELATIONS = False
 
 @onsetup
 def setup_eea_alchemy():
@@ -21,13 +27,25 @@ def setup_eea_alchemy():
     until the setup of the Plone site testing layer.
     """
     fiveconfigure.debug_mode = True
+
+    if EEA_RELATIONS:
+        zcml.load_config('configure.zcml', eea.relations)
     zcml.load_config('configure.zcml', eea.alchemy)
+
     fiveconfigure.debug_mode = False
+
+    if EEA_RELATIONS:
+        ptc.installPackage('eea.relations')
+    ptc.installPackage('eea.alchemy')
 
     provideUtility(FakeAlchemyAPI(), IAlchemyAPI)
 
+extension_profiles = ('eea.alchemy:default',)
+if EEA_RELATIONS:
+    extension_profiles = ('eea.relations:default',) + extension_profiles
+
 setup_eea_alchemy()
-ptc.setupPloneSite(extension_profiles=('eea.alchemy:default',))
+ptc.setupPloneSite(extension_profiles=extension_profiles)
 
 class EEAAlchemyTestCase(ptc.PloneTestCase):
     """ Base class for integration tests for the 'EEA Alchemy' product.
