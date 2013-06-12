@@ -9,7 +9,7 @@
   border-width: 1px;
   border-style: dotted;
   display: none;
-  box-shadow: 3px 3px 3px #CCC;
+  -webkit-box-shadow: 3px 3px 3px #CCC;
   border-radius: 10px;
   padding: 1em;
 }
@@ -30,11 +30,15 @@
   margin:0.2em;
 }
 
+#eea-alchemy .row-fluid {
+  width: 102%;
+}
+
 #eea-alchemy .alchemy-box-content {
   width: 100%;
   height: 75%;
   overflow-y: auto;
-  overflow-x: hiddden;
+  overflow-x: hidden;
 }
 
 #eea-alchemy .alchemy-box-content li {
