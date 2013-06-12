@@ -25,24 +25,25 @@ class View(BrowserView):
     def tags(self, **kwargs):
         """ Get tags
         """
-        search = set()
+        search = {}
         if getattr(self.context, 'getField', None):
-            fields = self.settings.autoTaggingFields
-            for name in fields:
+            table = self.settings.autoTaggingTableItems
+            for name, link in table:
                 field = self.context.getField(name)
                 if not field:
                     continue
                 value = field.getAccessor(self.context)()
+
                 if isinstance(value, (str, unicode)):
-                    search.add(value)
+                    search[value] = link
                 elif isinstance(value, (list, tuple, set)):
-                    search.update(value)
+                    for val in value:
+                        search[val] = link
 
         return {
             'enabled': self.settings.autoTagging,
-            'link': self.settings.autoTaggingLink,
             'blacklist': self.settings.autoTaggingBlackList,
-            'search': tuple(search)
+            'search': search
         }
 
     def tags_json(self, **kwargs):

@@ -2,6 +2,7 @@
 """
 from zope.interface import Interface
 from zope import schema
+from eea.alchemy.controlpanel import schema as customschema
 from eea.alchemy.config import EEAMessageFactory as _
 
 class IAlchemySettings(Interface):
@@ -22,19 +23,15 @@ class IAlchemySettings(Interface):
         default=False
     )
 
-    autoTaggingFields = schema.List(
-        title=_(u"Auto-tagging fields"),
-        description=_(u"Lookup these fields for tags"),
+    autoTaggingTable = schema.List(
+        title=_(u"Auto-tagging pair of field and link"),
+        description=_("Define a pair of schema field to lookup tags "
+                      "and the link to use. e.g. "
+                      "subject => @@search?Subject= | "
+                      "location => @@search?getLocation="),
         required=True,
-        default=[u"subject"],
-        value_type=schema.TextLine()
-    )
-
-    autoTaggingLink = schema.TextLine(
-        title=_(u"Auto-tagging link"),
-        description=_(u"Hyperlink to the following address"),
-        required=True,
-        default=u"@@search?Subject="
+        default=[u'subject=>@@search?Subject='],
+        value_type=customschema.TableRow()
     )
 
     autoTaggingBlackList = schema.List(

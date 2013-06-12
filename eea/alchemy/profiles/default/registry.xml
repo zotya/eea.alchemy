@@ -1,4 +1,24 @@
 <?xml version="1.0"?>
 <registry>
-  <records interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings" />
+  <record interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings"
+    field="autoTaggingFields"
+    delete="True" />
+  <record interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings"
+    field="autoTaggingLink"
+    delete="True" />
+  <record interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings"
+    field="autoTaggingTable">
+    <field type="plone.registry.field.Dict">
+      <title>Auto-tagging pair of field and link</title>
+      <description>Define a pair of schema field to lookup tags and the link to use. (e.g. {'subject': '@@search?Subject=", 'location': '@@search?getLocation='})</description>
+      <value_type type="plone.registry.field.TextLine" />
+      <value_type type="plone.registry.field.TextLine" />
+      <default>
+        <element key="subject">@@search?Subject=</element>
+      </default>
+    </field>
+  </record>
+  <records interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings">
+   <omit>autoTaggingTable</omit>
+  </records>
 </registry>
