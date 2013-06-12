@@ -8,6 +8,9 @@ Changelog
   [voineali refs #9486]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for EEA Alchemy
+* Feature: Add presence viewlet in order to call alchemy.tags.json via AJAX
+  only if auto-tagging is enabled
+  [voineali refs #9486]
 * Change: Pair tagging field and tagging link in order to allow to have geotags
   going to a different search than keywords tags.
   [voineali refs #9486]

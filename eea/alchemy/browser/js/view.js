@@ -7,9 +7,10 @@ if (typeof String.prototype.endswith !== 'function') {
 if(typeof Object.keys !== 'function'){
   Object.keys = function(o) {
     var result = [];
-    for(var name in o) {
-      if (o.hasOwnProperty(name))
+    for(var name in o){
+      if(o.hasOwnProperty(name)){
         result.push(name);
+      }
     }
     return result;
   };
@@ -121,22 +122,28 @@ jQuery.fn.EEAlchemy = function(options){
 
 // On document ready
 jQuery(document).ready(function(){
-  items = jQuery('#region-content,#content');
-
-  if(items.length){
-    base = jQuery('base').attr('href') || '';
-
-    if(base && !base.endswith('/view')){
-      base = base.replace(/\/view$/g, '/');
-    }
-
-    if(base && !base.endswith('/')){
-      base += '/';
-    }
-
-    items.EEAlchemy({
-      api: base + 'alchemy.tags.json'
-    });
+  var enabled = jQuery('#eea-alchemy-enabled');
+  if(!enabled.length){
+    return;
   }
+
+  var items = jQuery('#region-content,#content');
+  if(!items.length){
+    return;
+  }
+
+  base = jQuery('base').attr('href') || '';
+
+  if(base && !base.endswith('/view')){
+    base = base.replace(/\/view$/g, '/');
+  }
+
+  if(base && !base.endswith('/')){
+    base += '/';
+  }
+
+  items.EEAlchemy({
+    api: base + 'alchemy.tags.json'
+  });
 
 });
