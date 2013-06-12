@@ -1,7 +1,5 @@
 """ Custom zope schema
 """
-import json
-from zope.interface import Interface
 from zope.interface import implements
 from zope.formlib.textwidgets import TextWidget
 from zope.formlib.widget import renderElement
@@ -9,9 +7,7 @@ from zope.formlib.interfaces import ConversionError
 from plone.app.form.widgets import ListSequenceWidget
 from zope.schema.interfaces import IList
 from zope.schema.interfaces import ITuple
-from plone.registry.field import List as ListRegistry
-from plone.app.registry.exportimport.fields import PersistentFieldHandler
-
+from eea.alchemy.config import EEAMessageFactory as _
 from zope import schema
 
 class ITable(IList):
@@ -63,6 +59,8 @@ class TableRowWidget(TextWidget):
         return res
 
     def _toFieldValue(self, input):
+        """ Convert form value to field value
+        """
         if self.convert_missing_value and input == self._missing:
             value = self.context.missing_value
         else:
@@ -81,6 +79,8 @@ class TableWidget(ListSequenceWidget):
     """ Custom widget for table
     """
     def _getPresenceMarker(self, count=0):
+        """ Safely get presence marker
+        """
         try:
             return super(TableWidget, self)._getPresenceMarker(count=count)
         except Exception:
