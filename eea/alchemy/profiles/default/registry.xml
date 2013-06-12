@@ -9,10 +9,10 @@
   <record interface="eea.alchemy.controlpanel.interfaces.IAlchemySettings"
     field="autoTaggingTable">
     <field type="plone.registry.field.Dict">
-      <title>Auto-tagging pair of field and link</title>
-      <description>Define a pair of schema field to lookup tags and the link to use. (e.g. {'subject': '@@search?Subject=", 'location': '@@search?getLocation='})</description>
-      <value_type type="plone.registry.field.TextLine" />
-      <value_type type="plone.registry.field.TextLine" />
+      <title>Auto-tagging mapping dict (field, link)</title>
+      <description>Define pairs of 'schema field' where to lookup tags and the link where these tags should point, usually a search page. (e.g. 'subject=>@@search?Subject=' or 'location=>@@search?getLocation=')</description>
+      <key_type type="plone.registry.field.ASCIILine" />
+      <value_type type="plone.registry.field.ASCIILine" />
       <default>
         <element key="subject">@@search?Subject=</element>
       </default>

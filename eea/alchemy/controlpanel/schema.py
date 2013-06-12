@@ -8,30 +8,30 @@ from zope.formlib.widget import renderElement
 from zope.formlib.interfaces import ConversionError
 from plone.app.form.widgets import ListSequenceWidget
 from zope.schema.interfaces import IList
-from zope.schema.interfaces import IFromUnicode
+from zope.schema.interfaces import ITuple
 from plone.registry.field import List as ListRegistry
 from plone.app.registry.exportimport.fields import PersistentFieldHandler
 
 from zope import schema
 
-#class ITable(IList):
-    #""" Interface for Table field
-    #"""
+class ITable(IList):
+    """ Interface for Table field
+    """
 
-class ITableRow(IFromUnicode):
+class ITableRow(ITuple):
     """ Interface for TableRow field
     """
 
-#class Table(schema.List):
-    #""" Table field
-    #"""
-    #implements(ITable)
+class Table(schema.List):
+    """ Table field
+    """
+    implements(ITable)
 
-class TableRow(schema.TextLine):
+class TableRow(schema.Tuple):
     """ Pair of values
     """
     cells = 2
-    delimiter = u'=>'
+    delimiter = u','
     implements(ITableRow)
 
 class TableRowWidget(TextWidget):
@@ -66,15 +66,13 @@ class TableRowWidget(TextWidget):
         if self.convert_missing_value and input == self._missing:
             value = self.context.missing_value
         else:
-            # We convert everything to unicode. This might seem a bit crude,
-            # but anything contained in a TextWidget should be representable
-            # as a string. Note that you always have the choice of overriding
-            # the method.
-            if isinstance(input, (list, tuple)):
-                input = self.context.delimiter.join(input)
+            if isinstance(input, (str, unicode)):
+                input = [input, '']
+            elif isinstance(input, list):
+                input = tuple(input)
 
             try:
-                value = unicode(input)
+                value = tuple(str(x) for x in input)
             except ValueError, v:
                 raise ConversionError(_("Invalid text data"), v)
         return value

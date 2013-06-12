@@ -27,7 +27,7 @@ class View(BrowserView):
         """
         search = {}
         if getattr(self.context, 'getField', None):
-            table = self.settings.autoTaggingTableItems
+            table = self.settings.autoTaggingTable
             for name, link in table:
                 field = self.context.getField(name)
                 if not field:

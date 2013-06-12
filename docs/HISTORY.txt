@@ -3,11 +3,16 @@ Changelog
 
 5.1-dev - (unreleased)
 ----------------------
-* Change: updated link to site setup
-  [ghicale]
 * Upgrade step: (optional) Manually **Enable auto relations** within Site Setup >
   Alchemy Settings
   [voineali refs #9486]
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for EEA Alchemy
+* Change: Pair tagging field and tagging link in order to allow to have geotags
+  going to a different search than keywords tags.
+  [voineali refs #9486]
+* Change: updated link to site setup
+  [ghicale]
 * Bug fix: Handle auto-tagging when BASE_URL endswith /view
   [voineali refs #14592]
 * Feature: Auto discover internal links within a Plone Content-Type's text

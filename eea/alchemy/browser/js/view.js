@@ -1,7 +1,18 @@
 if (typeof String.prototype.endswith !== 'function') {
-    String.prototype.endswith = function(suffix) {
-        return this.indexOf(suffix, this.length - suffix.length) !== -1;
-    };
+  String.prototype.endswith = function(suffix) {
+      return this.indexOf(suffix, this.length - suffix.length) !== -1;
+  };
+}
+
+if(typeof Object.keys !== 'function'){
+  Object.keys = function(o) {
+    var result = [];
+    for(var name in o) {
+      if (o.hasOwnProperty(name))
+        result.push(name);
+    }
+    return result;
+  };
 }
 
 if(window.EEA === undefined){
@@ -58,10 +69,6 @@ EEA.Alchemy.prototype = {
       return;
     }
 
-    if(!options.search.length){
-      return;
-    }
-
     jQuery.extend(self.settings, options);
     return self.reload();
   },
@@ -69,7 +76,7 @@ EEA.Alchemy.prototype = {
   reload: function(){
     var self = this;
     self.context.highlightSearchTerms({
-      terms: self.settings.search,
+      terms: Object.keys(self.settings.search),
       highlightClass: self.settings.highlightClass
     });
 
@@ -91,8 +98,13 @@ EEA.Alchemy.prototype = {
       return;
     }
 
+    var url = self.settings.search[item.text()];
+    if(!url){
+      return;
+    }
+
     var link = jQuery('<a>')
-      .attr('href', self.settings.link + item.text())
+      .attr('href', url + item.text())
       .text(item.text());
     item.html(link);
     item.show('highlight', 2000);

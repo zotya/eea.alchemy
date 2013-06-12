@@ -23,14 +23,14 @@ class IAlchemySettings(Interface):
         default=False
     )
 
-    autoTaggingTable = schema.List(
-        title=_(u"Auto-tagging pair of field and link"),
-        description=_("Define a pair of schema field to lookup tags "
-                      "and the link to use. e.g. "
-                      "subject => @@search?Subject= | "
-                      "location => @@search?getLocation="),
+    autoTaggingTable = customschema.Table(
+        title=_(u"Auto-tagging mapping table (field, link)"),
+        description=_("Define pairs of 'schema field' where to lookup tags "
+                      "and the link where these tags should point, usually "
+                      "a search page. (e.g. "
+                      "'subject=>@@search?Subject=' or "
+                      "'location=>@@search?getLocation=')"),
         required=True,
-        default=[u'subject=>@@search?Subject='],
         value_type=customschema.TableRow()
     )
 

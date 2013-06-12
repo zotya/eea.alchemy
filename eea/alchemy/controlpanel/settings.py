@@ -66,20 +66,14 @@ class ControlPanelAdapter(SchemaAdapterBase):
         """ Fields and links
         """
         name = u"autoTaggingTable"
-        return getattr(self.settings, name, IAlchemySettings[name].default)
-
-    @property
-    def autoTaggingTableItems(self):
-        """ Parse
-        """
-        delimiter = u'=>'
-        return [item.split(delimiter) for item in self.autoTaggingTable]
+        mapping = getattr(self.settings, name, {})
+        return mapping.items()
 
     @autoTaggingTable.setter
     def autoTaggingTable(self, value):
         """ Update autoTaggingTable
         """
-        self.settings.autoTaggingTable = value
+        self.settings.autoTaggingTable = dict(value)
 
     @property
     def autoTaggingBlackList(self):
