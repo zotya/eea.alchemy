@@ -3,7 +3,7 @@
   i18n_domain="eea">
 
   <browser:page
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    for="zope.interface.Interface"
     name="alchemy-tags.html"
     template="zpt/tool.pt"
     class=".app.tool.Alchemy"
@@ -19,7 +19,7 @@
     />
 
   <browser:page
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    for="zope.interface.Interface"
     name="alchemy.search"
     template="zpt/search.pt"
     class=".app.tool.Search"
@@ -27,14 +27,14 @@
     />
 
   <browser:page
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    for="zope.interface.Interface"
     name="alchemy.update"
     class=".app.tool.Update"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
-    for="Products.CMFPlone.interfaces.siteroot.IPloneSiteRoot"
+    for="zope.interface.Interface"
     name="alchemy.batch"
     class=".app.tool.Batch"
     permission="cmf.ManagePortal"
