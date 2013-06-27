@@ -3,6 +3,13 @@ Changelog
 
 5.2-dev - (unreleased)
 ----------------------
+* WIP
+* Feature: Pair lookin field with tagging link in order to be able to link
+  different search pages
+  [voineali refs #14797]
+* Feature: Added  "mark only first occurrence" selected by default in order
+  not to pollute pages with the same link
+  [voineali refs #14797]
 
 5.1 - (2013-06-17)
 ------------------
