@@ -4,24 +4,33 @@ if (typeof String.prototype.endswith !== 'function') {
   };
 }
 
-if(typeof Object.keys !== 'function'){
-  Object.keys = function(o) {
-    var result = [];
-    for(var name in o){
-      if(o.hasOwnProperty(name)){
-        result.push(name);
-      }
-    }
-    return result;
-  };
-}
-
 if(window.EEA === undefined){
   var EEA = {
     who: 'eea.alchemy',
     version: '5.0'
   };
 }
+
+EEA.Highlighter = function(context, options){
+ var self = this;
+  self.context = context;
+
+  self.settings = {
+    highlightClass: 'eea-alchemy-tag'
+  };
+
+  if(options){
+    jQuery.extend(self.settings, options);
+  }
+
+  self.initialize();
+};
+
+EEA.Highlighter.prototype = {
+  initialize: function(){
+
+  }
+};
 
 EEA.Alchemy = function(context, options){
   var self = this;
@@ -76,40 +85,37 @@ EEA.Alchemy.prototype = {
 
   reload: function(){
     var self = this;
-    self.context.highlightSearchTerms({
-      terms: Object.keys(self.settings.search),
-      highlightClass: self.settings.highlightClass
-    });
-
-    jQuery('.' + self.settings.highlightClass, self.context).each(function(){
-      return self.reloadItem(jQuery(this));
-    });
-  },
-
-  reloadItem: function(item){
-    var self = this;
-
-    // Skip blacklisted items
-    var blacklist = self.settings.blacklist || [];
-    blacklist.push('a');
-    blacklist = blacklist.join(',');
-
-    if(item.parents(blacklist).length){
-      item.removeClass(self.settings.highlightClass);
-      return;
-    }
-
-    var url = self.settings.search[item.text()];
-    if(!url){
-      return;
-    }
-
-    var link = jQuery('<a>')
-      .attr('href', url + item.text())
-      .text(item.text());
-    item.html(link);
-    item.show('highlight', 2000);
+    var adapter = new EEA.Highlighter(self.context, self.settings);
+    self.context.data('EEAHighlighter', adapter);
+    //jQuery('.' + self.settings.highlightClass, self.context).each(function(){
+      //return self.reloadItem(jQuery(this));
+    //});
   }
+
+  //reloadItem: function(item){
+    //var self = this;
+
+    //// Skip blacklisted items
+    //var blacklist = self.settings.blacklist || [];
+    //blacklist.push('a');
+    //blacklist = blacklist.join(',');
+
+    //if(item.parents(blacklist).length){
+      //item.removeClass(self.settings.highlightClass);
+      //return;
+    //}
+
+    //var url = self.settings.search[item.text()];
+    //if(!url){
+      //return;
+    //}
+
+    //var link = jQuery('<a>')
+      //.attr('href', url + item.text())
+      //.text(item.text());
+    //item.html(link);
+    //item.show('highlight', 2000);
+  //}
 };
 
 jQuery.fn.EEAlchemy = function(options){

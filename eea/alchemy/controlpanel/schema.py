@@ -55,6 +55,8 @@ class TableRowWidget(TextWidget):
             if self.displayMaxWidth:
                 kwargs['maxlength'] = self.displayMaxWidth
 
+            if cell:
+                res += u'&nbsp; &rarr; &nbsp;'
             res += renderElement(self.tag, **kwargs)
         return res
 

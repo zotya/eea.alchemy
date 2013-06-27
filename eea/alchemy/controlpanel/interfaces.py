@@ -18,9 +18,17 @@ class IAlchemySettings(Interface):
 
     autoTagging = schema.Bool(
         title=_(u'Enable auto-tagging'),
-        description=_(u"Hyperlink tags within page's body"),
+        description=_(u"Hyperlink tags within page body"),
         required=False,
         default=False
+    )
+
+    autoTaggingFirstOnly = schema.Bool(
+        title=_(u'Auto-tagging mark only first occurrence'),
+        description=_(u"Hyperlink only the first occurence of a tag "
+                      "wihin page body"),
+        required=False,
+        default=True
     )
 
     autoTaggingTable = customschema.Table(
@@ -28,8 +36,8 @@ class IAlchemySettings(Interface):
         description=_("Define pairs of 'schema field' where to lookup tags "
                       "and the link where these tags should point, usually "
                       "a search page. (e.g. "
-                      "'subject=>@@search?Subject=' or "
-                      "'location=>@@search?getLocation=')"),
+                      "'subject -> @@search?Subject=' or "
+                      "'location -> @@search?getLocation=')"),
         required=True,
         value_type=customschema.TableRow()
     )

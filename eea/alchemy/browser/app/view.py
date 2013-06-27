@@ -34,15 +34,21 @@ class View(BrowserView):
                     continue
                 value = field.getAccessor(self.context)()
 
+                if not value:
+                    continue
+
                 if isinstance(value, (str, unicode)):
                     search[value] = link
                 elif isinstance(value, (list, tuple, set)):
                     for val in value:
+                        if not val:
+                            continue
                         search[val] = link
 
         return {
             'enabled': self.settings.autoTagging,
             'blacklist': self.settings.autoTaggingBlackList,
+            'firstOnly': self.settings.autoTaggingFirstOnly,
             'search': search
         }
 

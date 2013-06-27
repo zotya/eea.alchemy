@@ -62,6 +62,19 @@ class ControlPanelAdapter(SchemaAdapterBase):
         self.settings.autoTagging = value
 
     @property
+    def autoTaggingFirstOnly(self):
+        """ Auto-tagging only the first occurence
+        """
+        name = u"autoTaggingFirstOnly"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @autoTaggingFirstOnly.setter
+    def autoTaggingFirstOnly(self, value):
+        """ Auto-tagging only the first occurence
+        """
+        self.settings.autoTaggingFirstOnly = value
+
+    @property
     def autoTaggingTable(self):
         """ Fields and links
         """
