@@ -140,7 +140,7 @@ jQuery(document).ready(function(){
 
   base = jQuery('base').attr('href') || '';
 
-  if(base && !base.endswith('/view')){
+  if(base && base.endswith('/view')){
     base = base.replace(/\/view$/g, '/');
   }
 
