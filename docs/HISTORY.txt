@@ -6,7 +6,6 @@ Changelog
 * Bug fix: inverted condition in order to fix issue described first at #14592
   from the 5.1 release
   [ichimdav #14592]
-* WIP
 * Feature: Pair lookin field with tagging link in order to be able to link
   different search pages
   [voineali refs #14797]
