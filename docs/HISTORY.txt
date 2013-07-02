@@ -6,6 +6,9 @@ Changelog
 * Bug fix: inverted condition in order to fix issue described first at #14592
   from the 5.1 release
   [ichimdav #14592]
+* Feature: Added "auto-tagging delimiter" option in order to allow extraction of
+  tags from Text fields
+  [voineali refs #14797]
 * Feature: Pair lookin field with tagging link in order to be able to link
   different search pages
   [voineali refs #14797]

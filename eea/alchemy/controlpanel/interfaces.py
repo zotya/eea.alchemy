@@ -46,12 +46,22 @@ class IAlchemySettings(Interface):
         title=_(u'Auto-tagging blacklist'),
         description=_(u"Do not apply auto-tagging if the tag is a child of the "
                       "following HTML elements. "
-                      "(use CSS selectors like: div.documentByLine) "
+                      "(use CSS3 selectors like: div.documentByLine) "
                       "By default auto-tagging will not be applied on text "
                       "that is already a child of an <a> HTML tag"),
         required=False,
         default=[u"h1", u"h2", u"h3"],
         value_type=schema.TextLine()
+    )
+
+    autoTaggingDelimiter = schema.TextLine(
+        title=_(u"Auto-tagging delimiter"),
+        description=_(u"If the schema fields define above are of type text "
+                      "(not iterable) use this delimiter to split tags. "
+                      "If left empty the entire content of the field will be "
+                      "considered one tag"),
+        required=False,
+        default=u","
     )
 
     autoRelations = schema.Bool(

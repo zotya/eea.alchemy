@@ -102,6 +102,19 @@ class ControlPanelAdapter(SchemaAdapterBase):
         self.settings.autoTaggingBlackList = value
 
     @property
+    def autoTaggingDelimiter(self):
+        """ Blacklist
+        """
+        name = u"autoTaggingDelimiter"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @autoTaggingDelimiter.setter
+    def autoTaggingDelimiter(self, value):
+        """ Update blacklist
+        """
+        self.settings.autoTaggingDelimiter = value
+
+    @property
     def autoRelations(self):
         """ Enable auto-relations
         """

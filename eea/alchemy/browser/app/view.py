@@ -26,6 +26,10 @@ class View(BrowserView):
         """ Get tags
         """
         search = {}
+        delimiter = self.settings.autoTaggingDelimiter
+        if delimiter and delimiter != u' ':
+            delimiter = delimiter.strip()
+
         if getattr(self.context, 'getField', None):
             table = self.settings.autoTaggingTable
             for name, link in table:
@@ -38,7 +42,11 @@ class View(BrowserView):
                     continue
 
                 if isinstance(value, (str, unicode)):
-                    search[value] = link
+                    if delimiter:
+                        for val in value.split(delimiter):
+                            search[val.strip()] = link
+                    else:
+                        search[value] = link
                 elif isinstance(value, (list, tuple, set)):
                     for val in value:
                         if not val:
