@@ -46,7 +46,7 @@ class SchemaFields(object):
         ctool = getToolByName(context, 'portal_catalog')
         res = set()
         for portal_type in types.objectIds():
-            brains = ctool(portal_type=portal_type)
+            brains = ctool(portal_type=portal_type, sort_limit=1)
             if not brains:
                 continue
 
