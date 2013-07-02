@@ -159,11 +159,11 @@ EEA.Alchemy.prototype = {
 
     // Handle Highlight firstOnly option
     var word = item.data('word');
-    if(self.settings.firstOnly && self.exists[word]){
+    if(self.settings.firstOnly && self.exists[word.toLowerCase()]){
       item.removeClass(self.settings.highlightClass);
       return;
     }
-    self.exists[word] = url;
+    self.exists[word.toLowerCase()] = url;
 
     // Add link
     var link = jQuery('<a>')
