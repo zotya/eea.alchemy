@@ -1,6 +1,9 @@
 Changelog
 =========
 
+5.3-dev - (unreleased)
+----------------------
+
 5.2 - (2013-07-08)
 ------------------
 * Bug fix: inverted condition in order to fix issue described first at #14592
