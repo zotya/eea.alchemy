@@ -33,5 +33,7 @@ class AlchemyViewlet(common.ViewletBase):
 
     @property
     def modalEnabled(self):
+        """ Condition if Modal Window for Results is enabled
+        """
         modal = self.settings.modalDisplay or False
         return modal
