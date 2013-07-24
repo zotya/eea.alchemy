@@ -4,8 +4,8 @@
   i18n_domain="eea">
 
   <genericsetup:upgradeSteps
-    source="5.1"
-    destination="5.2"
+    source="*"
+    destination="5.3"
     profile="eea.alchemy:default">
 
     <genericsetup:upgradeDepends

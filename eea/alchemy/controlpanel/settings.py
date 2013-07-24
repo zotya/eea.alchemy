@@ -62,6 +62,20 @@ class ControlPanelAdapter(SchemaAdapterBase):
         self.settings.autoTagging = value
 
     @property
+    def modalDisplay(self):
+        """ Enable auto-tagging
+        """
+        name = u"modalDisplay"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @modalDisplay.setter
+    def modalDisplay(self, value):
+        """ Enable / disable auto-tagging
+        """
+        self.settings.modalDisplay = value
+
+
+    @property
     def autoTaggingFirstOnly(self):
         """ Auto-tagging only the first occurence
         """

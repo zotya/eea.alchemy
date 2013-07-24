@@ -125,6 +125,10 @@ EEA.Alchemy.prototype = {
       return;
     }
 
+    if(options.modal){
+      self.makeModal();
+    }
+
     jQuery.extend(self.settings, options);
     return self.reload();
   },
@@ -171,6 +175,10 @@ EEA.Alchemy.prototype = {
       .text(item.text());
     item.html(link);
     item.show('highlight', 2000);
+  },
+
+  makeModal: function(){
+
   }
 };
 
@@ -219,4 +227,36 @@ jQuery(document).ready(function(){
     api: base + 'alchemy.tags.json'
   });
 
+  var modal = jQuery('#eea-alchemy-modalEnabled');
+  if (modal.length){
+    jQuery("body").delegate(".eea-alchemy-tag a", "click", function() {
+      jQuery("#eea-alchemy-modal-output").remove();
+      jQuery("body").append(jQuery("<div id='eea-alchemy-modal-output'></div>"));
+      var url = encodeURI(jQuery(this).attr("href").replace("@@search", "@@updated_search"));
+      jQuery("#eea-alchemy-modal-output").dialog({
+        width:800,
+        height:600,
+        modal:true,
+        title:"Results",
+        open: function(evt, ui){
+          jQuery("#eea-alchemy-modal-output").load(url);
+        }
+      });
+      return false;
+    });
+
+    jQuery("body").delegate("#eea-alchemy-modal-output #updated-sorting-options a", "click", function() {
+      var url = jQuery(this).attr("href").replace("@@search", "@@updated_search");
+      jQuery("#eea-alchemy-modal-output").html("");
+      jQuery("#eea-alchemy-modal-output").load(url);
+      return false;
+    });
+
+    jQuery("body").delegate("#eea-alchemy-modal-output .listingBar a", "click", function() {
+      var url = jQuery(this).attr("href");
+      jQuery("#eea-alchemy-modal-output").html("");
+      jQuery("#eea-alchemy-modal-output").load(url);
+      return false;
+    });
+  }
 });

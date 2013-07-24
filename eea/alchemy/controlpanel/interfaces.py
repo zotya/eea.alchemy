@@ -23,6 +23,13 @@ class IAlchemySettings(Interface):
         default=False
     )
 
+    modalDisplay = schema.Bool(
+        title=_(u'Display results in modal window'),
+        description=_(u"Display results in modal window"),
+        required=False,
+        default=False
+    )
+
     autoTaggingFirstOnly = schema.Bool(
         title=_(u'Auto-tagging mark only first occurrence'),
         description=_(u"Hyperlink only the first occurence of a tag "

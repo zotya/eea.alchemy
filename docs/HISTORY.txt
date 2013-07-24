@@ -3,6 +3,8 @@ Changelog
 
 5.3-dev - (unreleased)
 ----------------------
+* Feature: Added option to have the results in a modal window
+  [szabozo0 refs #14916]
 
 5.2 - (2013-07-08)
 ------------------

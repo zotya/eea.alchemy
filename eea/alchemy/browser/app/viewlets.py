@@ -30,3 +30,8 @@ class AlchemyViewlet(common.ViewletBase):
         """
         enabled = self.settings.autoTagging or False
         return enabled
+
+    @property
+    def modalEnabled(self):
+        modal = self.settings.modalDisplay or False
+        return modal
