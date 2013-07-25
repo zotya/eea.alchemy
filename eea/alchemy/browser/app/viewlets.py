@@ -29,6 +29,8 @@ class AlchemyViewlet(common.ViewletBase):
         """ Condition for rendering of this viewlet
         """
         enabled = self.settings.autoTagging or False
+        if getattr(self.context, "forcedisableautolinks", False):
+            enabled = False
         return enabled
 
     @property
