@@ -98,7 +98,14 @@ class DiscoverRelatedItems(Discover):
             doc = getObject()
 
         myuid = IUUID(doc, None)
-        for item in discover(string, match=site):
+        discovered = []
+        try:
+            discovered = list(discover(string, match=site))
+        except Exception, err:
+            logger.exception("%s while discovering items on: %s",
+                            err, doc.absolute_url_path())
+
+        for item in discovered:
             text = item.get('text')
             if text.startswith('resolveuid/'):
                 uid = text.split('/')[1]
@@ -113,7 +120,10 @@ class DiscoverRelatedItems(Discover):
             try:
                 obj = doc.unrestrictedTraverse(text)
             except Exception, err:
-                logger.exception(err)
+                logger.exception("%s while trying " + \
+                                "doc.unrestrictedTraverse(text)" + \
+                                "with doc: %s    text: %s",
+                                err, doc.absolute_url_path(), text)
                 continue
             else:
                 if not canRelate(doc, obj):
