@@ -46,7 +46,7 @@ class DiscoverGeographicalCoverage(object):
         self._alchemy.setAPIKey(self.key)
         return self._alchemy
 
-    def __call__(self, key, text=""):
+    def __call__(self, key, text="", path=""):
         self._key = key
 
         if not self.alchemy:
@@ -56,7 +56,7 @@ class DiscoverGeographicalCoverage(object):
         try:
             res = self.alchemy.TextGetRankedNamedEntities(text)
         except Exception, err:
-            logger.exception(err)
+            logger.exception("%s while discovering: %s", err, path)
             return
 
         for entity in res.get('entities', []):

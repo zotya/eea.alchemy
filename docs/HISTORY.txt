@@ -3,6 +3,8 @@ Changelog
 
 5.3-dev - (unreleased)
 ----------------------
+* Feature: Added more details on alchemy discoverer exceptions for geographical coverage and keywords
+  [szabozo0 refs #14916]
 * Feature: Added more details on alchemy discoverer exceptions for related items
   [szabozo0 refs #14916]
 * Feature: Added possibility to disable auto-links for a specific page

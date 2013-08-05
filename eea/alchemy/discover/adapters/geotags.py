@@ -108,7 +108,9 @@ class DiscoverGeoTags(Discover):
         if not string:
             return
 
-        for item in discover(self.key, string):
+        for item in discover(self.key,
+                            string,
+                            self.context.getObject().absolute_url_path()):
             yield item
 
     @tags.setter

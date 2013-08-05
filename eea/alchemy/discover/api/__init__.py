@@ -737,7 +737,11 @@ class AlchemyAPI(object):
         handle.close()
         result = json.loads(result)
         if result.get('status') != "OK":
-            raise AlchemyAPIException('Error making API call.')
+            statusInfo = result.get('statusInfo', '')
+            language = result.get('language', '')
+            raise AlchemyAPIException(\
+                "Error making API call. statusInfo: %s, language: %s"\
+                %(statusInfo, language))
         return result
     def GetRequest(self, apiCall, apiPrefix, paramObject):
         """ Get request """
@@ -749,5 +753,9 @@ class AlchemyAPI(object):
         handle.close()
         result = json.loads(result)
         if result.get('status') != "OK":
-            raise AlchemyAPIException('Error making API call.')
+            statusInfo = result.get('statusInfo', '')
+            language = result.get('language', '')
+            raise AlchemyAPIException(\
+                "Error making API call. statusInfo: %s, language: %s"\
+                %(statusInfo, language))
         return result

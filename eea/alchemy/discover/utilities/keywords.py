@@ -37,7 +37,7 @@ class DiscoverKeywords(object):
         self._alchemy.setAPIKey(self.key)
         return self._alchemy
 
-    def __call__(self, key, text=""):
+    def __call__(self, key, text="", path=""):
         self._key = key
         if not self.alchemy:
             logger.exception('You need to provide a valid Alchemy API key')
@@ -46,7 +46,7 @@ class DiscoverKeywords(object):
         try:
             res = self.alchemy.TextGetRankedKeywords(text)
         except Exception, err:
-            logger.exception(err)
+            logger.exception("%s while discovering: %s", err, path)
             return
 
         for keyword in res.get('keywords', []):
