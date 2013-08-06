@@ -3,6 +3,8 @@ Changelog
 
 5.3-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed auto-discoverer for languageIndependent fields
+  [voineali refs #15615]
 * Feature: Added more details on alchemy discoverer exceptions for geographical coverage and keywords
   [szabozo0 refs #14916]
 * Feature: Added more details on alchemy discoverer exceptions for related items

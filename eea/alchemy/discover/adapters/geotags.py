@@ -37,6 +37,12 @@ class DiscoverGeoTags(Discover):
                         doc.absolute_url(1), self.field, self.title)
             return
 
+        languageIndependent = getattr(field, 'languageIndependent', False)
+        isCanonical = getattr(doc, 'isCanonical', None)
+        isTranslation = not isCanonical() if isCanonical else False
+        if languageIndependent and isTranslation:
+            return
+
         mutator = field.getMutator(doc)
         if not mutator:
             logger.warn("Can't edit field %s for doc %s",
