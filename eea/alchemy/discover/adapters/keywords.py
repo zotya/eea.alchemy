@@ -129,9 +129,13 @@ class DiscoverTags(Discover):
 
         discover = getUtility(IDiscoverUtility, name=self.field)
         duplicates = set()
-        items = discover(self.key,
-                        string,
-                        self.context.getObject().absolute_url_path())
+        abs_url = ''
+        if hasattr(self.context, "getObject"):
+            abs_url = self.context.getObject().absolute_url_path()
+        else:
+            abs_url = self.context.absolute_url_path()
+
+        items = discover(self.key, string, abs_url)
         for item in items:
             keyword = item.get('text')
             if not isinstance(keyword, unicode):
