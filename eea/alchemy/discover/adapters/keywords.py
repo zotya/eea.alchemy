@@ -3,11 +3,14 @@
 import logging
 from zope.interface import implements
 from zope.component import getUtility
+from zope.component import queryAdapter
+from zope.component.hooks import getSite
 from Products.CMFCore.utils import getToolByName
 
 from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverUtility
+from eea.alchemy.controlpanel.interfaces import IAlchemySettings 
 from eea.alchemy.discover.adapters import Discover
 logger = logging.getLogger('eea.alchemy')
 
@@ -127,27 +130,29 @@ class DiscoverTags(Discover):
         if not string:
             return
 
-        discover = getUtility(IDiscoverUtility, name=self.field)
-        duplicates = set()
-        abs_url = ''
-        if hasattr(self.context, "getObject"):
-            abs_url = self.context.getObject().absolute_url_path()
-        else:
-            abs_url = self.context.absolute_url_path()
+        settings = queryAdapter(getSite(), IAlchemySettings)
+        if not settings.onlyExistingKeywords:
+            discover = getUtility(IDiscoverUtility, name=self.field)
+            duplicates = set()
+            abs_url = ''
+            if hasattr(self.context, "getObject"):
+                abs_url = self.context.getObject().absolute_url_path()
+            else:
+                abs_url = self.context.absolute_url_path()
 
-        items = discover(self.key, string, abs_url)
-        for item in items:
-            keyword = item.get('text')
-            if not isinstance(keyword, unicode):
-                keyword = keyword.decode('utf-8')
-                item['text'] = keyword
+            items = discover(self.key, string, abs_url)
+            for item in items:
+                keyword = item.get('text')
+                if not isinstance(keyword, unicode):
+                    keyword = keyword.decode('utf-8')
+                    item['text'] = keyword
 
-            keyword = keyword.lower()
-            if keyword in duplicates:
-                continue
+                keyword = keyword.lower()
+                if keyword in duplicates:
+                    continue
 
-            duplicates.add(keyword)
-            yield item
+                duplicates.add(keyword)
+                yield item
 
         # Search in portal_catalog existing keywords
         for keyword in self.existing:

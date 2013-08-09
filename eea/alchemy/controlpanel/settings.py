@@ -153,3 +153,17 @@ class ControlPanelAdapter(SchemaAdapterBase):
         """ Update autoRelationsFields
         """
         self.settings.autoRelationsFields = value
+
+    @property
+    def onlyExistingKeywords(self):
+        """ Only discover existing keywords
+        """
+        name = u"onlyExistingKeywords"
+        return getattr(self.settings, name, IAlchemySettings[name].default)
+
+    @onlyExistingKeywords.setter
+    def onlyExistingKeywords(self, value):
+        """ Enable / disable onlyExistingKeywords
+        """
+        self.settings.onlyExistingKeywords = value
+

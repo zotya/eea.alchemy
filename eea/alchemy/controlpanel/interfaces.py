@@ -86,3 +86,12 @@ class IAlchemySettings(Interface):
         default=[u'text', u'body'],
         value_type=schema.TextLine()
     )
+
+    onlyExistingKeywords = schema.Bool(
+        title=_(u'Discover only existing keywords'),
+        description=_(u"Discover keywords that already exists "
+                      "in the existing keywords list"
+                      "(Token is not required)"),
+        required=False,
+        default=False
+    )

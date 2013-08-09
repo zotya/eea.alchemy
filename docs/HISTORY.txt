@@ -3,6 +3,8 @@ Changelog
 
 5.3-dev - (unreleased)
 ----------------------
+* Feature: Added possibility to only discover keywords already in the existing keywords list
+  [szabozo0 refs #15615]
 * Bug fix: Fixed auto-discoverer for languageIndependent fields
   [voineali refs #15615]
 * Feature: Added more details on alchemy discoverer exceptions for geographical coverage and keywords
