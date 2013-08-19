@@ -1,6 +1,9 @@
 Changelog
 =========
 
+5.5-dev - (unreleased)
+----------------------
+
 5.4 - (2013-08-19)
 ------------------
 * Bug fix: fixed the afterSetUp method after upgrading to Plone 4.3 by setting
