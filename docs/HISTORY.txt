@@ -3,6 +3,9 @@ Changelog
 
 5.4-dev - (unreleased)
 ----------------------
+* Bug fix: fixed the afterSetUp method after upgrading to Plone 4.3 by setting
+  role to manager on the test user before starting the object creations
+  [ichim-david refs #14924]
 
 5.3 - (2013-08-09)
 ------------------

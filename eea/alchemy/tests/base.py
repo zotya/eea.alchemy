@@ -80,6 +80,10 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
     def afterSetUp(self):
         """ Setup
         """
+        # login as Manager otherwise we don't have permission to create a
+        # version
+        self.setRoles(['Manager'])
+
         sid = self.folder.invokeFactory('Folder', id='sandbox')
         sandbox = self.folder._getOb(sid)
         eid = self.folder.invokeFactory('Event', id='an-event')
