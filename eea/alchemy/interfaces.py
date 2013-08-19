@@ -273,29 +273,26 @@ class IDiscoverTime(IDiscoverAdapter):
 
 class IDiscoverRelatedItems(IDiscoverAdapter):
     """ Auto discover related items from object metadata (description, text)
+        metadata -- object metadata to look in for related items
+        tags -- get/set (persist to ZODB) discovered related items
 
-    metadata -- object metadata to look in for related items
-    tags -- get/set (persist to ZODB) discovered related items
+        >>> from zope.component import getAdapter
+        >>> from eea.alchemy.interfaces import IDiscoverAdapter
+        >>> discover = getAdapter(self.page,
+        ... IDiscoverAdapter, name='relatedItems')
+        >>> discover.metadata = 'text'
+        >>> tags = [tag.get('text', '') for tag in discover.tags]
 
-    >>> from zope.component import getAdapter
-    >>> from eea.alchemy.interfaces import IDiscoverAdapter
-    >>> discover = getAdapter(self.page,
-    ... IDiscoverAdapter, name='relatedItems')
-    >>> discover.metadata = 'text'
-    >>> tags = [tag.get('text', '') for tag in discover.tags]
+        >>> len(tags)
+        2
 
+        >>> discover.tags = 'Update'
+        >>> relations = self.page.getRelatedItems()
+        >>> relations
+        [<ATEvent at ...an-event>, <ATEvent at ...new-event>]
 
-    XX This tests fails within eea.relations context. Disable for now
-
-    >> len(tags)
-    2
-
-    >> discover.tags = 'Update'
-    >> relations = self.page.getRelatedItems()
-    >> relations
-    [<ATEvent at ...an-event>, <ATEvent at ...new-event>]
-
-    >> relations[1].getBRefs('relatesTo')
-    [<ATDocument at ...new-article>]
+        >>> relations[1].getBRefs('relatesTo')
+        [<ATDocument at ...new-article>]
 
     """
+

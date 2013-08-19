@@ -91,6 +91,9 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
         pid = self.folder.invokeFactory('Document', id='new-article')
 
         page = self.folder._getOb(pid)
+        # 14924 without this flag the page id will be changed on processForm
+        page._at_rename_after_creation = False
+
         event = self.folder._getOb(eid)
         uid = IUUID(event)
 
