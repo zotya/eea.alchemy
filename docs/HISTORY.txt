@@ -1,6 +1,9 @@
 Changelog
 =========
 
+5.6-dev - (unreleased)
+----------------------
+
 5.5 - (2013-09-06)
 ------------------
 * Bug fix: fixed failing tests after Plone 4.3 upgrade
