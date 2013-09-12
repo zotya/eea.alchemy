@@ -12,13 +12,22 @@ class IAlchemySettings(Interface):
         title=_(u"Token"),
         description=_(u"Provide token from "
                       "http://www.alchemyapi.com/api/register.html"),
-        required=True,
+        required=False,
         default=u""
     )
 
     autoTagging = schema.Bool(
         title=_(u'Enable auto-tagging'),
         description=_(u"Hyperlink tags within page body"),
+        required=False,
+        default=False
+    )
+
+    onlyExistingKeywords = schema.Bool(
+        title=_(u'Discover only existing keywords'),
+        description=_(u"Discover keywords that already exists "
+                      "in the existing keywords list"
+                      "(Token is not required)"),
         required=False,
         default=False
     )
@@ -45,7 +54,7 @@ class IAlchemySettings(Interface):
                       "a search page. (e.g. "
                       "'subject -> @@search?Subject=' or "
                       "'location -> @@search?getLocation=')"),
-        required=True,
+        required=False,
         value_type=customschema.TableRow()
     )
 
@@ -82,16 +91,7 @@ class IAlchemySettings(Interface):
     autoRelationsFields = schema.List(
         title=_(u"Auto-relations fields"),
         description=_(u"Lookup these fields for internal links"),
-        required=True,
+        required=False,
         default=[u'text', u'body'],
         value_type=schema.TextLine()
-    )
-
-    onlyExistingKeywords = schema.Bool(
-        title=_(u'Discover only existing keywords'),
-        description=_(u"Discover keywords that already exists "
-                      "in the existing keywords list"
-                      "(Token is not required)"),
-        required=False,
-        default=False
     )

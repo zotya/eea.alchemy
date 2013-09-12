@@ -12,6 +12,7 @@ from eea.alchemy.discover.adapters import Discover
 from eea.alchemy.relations import canRelate
 logger = logging.getLogger('eea.alchemy')
 
+
 class DiscoverRelatedItems(Discover):
     """ Common adapter to auto-discover related items in context metadata
     """
@@ -56,6 +57,11 @@ class DiscoverRelatedItems(Discover):
 
         if not set(tags).difference(current):
             return
+
+        # Preserve current tags
+        for tag in current:
+            if tag not in tags:
+                tags.append(tag)
 
         return (tags, 'Update %s for %s. Before: %s, After: %s' %
                 (self.field, doc.absolute_url(1), current, tags))
