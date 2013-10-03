@@ -3,6 +3,8 @@ Changelog
 
 5.6-dev - (unreleased)
 ----------------------
+* Bug fix: Fixed "duplicates referenced before assignment" error
+  [voineali]
 * Bug fix: Preserve manually added relations when
   auto-relations feature is enabled
   [voineali refs #16718]

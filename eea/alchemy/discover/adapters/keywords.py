@@ -10,7 +10,7 @@ from Products.CMFCore.utils import getToolByName
 from eea.alchemy.config import EEAMessageFactory as _
 from eea.alchemy.interfaces import IDiscoverTags
 from eea.alchemy.interfaces import IDiscoverUtility
-from eea.alchemy.controlpanel.interfaces import IAlchemySettings 
+from eea.alchemy.controlpanel.interfaces import IAlchemySettings
 from eea.alchemy.discover.adapters import Discover
 logger = logging.getLogger('eea.alchemy')
 
@@ -130,10 +130,10 @@ class DiscoverTags(Discover):
         if not string:
             return
 
+        duplicates = set()
         settings = queryAdapter(getSite(), IAlchemySettings)
         if not settings.onlyExistingKeywords:
             discover = getUtility(IDiscoverUtility, name=self.field)
-            duplicates = set()
             abs_url = ''
             if hasattr(self.context, "getObject"):
                 abs_url = self.context.getObject().absolute_url_path()
