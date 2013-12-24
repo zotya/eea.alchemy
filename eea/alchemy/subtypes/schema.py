@@ -11,7 +11,7 @@ class EEAAlchemyBooleanField(ExtensionField, BooleanField):
     """
 
 class EEAAlchemySchemaExtender(object):
-    """ Schema extender for content types with data provenance
+    """ Schema extender for disable auto-links field
     """
     implements(ISchemaExtender)
     fields = (
