@@ -1,8 +1,8 @@
 Changelog
 =========
 
-5.7-dev - (unreleased)
-----------------------
+5.7 - (2014-01-22)
+------------------
 * Change: updated docsting for disable auto-links field
   [ghicaale refs #16666]
 * Feature: adding Sphinx-generated documentation in Page Template format
