@@ -4,5 +4,5 @@
 *.wpr
 *.wpu
 *.log
-documentation/searchindex.js
-documentation/search.html
+searchindex.js
+search.html
