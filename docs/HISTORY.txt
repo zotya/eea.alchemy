@@ -1,8 +1,8 @@
 Changelog
 =========
 
-5.8-dev - (unreleased)
-----------------------
+5.8 - (2014-08-12)
+------------------
 * Bug fix: Include i18n translations
   [avoinea]
 
