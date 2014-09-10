@@ -4,6 +4,10 @@ import logging
 from zope.interface import implements
 from zope.component import getUtility
 from zope.component.hooks import getSite
+from zope.browser.interfaces import IBrowserView
+from zope.pagetemplate.interfaces import IPageTemplate
+from Products.GenericSetup.PythonScripts.interfaces import IPythonScript
+from Products.CMFCore.FSPythonScript import FSPythonScript
 from plone.uuid.interfaces import IUUID
 from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
@@ -97,10 +101,6 @@ class DiscoverRelatedItems(Discover):
 
             string += '\n' + text
 
-        discover = getUtility(IDiscoverUtility, name=u'links')
-        if not discover:
-            return
-
         string = string.strip()
         if not string:
             return
@@ -110,34 +110,62 @@ class DiscoverRelatedItems(Discover):
             doc = getObject()
 
         myuid = IUUID(doc, None)
-        discovered = []
-        try:
-            discovered = list(discover(string, match=site))
-        except Exception, err:
-            logger.exception("%s while discovering items on: %s",
-                            err, doc.absolute_url_path())
 
-        for item in discovered:
-            text = item.get('text')
+        discovered = set()
+        discover = getUtility(IDiscoverUtility, name=u'links')
+        if discover:
+            try:
+                discovered.update(x.get('text')
+                                  for x in discover(string, match=site))
+            except Exception, err:
+                logger.exception("%s while discovering items on: %s",
+                                err, doc.absolute_url_path())
+
+        discover = getUtility(IDiscoverUtility, name=u'iframes')
+        if discover:
+            try:
+                discovered.update(x.get('text')
+                                  for x in discover(string, match=site))
+            except Exception, err:
+                logger.exception("%s while discovering items on: %s",
+                                err, doc.absolute_url_path())
+
+        uids = set()
+        for text in discovered:
             if text.startswith('resolveuid/'):
                 uid = text.split('/')[1]
                 if uid == myuid:
                     continue
 
                 if canRelate(doc, uid=uid):
-                    item['text'] = uid
-                    yield item
+                    if uid in uids:
+                        continue
+
+                    uids.add(uid)
+                    yield {
+                        'count': 1,
+                        'type': 'Link',
+                        'text': uid,
+                        'relevance': '100.0'
+                    }
                     continue
 
             try:
                 obj = doc.unrestrictedTraverse(text)
             except Exception, err:
-                logger.exception("%s while trying " + \
-                                "doc.unrestrictedTraverse(text)" + \
-                                "with doc: %s    text: %s",
-                                err, doc.absolute_url_path(), text)
+                logger.exception("%s while trying "
+                                 "doc.unrestrictedTraverse(text)"
+                                 "with doc: %s    text: %s",
+                                 err, doc.absolute_url_path(), text)
                 continue
             else:
+                if IBrowserView.providedBy(obj):
+                    obj = obj.context
+                elif (IPageTemplate.providedBy(obj) or
+                      IPythonScript.providedBy(obj) or
+                      isinstance(obj, FSPythonScript)):
+                    obj = obj.getParentNode()
+
                 if not canRelate(doc, obj):
                     continue
 
@@ -147,9 +175,18 @@ class DiscoverRelatedItems(Discover):
 
                 if uid == myuid:
                     continue
-                item['text'] = uid
-                yield item
-                continue
+
+                if uid in uids:
+                    continue
+
+                uids.add(uid)
+                yield {
+                    'count': 1,
+                    'type': 'Link',
+                    'text': uid,
+                    'relevance': '100.0'
+                }
+
 
     @tags.setter
     def tags(self, value):

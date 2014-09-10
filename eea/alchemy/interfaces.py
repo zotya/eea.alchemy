@@ -138,8 +138,9 @@ class IDiscoverLinks(IDiscoverUtility):
 
         >>> discover = getUtility(IDiscoverUtility, name='links')
         >>> text = "<p>"
-        >>> text += "<a href='http://example.com/a'>This</a> is a long article "
-        >>> text += "also <a href='https://example.com/b/c/d'>example.com</a> "
+        >>> text += "<a href='http://example.com/a?x=1&y=2#tab-2'>This</a>"
+        >>> text += "also <a href='https://example.com/b/c/d#tab-3'>exampl</a> "
+        >>> text += "also <a href='https://example.com/b/download.pdf'>dow</a> "
         >>> text += "while <a href='http://foobar.com/b/c/d/'>this external</a>"
         >>> text += " article shouldn't be included in the results. "
         >>> text += "Neither this: https://example.com/a/b as it's not a link"
@@ -159,6 +160,56 @@ class IDiscoverLinks(IDiscoverUtility):
 
         >>> res.next()['text']
         'b/c/d'
+
+        >>> res.next()['text']
+        'b/download.pdf'
+
+        >>> res.next()
+        Traceback (most recent call last):
+        ...
+        StopIteration
+
+        Keyword arguments:
+        text -- search in text
+        match -- filter links by this match expression
+        """
+
+
+class IDiscoverIframes(IDiscoverUtility):
+    """ Extract iframe links from text
+    """
+    def __call__(kwargs):
+        """ Return an iterable with discovered links extracted from iframea src
+
+        >>> from zope.component import getUtility
+        >>> from eea.alchemy.interfaces import IDiscoverUtility
+
+        >>> discover = getUtility(IDiscoverUtility, name='iframes')
+
+        >>> text = "<p>"
+        >>> text += "<iframe src='http://example.com/a/b/c/embed-chart?a=1&b=2'"
+        >>> text += " width='1500' height='400'></iframe>"
+        >>> text += "more text here <br /> <br />"
+        >>> text += "<iframe src='http://example.com/a/embed-dashboard?d=1&b=2'"
+        >>> text += " width='1240' height='1400'></iframe>"
+        >>> text += "And a link: https://example.com/a/b as it's not a link"
+        >>> text += "</p>"
+
+        >>> res = discover(text, match="http://example.com")
+
+        res
+        [{
+          'count': '1',
+          'relevance': '100.0',
+          'type': 'Link',
+          'text': 'a/b/c'
+        }, ...]
+
+        >>> res.next()['text']
+        'a/b/c/embed-chart'
+
+        >>> res.next()['text']
+        'a/embed-dashboard'
 
         >>> res.next()
         Traceback (most recent call last):

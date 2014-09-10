@@ -67,11 +67,16 @@
     provides="eea.alchemy.interfaces.IDiscoverUtility"
     factory=".utilities.keywords.DiscoverKeywords" />
 
-  <!-- Related items Utility -->
+  <!-- Related items Utilities -->
   <utility
     name="links"
     provides="eea.alchemy.interfaces.IDiscoverUtility"
     factory=".utilities.links.DiscoverLinks" />
+
+  <utility
+    name="iframes"
+    provides="eea.alchemy.interfaces.IDiscoverUtility"
+    factory=".utilities.iframes.DiscoverIframes" />
 
   <!-- Geographical Coverage Adapter -->
   <adapter

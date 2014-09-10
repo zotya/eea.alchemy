@@ -3,20 +3,20 @@
 from urllib2 import urlparse
 from bs4 import BeautifulSoup
 from zope.interface import implements
-from eea.alchemy.interfaces import IDiscoverLinks
+from eea.alchemy.interfaces import IDiscoverIframes
 
-class DiscoverLinks(object):
-    """ Discover internal links
+class DiscoverIframes(object):
+    """ Discover internal links from embeded iframes
     """
-    implements(IDiscoverLinks)
+    implements(IDiscoverIframes)
 
     def __call__(self, text="", match=""):
         match = match.replace('https://', 'http://')
         soup = BeautifulSoup(text)
 
         items = set()
-        for link in soup.find_all('a'):
-            href = link.get('href')
+        for link in soup.find_all('iframe'):
+            href = link.get('src')
             href = href.replace('https://', 'http://')
 
             ourl = urlparse.urlparse(href)

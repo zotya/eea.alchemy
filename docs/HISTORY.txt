@@ -3,6 +3,9 @@ Changelog
 
 5.9-dev - (unreleased)
 ----------------------
+* Feature: Auto-discover relations also by embedded iframes. Also fix the
+  discover links utility to strip query and hash from URL.
+  [voineali refs #21025]
 
 5.8 - (2014-08-12)
 ------------------
