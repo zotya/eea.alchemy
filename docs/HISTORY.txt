@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.0-dev - (unreleased)
+----------------------
+
 5.9 - (2014-09-15)
 ------------------
 * Feature: Auto-discover relations also by embedded iframes. Also fix the
