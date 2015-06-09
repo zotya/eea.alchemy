@@ -22,7 +22,7 @@ class EEAAlchemySchemaExtender(object):
             searchable=False,
             widget=BooleanWidget(
                 label='Force Disable Autolinks',
-                description= 'Disable Autolinks for this context/page',
+                description='Disable Autolinks for this context/page',
             )
         ),
 
