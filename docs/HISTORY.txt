@@ -3,7 +3,8 @@ Changelog
 
 6.2.dev0 - (unreleased)
 -----------------------
-* Bug fix: Fix parsing issues when anchors tags are present. Update tests.
+* Bug fix: Fixed parsing issues when anchors tags are present:
+  they lack the "href" attribute. Updated tests.
   [chiridra refs #27904]
 
 6.1 - (2015-08-18)
