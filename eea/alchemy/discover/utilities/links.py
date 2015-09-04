@@ -17,6 +17,8 @@ class DiscoverLinks(object):
         items = set()
         for link in soup.find_all('a'):
             href = link.get('href')
+            if href is None:
+                continue
             href = href.replace('https://', 'http://')
 
             ourl = urlparse.urlparse(href)

@@ -117,7 +117,8 @@ class EEAAlchemyFunctionalTestCase(ptc.FunctionalTestCase, EEAAlchemyTestCase):
                 "Formation of new land cover in the region of Valencia, Spain"
             ),
             'text': (
-                "Urban sprawl 1990-2000 in the province of Venice "
+                "Urban sprawl 1990-2000 in the province of "
+                "<a name=\"Venice\"></a>Venice "
                 "using a 1 km x 1 km grid. See more: "
                 ""
                 "<a href='https://nohost/plone"
