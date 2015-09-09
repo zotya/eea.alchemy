@@ -9,6 +9,7 @@ from zope.pagetemplate.interfaces import IPageTemplate
 from Products.GenericSetup.PythonScripts.interfaces import IPythonScript
 from Products.CMFCore.FSPythonScript import FSPythonScript
 from plone.uuid.interfaces import IUUID
+from plone import api
 from eea.alchemy.interfaces import IDiscoverRelatedItems
 from eea.alchemy.interfaces import IDiscoverUtility
 from eea.alchemy.config import EEAMessageFactory as _
@@ -150,10 +151,16 @@ class DiscoverRelatedItems(Discover):
                     }
                     continue
 
-            try:
-                obj = doc.unrestrictedTraverse(text)
-            except Exception, err:
-                logger.exception("%s while trying "
+            nav_root = api.portal.get_navigation_root(doc)
+            nav_root_path = '/'.join(nav_root.getPhysicalPath())
+
+            obj = doc.unrestrictedTraverse(text, None)
+            if obj is None:
+                obj = doc.unrestrictedTraverse(nav_root_path + '/' + text, None)
+
+            if obj is None:
+                err = "No object found"
+                logger.warn("%s while trying "
                                  "doc.unrestrictedTraverse(text)"
                                  "with doc: %s    text: %s",
                                  err, doc.absolute_url_path(), text)

@@ -3,6 +3,9 @@ Changelog
 
 6.2.dev0 - (unreleased)
 -----------------------
+* Bug fix: Fixed unrestrictedTraverse issue due to the local publications
+  folder inside a theme directory.
+  [chiridra refs #28455]
 * Bug fix: Fixed parsing issues when anchors tags are present:
   they lack the "href" attribute. Updated tests.
   [chiridra refs #27904]
