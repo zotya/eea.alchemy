@@ -1,8 +1,8 @@
 Changelog
 =========
 
-6.2.dev0 - (unreleased)
------------------------
+6.2 - (2015-09-10)
+------------------
 * Bug fix: Fixed unrestrictedTraverse issue due to the local publications
   folder inside a theme directory.
   [chiridra refs #28455]
