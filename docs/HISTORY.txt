@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.3.dev0 - (unreleased)
+-----------------------
+
 6.2 - (2015-09-10)
 ------------------
 * Bug fix: Fixed unrestrictedTraverse issue due to the local publications
