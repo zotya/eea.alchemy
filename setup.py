@@ -32,6 +32,7 @@ setup(name=NAME,
       install_requires=[
           'setuptools',
           'beautifulsoup4',
+          'plone.api',
           'eea.faceted.vocabularies',
           'collective.js.jqueryui',
       ],
