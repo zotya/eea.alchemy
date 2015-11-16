@@ -3,6 +3,8 @@ Changelog
 
 6.3.dev0 - (unreleased)
 -----------------------
+* Change: updated git ignore list
+  [ghicaare refs #30338]
 
 6.2 - (2015-09-10)
 ------------------
