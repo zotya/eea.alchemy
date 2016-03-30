@@ -1,9 +1,9 @@
 *.egg-info
 *.pyc
+*.pyo
 *.mo
-*.wpr
-*.wpu
-*.log
+dist
 searchindex.js
 search.html
-dist
+pylint.log
+pyflakes.log
