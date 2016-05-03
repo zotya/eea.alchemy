@@ -500,7 +500,7 @@ class AlchemyAPI(object):
     def URLGetRankedNamedEntities(self, url, namedEntityParams=None):
         """ URL ranked named entities """
         self.CheckURL(url)
-        if namedEntityParams == None:
+        if namedEntityParams is None:
             namedEntityParams = AlchemyAPI_NamedEntityParams()
         namedEntityParams.setUrl(url)
         return self.GetRequest("URLGetRankedNamedEntities",
@@ -508,7 +508,7 @@ class AlchemyAPI(object):
     def HTMLGetRankedNamedEntities(self, html, url, namedEntityParams=None):
         """ ranked named entities """
         self.CheckHTML(html, url)
-        if namedEntityParams == None:
+        if namedEntityParams is None:
             namedEntityParams = AlchemyAPI_NamedEntityParams()
         namedEntityParams.setUrl(url)
         namedEntityParams.setHtml(html)
@@ -517,7 +517,7 @@ class AlchemyAPI(object):
     def TextGetRankedNamedEntities(self, text, namedEntityParams=None):
         """ Text ranked named entities """
         self.CheckText(text)
-        if namedEntityParams == None:
+        if namedEntityParams is None:
             namedEntityParams = AlchemyAPI_NamedEntityParams()
         namedEntityParams.setText(text)
         return self.PostRequest("TextGetRankedNamedEntities",
@@ -525,14 +525,14 @@ class AlchemyAPI(object):
     def URLGetRankedConcepts(self, url, conceptParams=None):
         """ URL ranked concepts """
         self.CheckURL(url)
-        if conceptParams == None:
+        if conceptParams is None:
             conceptParams = AlchemyAPI_ConceptParams()
         conceptParams.setUrl(url)
         return self.GetRequest("URLGetRankedConcepts", "url", conceptParams)
     def HTMLGetRankedConcepts(self, html, url, conceptParams=None):
         """ HTML ranked concepts """
         self.CheckHTML(html, url)
-        if conceptParams == None:
+        if conceptParams is None:
             conceptParams = AlchemyAPI_ConceptParams()
         conceptParams.setUrl(url)
         conceptParams.setHtml(html)
@@ -540,21 +540,21 @@ class AlchemyAPI(object):
     def TextGetRankedConcepts(self, text, conceptParams=None):
         """ Text ranked concepts """
         self.CheckText(text)
-        if conceptParams == None:
+        if conceptParams is None:
             conceptParams = AlchemyAPI_ConceptParams()
         conceptParams.setText(text)
         return self.PostRequest("TextGetRankedConcepts", "text", conceptParams)
     def URLGetRankedKeywords(self, url, keywordParams=None):
         """ URL ranked keywords """
         self.CheckURL(url)
-        if keywordParams == None:
+        if keywordParams is None:
             keywordParams = AlchemyAPI_KeywordParams()
         keywordParams.setUrl(url)
         return self.GetRequest("URLGetRankedKeywords", "url", keywordParams)
     def HTMLGetRankedKeywords(self, html, url, keywordParams=None):
         """ HTML ranked keywords """
         self.CheckHTML(html, url)
-        if keywordParams == None:
+        if keywordParams is None:
             keywordParams = AlchemyAPI_KeywordParams()
         keywordParams.setUrl(url)
         keywordParams.setHtml(html)
@@ -562,21 +562,21 @@ class AlchemyAPI(object):
     def TextGetRankedKeywords(self, text, keywordParams=None):
         """ Text ranked keywords """
         self.CheckText(text)
-        if keywordParams == None:
+        if keywordParams is None:
             keywordParams = AlchemyAPI_KeywordParams()
         keywordParams.setText(text)
         return self.PostRequest("TextGetRankedKeywords", "text", keywordParams)
     def URLGetLanguage(self, url, languageParams=None):
         """ URL Language """
         self.CheckURL(url)
-        if languageParams == None:
+        if languageParams is None:
             languageParams = AlchemyAPI_LanguageParams()
         languageParams.setUrl(url)
         return self.GetRequest("URLGetLanguage", "url", languageParams)
     def HTMLGetLanguage(self, html, url, languageParams=None):
         """ HTML Language """
         self.CheckHTML(html, url)
-        if languageParams == None:
+        if languageParams is None:
             languageParams = AlchemyAPI_LanguageParams()
         languageParams.setUrl(url)
         languageParams.setHtml(html)
@@ -584,21 +584,21 @@ class AlchemyAPI(object):
     def TextGetLanguage(self, text, languageParams=None):
         """ Text language """
         self.CheckText(text)
-        if languageParams == None:
+        if languageParams is None:
             languageParams = AlchemyAPI_LanguageParams()
         languageParams.setText(text)
         return self.PostRequest("TextGetLanguage", "text", languageParams)
     def URLGetCategory(self, url, categParams=None):
         """ URL Category """
         self.CheckURL(url)
-        if categParams == None:
+        if categParams is None:
             categParams = AlchemyAPI_CategoryParams()
         categParams.setUrl(url)
         return self.GetRequest("URLGetCategory", "url", categParams)
     def HTMLGetCategory(self, html, url, categParams=None):
         """ HTML Category """
         self.CheckHTML(html, url)
-        if categParams == None:
+        if categParams is None:
             categParams = AlchemyAPI_CategoryParams()
         categParams.setUrl(url)
         categParams.setHtml(html)
@@ -606,21 +606,21 @@ class AlchemyAPI(object):
     def TextGetCategory(self, text, categParams=None):
         """ Text Category """
         self.CheckText(text)
-        if categParams == None:
+        if categParams is None:
             categParams = AlchemyAPI_CategoryParams()
         categParams.setText(text)
         return self.PostRequest("TextGetCategory", "text", categParams)
     def URLGetText(self, url, textParams=None):
         """ URL text """
         self.CheckURL(url)
-        if textParams == None:
+        if textParams is None:
             textParams = AlchemyAPI_TextParams()
         textParams.setUrl(url)
         return self.GetRequest("URLGetText", "url", textParams)
     def HTMLGetText(self, html, url, textParams=None):
         """ HTML Text """
         self.CheckHTML(html, url)
-        if textParams == None:
+        if textParams is None:
             textParams = AlchemyAPI_TextParams()
         textParams.setUrl(url)
         textParams.setHtml(html)
@@ -628,14 +628,14 @@ class AlchemyAPI(object):
     def URLGetRawText(self, url, baseParams=None):
         """ URL Raw text """
         self.CheckURL(url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         return self.GetRequest("URLGetRawText", "url", baseParams)
     def HTMLGetRawText(self, html, url, baseParams=None):
         """ HTML Raw text """
         self.CheckHTML(html, url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         baseParams.setHtml(html)
@@ -643,14 +643,14 @@ class AlchemyAPI(object):
     def URLGetTitle(self, url, baseParams=None):
         """ URL Title """
         self.CheckURL(url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         return self.GetRequest("URLGetTitle", "url", baseParams)
     def HTMLGetTitle(self, html, url, baseParams=None):
         """ HTML Title """
         self.CheckHTML(html, url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         baseParams.setHtml(html)
@@ -658,14 +658,14 @@ class AlchemyAPI(object):
     def URLGetFeedLinks(self, url, baseParams=None):
         """ URL Feed Links """
         self.CheckURL(url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         return self.GetRequest("URLGetFeedLinks", "url", baseParams)
     def HTMLGetFeedLinks(self, html, url, baseParams=None):
         """ HTML Feed Links """
         self.CheckHTML(html, url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         baseParams.setHtml(html)
@@ -673,14 +673,14 @@ class AlchemyAPI(object):
     def URLGetMicroformats(self, url, baseParams=None):
         """ Microformats """
         self.CheckURL(url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         return self.GetRequest("URLGetMicroformatData", "url", baseParams)
     def HTMLGetMicroformats(self, html, url, baseParams=None):
         """ Microformats """
         self.CheckHTML(html, url)
-        if baseParams == None:
+        if baseParams is None:
             baseParams = AlchemyAPI_Params()
         baseParams.setUrl(url)
         baseParams.setHtml(html)
@@ -690,7 +690,7 @@ class AlchemyAPI(object):
         self.CheckURL(url)
         if len(query) < 2:
             raise AlchemyAPIException('Invalid constraint query specified.')
-        if cQueryParams == None:
+        if cQueryParams is None:
             cQueryParams = AlchemyAPI_ConstraintQueryParams()
         cQueryParams.setUrl(url)
         cQueryParams.setConstraintQuery(query)
@@ -700,7 +700,7 @@ class AlchemyAPI(object):
         self.CheckHTML(html, url)
         if len(query) < 2:
             raise AlchemyAPIException('Invalid constraint query specified.')
-        if cQueryParams == None:
+        if cQueryParams is None:
             cQueryParams = AlchemyAPI_ConstraintQueryParams()
         cQueryParams.setUrl(url)
         cQueryParams.setHtml(html)

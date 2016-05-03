@@ -3,6 +3,8 @@ Changelog
 
 6.4.dev0 - (unreleased)
 -----------------------
+* Bug fix: fixed pylint warnings
+  [alecghica refs #68082]
 
 6.3 - (2015-11-16)
 ------------------

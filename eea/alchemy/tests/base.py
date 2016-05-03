@@ -1,5 +1,11 @@
 """ Base test cases
 """
+import logging
+try:
+    import eea.relations
+    EEA_RELATIONS = True
+except ImportError:
+    EEA_RELATIONS = False
 from Zope2.App import zcml
 from Products.Five import fiveconfigure
 from plone.uuid.interfaces import IUUID
@@ -10,14 +16,7 @@ from Products.PloneTestCase.layer import onsetup
 from zope.component import provideUtility
 import eea.alchemy
 
-import logging
 logger = logging.getLogger('eea.alchemy.tests.base')
-
-EEA_RELATIONS = True
-try:
-    import eea.relations
-except ImportError:
-    EEA_RELATIONS = False
 
 @onsetup
 def setup_eea_alchemy():

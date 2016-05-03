@@ -1,9 +1,9 @@
 """ Doc tests
 """
-from Testing.ZopeTestCase import FunctionalDocFileSuite as Suite
-from eea.alchemy.tests.base import EEAAlchemyFunctionalTestCase
 import doctest
 import unittest
+from Testing.ZopeTestCase import FunctionalDocFileSuite as Suite
+from eea.alchemy.tests.base import EEAAlchemyFunctionalTestCase
 
 OPTIONFLAGS = (doctest.REPORT_ONLY_FIRST_FAILURE |
                doctest.ELLIPSIS |
